@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float groundDrag;
     [SerializeField] float airDrag = 0.05f;
     [SerializeField] float airControlSpeed;
+    [SerializeField] float extraFallForce;
     [SerializeField] float jumpCooldown;
     Vector3 moveDirection;
     Vector2 moveInput;
@@ -38,7 +39,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        //HandleGravity();
+        ApplyExtraGravity();
         MovePlayer();
         HandleDrag();
     }
@@ -96,19 +97,6 @@ public class PlayerController : MonoBehaviour
         }           
     }
 
-    // Not working right I think!
-    void HandleGravity()
-    {
-        if (groundChecker.IsStandingOnSlope() && !exitingSlope)
-        {
-            rb.useGravity = false;
-        }
-        else
-        {
-            rb.useGravity = true;
-        }
-    }
-
     void HandleDrag()
     {
         if(groundChecker.IsGrounded)
@@ -127,8 +115,7 @@ public class PlayerController : MonoBehaviour
     }
 
     void HandleSlopeMovement()
-    {
-        
+    {        
         Vector3 slopeDir = groundChecker.GetSlopeMoveDirection(moveDirection);
 
         rb.AddForce(slopeDir * currentSpeed * 10, ForceMode.Force);
@@ -149,6 +136,15 @@ public class PlayerController : MonoBehaviour
         {
             rb.AddForce(moveDirection.normalized * currentSpeed * 10f * airControlSpeed, ForceMode.Force);
         }        
+    }
+
+    void ApplyExtraGravity()
+    {
+        // Stronger gravity while falling
+        if (rb.linearVelocity.y < 0)
+        {
+            rb.AddForce(Vector3.down * extraFallForce, ForceMode.Force);           
+        }
     }
 
     public void Move(InputAction.CallbackContext context)
