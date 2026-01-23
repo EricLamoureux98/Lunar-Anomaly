@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Camera : MonoBehaviour
+public class HideCursor : MonoBehaviour
 {
     void Start()
     {
