@@ -6,6 +6,7 @@ public class Rock : MonoBehaviour
     //[SerializeField] MiningManager miningManager;
     [SerializeField] float health;
     float currentHealth;
+    bool isDestroyed;
 
     public static event Action OnRockDestroyed;
 
@@ -16,6 +17,8 @@ public class Rock : MonoBehaviour
 
     public void DamageRock(float damage)
     {
+        if (isDestroyed) return;
+
         currentHealth -= damage;
         Debug.Log("Rock damaged, health: " + currentHealth);
 
@@ -27,7 +30,12 @@ public class Rock : MonoBehaviour
 
     void DestroyRock()
     {
+        if (isDestroyed) return; 
+
+        isDestroyed = true;
         gameObject.SetActive(false);
         OnRockDestroyed?.Invoke();
     }
 }
+
+// Add breaking damage

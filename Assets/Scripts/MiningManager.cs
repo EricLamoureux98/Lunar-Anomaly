@@ -9,7 +9,7 @@ public class MiningManager : MonoBehaviour
     void OnValidate()
     {
         rocksRemaining = rocks.Length;
-        Debug.Log("Rocks remaining: " + rocksRemaining);
+        //Debug.Log("Rocks remaining: " + rocksRemaining);
     }
 
     void OnEnable()

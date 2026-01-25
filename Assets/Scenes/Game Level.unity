@@ -1963,7 +1963,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1719026712}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: fb5ce1a67f743e24b96998a718ca8556, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2184,8 +2184,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1719026713}
   - {fileID: 89636847}
+  - {fileID: 1719026713}
   - {fileID: 134962934}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2389,7 +2389,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Pickaxe
   sphereCollider: {fileID: 1067809533}
   pickaxeDamage: 1
-  miningCooldown: 0.01
+  miningCooldown: 0.5
+  isMining: 0
 --- !u!114 &1757873781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2600,7 +2601,7 @@ SceneRoots:
   - {fileID: 1933502650}
   - {fileID: 410087041}
   - {fileID: 832575519}
+  - {fileID: 286766577}
   - {fileID: 1742931486}
   - {fileID: 1757873775}
   - {fileID: 1852730570}
-  - {fileID: 286766577}
