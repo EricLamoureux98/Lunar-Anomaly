@@ -1,5 +1,4 @@
 using System.Collections;
-using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,10 +7,13 @@ public class Pickaxe : MonoBehaviour
     [SerializeField] SphereCollider sphereCollider;
     [SerializeField] float pickaxeDamage = 1f;
     [SerializeField] float miningCooldown = 0.5f;
-    public bool isMining;
+    [SerializeField] Animator anim;
+    
+    const string MINING_ANIMATION = "Pickaxe_Mine";
+    const string MINING_IDLE = "Pickaxe_Idle";
 
+    bool isMining;
     bool miningCRActive = false;
-
     Rock currentRock;
 
     void Update()
@@ -51,18 +53,18 @@ public class Pickaxe : MonoBehaviour
 
     void StartMining()
     {
-        if (isMining && currentRock != null)
-        {
-            if (!miningCRActive)
-            {
-                miningCRActive = true;
-                StartCoroutine(nameof(MineRock));
-            }
-        }
+        if (!isMining || currentRock == null || miningCRActive)
+            return;
+
+        anim.Play(MINING_ANIMATION, 0, 0f);
+        miningCRActive = true;
+        StartCoroutine(MineRock());
     }
+
 
     void StopMining()
     {
+        anim.Play(MINING_IDLE);
         StopCoroutine(nameof(MineRock));
         miningCRActive = false;
     }
@@ -83,7 +85,7 @@ public class Pickaxe : MonoBehaviour
     {
         if (context.performed) 
         {
-            //Debug.Log("Attempting to mine");
+            Debug.Log("Attempting to mine");
             isMining = true;
         }
 
@@ -96,6 +98,7 @@ public class Pickaxe : MonoBehaviour
 
 // NOTES
 
-// Allow hold to mine - WIP
-// Add pickaxe model
+// Allow hold to mine - done
+// Add pickaxe model - done
+// Add basic animation - done
 // Run mine command with animation --- FUTURE GOAL
