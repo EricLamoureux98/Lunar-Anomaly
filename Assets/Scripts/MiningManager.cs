@@ -27,7 +27,7 @@ public class MiningManager : MonoBehaviour
         rocksRemaining = rocks.Length;
     }
 
-    public void RockDestroyed()
+    public void RockDestroyed(Rock rock)
     {
         rocksRemaining--;
         Debug.Log("Rocks remaining: " + rocksRemaining);

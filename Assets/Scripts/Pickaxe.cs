@@ -16,6 +16,16 @@ public class Pickaxe : MonoBehaviour
     bool miningCRActive = false;
     Rock currentRock;
 
+        void OnEnable()
+    {
+        Rock.OnRockDestroyed += RockDestroyed;
+    }
+
+    void OnDisable()
+    {
+        Rock.OnRockDestroyed -= RockDestroyed;
+    }
+
     void Update()
     {
         MiningController();
@@ -25,17 +35,16 @@ public class Pickaxe : MonoBehaviour
     {
         if (other.CompareTag("Rock") && other.TryGetComponent(out Rock rock))
         {
-            //Debug.Log("Mining rock triggered");
-            //rock.DamageRock(pickaxeDamage);
             currentRock = rock;
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Rock"))
+        if (other.TryGetComponent(out Rock rock) && rock == currentRock)
         {
             currentRock = null;
+            StopMining();
         }
     }    
 
@@ -53,14 +62,13 @@ public class Pickaxe : MonoBehaviour
 
     void StartMining()
     {
-        if (!isMining || currentRock == null || miningCRActive)
+        if (currentRock == null || miningCRActive)
             return;
 
         anim.Play(MINING_ANIMATION, 0, 0f);
         miningCRActive = true;
         StartCoroutine(MineRock());
     }
-
 
     void StopMining()
     {
@@ -69,13 +77,21 @@ public class Pickaxe : MonoBehaviour
         miningCRActive = false;
     }
 
+    void RockDestroyed(Rock rock)
+    {
+        if (currentRock == rock)
+        {
+            currentRock = null;
+            StopMining();
+        }
+    }
+
     IEnumerator MineRock()
     {
         while (isMining && currentRock != null)
         {
             currentRock.DamageRock(pickaxeDamage);
             yield return new WaitForSeconds(miningCooldown);
-            //Debug.Log("Mining Coroutine started");
         }
 
         miningCRActive = false;
@@ -85,7 +101,7 @@ public class Pickaxe : MonoBehaviour
     {
         if (context.performed) 
         {
-            Debug.Log("Attempting to mine");
+            //Debug.Log("Attempting to mine");
             isMining = true;
         }
 

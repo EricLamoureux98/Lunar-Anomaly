@@ -2337,7 +2337,7 @@ MonoBehaviour:
   groundDrag: 5
   airDrag: 0.05
   airControlSpeed: 0.5
-  extraFallForce: 2.5
+  extraFallForce: 4.5
   jumpCooldown: 0.25
 --- !u!114 &1757873777
 MonoBehaviour:

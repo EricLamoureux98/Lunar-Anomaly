@@ -8,7 +8,7 @@ public class Rock : MonoBehaviour
     float currentHealth;
     bool isDestroyed;
 
-    public static event Action OnRockDestroyed;
+    public static event Action<Rock> OnRockDestroyed;
 
     void Awake()
     {
@@ -33,8 +33,8 @@ public class Rock : MonoBehaviour
         if (isDestroyed) return; 
 
         isDestroyed = true;
-        gameObject.SetActive(false);
-        OnRockDestroyed?.Invoke();
+        OnRockDestroyed?.Invoke(this);
+        Destroy(gameObject); // Destroy after event to avoid errors
     }
 }
 
