@@ -16,7 +16,7 @@ public class Pickaxe : MonoBehaviour
     bool miningCRActive = false;
     Rock currentRock;
 
-        void OnEnable()
+    void OnEnable()
     {
         Rock.OnRockDestroyed += RockDestroyed;
     }
