@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
     bool exitingSlope;
     bool readyToJump;
 
+    // Add variable jump height
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -112,6 +114,13 @@ public class PlayerController : MonoBehaviour
     void HandleGroundMovement()
     {
         rb.AddForce(moveDirection.normalized * currentSpeed * 10f, ForceMode.Force);
+        
+        // Extra downward force to stick to ground
+        rb.AddForce(Vector3.down * 2f, ForceMode.Force);
+        // if (groundChecker.IsGrounded && rb.linearVelocity.y > 0f)
+        // {
+        //     rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        // }
     }
 
     void HandleSlopeMovement()
@@ -163,5 +172,4 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed) ApplyJumpInput();
     }
-
 }

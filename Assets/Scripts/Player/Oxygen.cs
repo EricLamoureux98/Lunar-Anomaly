@@ -13,12 +13,12 @@ public class Oxygen : MonoBehaviour
 
     void OnEnable()
     {
-        Atmosphere.OnPressurized += AtmosphereUpdated;
+        AtmosphereTracker.OnPressurized += AtmosphereUpdated;
     }
 
     void OnDisable()
     {
-        Atmosphere.OnPressurized -= AtmosphereUpdated;
+        AtmosphereTracker.OnPressurized -= AtmosphereUpdated;
     }
 
     void Start()
