@@ -1,5 +1,6 @@
-using System;
+
 using System.Collections;
+
 using UnityEngine;
 
 public class Airlock : MonoBehaviour
@@ -15,8 +16,6 @@ public class Airlock : MonoBehaviour
     [SerializeField] bool testEnterFromExterior = false;
     [SerializeField] bool testEnterFromInterior = false;
 
-    // Add a check for if player has entered
-
     void Update()
     {
         if (testEnterFromExterior)
@@ -31,7 +30,6 @@ public class Airlock : MonoBehaviour
             EnterFromInterior();
         }
     }
-
 
     public void EnterFromExterior()
     {
@@ -53,12 +51,16 @@ public class Airlock : MonoBehaviour
         //Debug.Log("Exterior opening");
         yield return new WaitForSeconds(2f);
 
+        // Add a check for if player has entered
+
         // Close exterior
         animExt.SetBool("IsOpen", false);
         //Debug.Log("Exterior closing");
         yield return new WaitForSeconds(pressurizationTime);
 
         // Pressurize chamber
+        //atmosphereTracker.isPressurized = true; <---------- Neither of these work
+        //atmosphereZone.UpdateZone(true);
 
         // Open interior
         animInt.SetBool("IsOpen", true);
@@ -86,6 +88,8 @@ public class Airlock : MonoBehaviour
         // Open interior
         animInt.SetBool("IsOpen", true);
         yield return new WaitForSeconds(2f);
+
+        // Add a check for if player has entered
 
         // Close interior
         animInt.SetBool("IsOpen", false);

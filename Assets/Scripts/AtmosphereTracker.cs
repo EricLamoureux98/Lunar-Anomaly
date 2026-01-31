@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class AtmosphereTracker : MonoBehaviour
 {
-    public bool IsPressurized { get; private set; }
+    bool IsPressurized;
 
+    // Sent to Oxygen
     public static event Action<bool> OnPressurized;
 
     void OnTriggerEnter(Collider other)

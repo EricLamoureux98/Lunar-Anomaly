@@ -233,6 +233,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8779175375593821898}
+  - component: {fileID: 1771554073323041226}
+  - component: {fileID: 2415743102886963509}
   m_Layer: 0
   m_Name: Frame
   m_TagString: Untagged
@@ -259,6 +261,40 @@ Transform:
   - {fileID: 2298938223435672647}
   m_Father: {fileID: 6987633638936206290}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1771554073323041226
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 849658402147356464}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 6, y: 7, z: 8}
+  m_Center: {x: 0, y: 6, z: -17}
+--- !u!114 &2415743102886963509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 849658402147356464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33fb725facef44b428cb65b7cbf20631, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AtmosphereZone
+  isPressurized: 0
 --- !u!1 &886314826551322835
 GameObject:
   m_ObjectHideFlags: 0
@@ -284,7 +320,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 886314826551322835}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 88.5, y: 68.08, z: 30.31795}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1060,6 +1096,7 @@ GameObject:
   - component: {fileID: 1004906084086383228}
   - component: {fileID: 8195874095754482008}
   - component: {fileID: 1841252095656794793}
+  - component: {fileID: 2794878923766488971}
   m_Layer: 0
   m_Name: Exterior
   m_TagString: Untagged
@@ -1125,8 +1162,21 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 5, y: 7, z: 2}
-  m_Center: {x: 0, y: 6.5, z: -22.5}
+  m_Size: {x: 5, y: 7, z: 4}
+  m_Center: {x: 0, y: 6.5, z: -23.5}
+--- !u!114 &2794878923766488971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6799936964726829925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a3ad1dff97b73549b55d4d93d39f3e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AirlockSensor
+  isExterior: 1
 --- !u!1 &7453970466005031136
 GameObject:
   m_ObjectHideFlags: 0
@@ -1234,6 +1284,7 @@ GameObject:
   - component: {fileID: 441015520156077269}
   - component: {fileID: 8166530263129672672}
   - component: {fileID: 7338291205668536435}
+  - component: {fileID: 4257518704025431606}
   m_Layer: 0
   m_Name: Interior
   m_TagString: Untagged
@@ -1299,5 +1350,18 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 5, y: 7, z: 2}
-  m_Center: {x: 0, y: 6.5, z: -19.5}
+  m_Size: {x: 5, y: 7, z: 3}
+  m_Center: {x: 0, y: 6.5, z: -19}
+--- !u!114 &4257518704025431606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9051374051927414325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a3ad1dff97b73549b55d4d93d39f3e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AirlockSensor
+  isExterior: 0

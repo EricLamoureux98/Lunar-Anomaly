@@ -842,7 +842,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 60.43, z: 6}
+  m_LocalPosition: {x: 89.20659, y: 74.88355, z: -3.61487}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1918,6 +1918,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &933583942 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2415743102886963509, guid: e6ef924cbd22c5d43892c9841730ddf6, type: 3}
+  m_PrefabInstance: {fileID: 5545326190555973696}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33fb725facef44b428cb65b7cbf20631, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AtmosphereZone
 --- !u!1 &985538840
 GameObject:
   m_ObjectHideFlags: 0
@@ -2293,7 +2304,7 @@ Transform:
   m_GameObject: {fileID: 1087388742}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 60.43, z: 6}
+  m_LocalPosition: {x: 89.20659, y: 74.88355, z: -3.61487}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3125,7 +3136,7 @@ GameObject:
   - component: {fileID: 1719026714}
   m_Layer: 0
   m_Name: Player Body
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3357,7 +3368,7 @@ GameObject:
   - component: {fileID: 1757873783}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3371,7 +3382,7 @@ Transform:
   m_GameObject: {fileID: 1757873774}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 58.43, z: 6}
+  m_LocalPosition: {x: 89.20659, y: 72.88355, z: -3.61487}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4075,6 +4086,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Airlock
       objectReference: {fileID: 0}
+    - target: {fileID: 3418179412076864350, guid: e6ef924cbd22c5d43892c9841730ddf6, type: 3}
+      propertyPath: atmosphereZone
+      value: 
+      objectReference: {fileID: 933583942}
     - target: {fileID: 6987633638936206290, guid: e6ef924cbd22c5d43892c9841730ddf6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 88.5
