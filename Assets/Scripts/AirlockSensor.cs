@@ -2,12 +2,11 @@ using UnityEngine;
 
 public class AirlockSensor : MonoBehaviour
 {
-    [SerializeField] bool isExterior;
-    [SerializeField] float airlockCooldown = 6f;
-    Airlock airlock;
+    public enum SensorType {Interior, Exterior, Inside}
 
-    float cooldown; // ------ Not yet implemented 
-                    // ------ Might be able to avoid with player detection inside airlock
+    [SerializeField] SensorType sensorType;
+
+    Airlock airlock;
 
     void Awake()
     {
@@ -18,18 +17,25 @@ public class AirlockSensor : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Trigger");
         if (!other.CompareTag("Player")) return;
 
-        if (isExterior)
+        switch (sensorType)
         {
-            Debug.Log("Player waiting to enter");
-            airlock.EnterFromExterior();
-        }
-        else
-        {
-            Debug.Log("Player waiting to exit");
-            airlock.EnterFromInterior();
+            case SensorType.Interior:
+                airlock.EnterFromInterior();
+                break;
+
+            case SensorType.Exterior:
+                airlock.EnterFromExterior();
+                break;
+
+            case SensorType.Inside:
+                airlock.PlayerInsideAirlock();
+                break;
+
+            default:
+                Debug.Log("Unknown state");
+                break;
         }
     }
 }

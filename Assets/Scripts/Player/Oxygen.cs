@@ -66,11 +66,13 @@ public class Oxygen : MonoBehaviour
     {
         if (pressurized)
         {
+            Debug.Log("Player entered pressurized area");
             oxygenDraining = false;
             oxygenRefilling = true;
         }
         else
         {
+            Debug.Log("Player exited pressurized area");
             oxygenDraining = true;
             oxygenRefilling = false;
         }

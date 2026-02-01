@@ -235,6 +235,7 @@ GameObject:
   - component: {fileID: 8779175375593821898}
   - component: {fileID: 1771554073323041226}
   - component: {fileID: 2415743102886963509}
+  - component: {fileID: 8590803539443623810}
   m_Layer: 0
   m_Name: Frame
   m_TagString: Untagged
@@ -295,6 +296,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AtmosphereZone
   isPressurized: 0
+--- !u!114 &8590803539443623810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 849658402147356464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a3ad1dff97b73549b55d4d93d39f3e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AirlockSensor
+  sensorType: 2
 --- !u!1 &886314826551322835
 GameObject:
   m_ObjectHideFlags: 0
@@ -341,8 +355,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcfe7cf45de3ed4408c0af21eb985335, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Airlock
-  exteriorTrigger: {fileID: 1841252095656794793}
-  interiorTrigger: {fileID: 7338291205668536435}
   animExt: {fileID: 8195874095754482008}
   animInt: {fileID: 8166530263129672672}
   pressurizationTime: 3
@@ -1176,7 +1188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a3ad1dff97b73549b55d4d93d39f3e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AirlockSensor
-  isExterior: 1
+  sensorType: 1
 --- !u!1 &7453970466005031136
 GameObject:
   m_ObjectHideFlags: 0
@@ -1364,4 +1376,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a3ad1dff97b73549b55d4d93d39f3e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AirlockSensor
-  isExterior: 0
+  sensorType: 0

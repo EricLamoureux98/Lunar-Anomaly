@@ -5,16 +5,22 @@ using UnityEngine;
 
 public class Airlock : MonoBehaviour
 {
-    [SerializeField] BoxCollider exteriorTrigger;
-    [SerializeField] BoxCollider interiorTrigger;
     [SerializeField] Animator animExt;
     [SerializeField] Animator animInt;
+    [SerializeField] AtmosphereZone atmosphereZone;
     [SerializeField] float pressurizationTime = 3f;
 
     bool isCycling = false;
+    bool playerInside = false;
 
     [SerializeField] bool testEnterFromExterior = false;
     [SerializeField] bool testEnterFromInterior = false;
+
+    void Awake()
+    {
+        atmosphereZone = GetComponentInChildren<AtmosphereZone>();
+        if (atmosphereZone == null) Debug.Log("Atmosphere zone not found");
+    }
 
     void Update()
     {
@@ -51,7 +57,8 @@ public class Airlock : MonoBehaviour
         //Debug.Log("Exterior opening");
         yield return new WaitForSeconds(2f);
 
-        // Add a check for if player has entered
+        // Check if player has entered
+        yield return new WaitUntil(() => playerInside); // <--- How does this work? 
 
         // Close exterior
         animExt.SetBool("IsOpen", false);
@@ -59,16 +66,15 @@ public class Airlock : MonoBehaviour
         yield return new WaitForSeconds(pressurizationTime);
 
         // Pressurize chamber
-        //atmosphereTracker.isPressurized = true; <---------- Neither of these work
-        //atmosphereZone.UpdateZone(true);
+        atmosphereZone.SetPressuized(true);
 
         // Open interior
         animInt.SetBool("IsOpen", true);
         //Debug.Log("Interior opening");
 
         isCycling = false;
+        playerInside = false;
     }
-
 
     // Can this be optimized? Not D.R.Y
     public void EnterFromInterior()
@@ -89,17 +95,26 @@ public class Airlock : MonoBehaviour
         animInt.SetBool("IsOpen", true);
         yield return new WaitForSeconds(2f);
 
-        // Add a check for if player has entered
+        // Check if player has entered
+        yield return new WaitUntil(() => playerInside);
 
         // Close interior
         animInt.SetBool("IsOpen", false);
         yield return new WaitForSeconds(pressurizationTime);
 
         // Pressurize chamber
+        atmosphereZone.SetPressuized(false);
 
         // Open exterior
         animExt.SetBool("IsOpen", true);
 
         isCycling = false;
+        playerInside = false;
+    }
+
+    public void PlayerInsideAirlock()
+    {
+        Debug.Log("Player inside airlock");
+        playerInside = true;
     }
 }
