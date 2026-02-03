@@ -1,7 +1,9 @@
+using UnityEngine.UI;
 using UnityEngine;
 
 public class Oxygen : MonoBehaviour
 {
+    [SerializeField] Image oxygenBar;
     [SerializeField] float startingOxygen = 120f;
     [SerializeField] float drainRate = 1f;
     [SerializeField] float refillRate = 2f;
@@ -42,6 +44,7 @@ public class Oxygen : MonoBehaviour
     void drainOxygen()
     {
         currentOxygen -= drainRate * Time.deltaTime;
+        oxygenBar.fillAmount = currentOxygen / startingOxygen;
 
         if (currentOxygen <= 0) oxygenDepleted();
     }
@@ -50,7 +53,8 @@ public class Oxygen : MonoBehaviour
     {
         if (currentOxygen < startingOxygen)
         {
-            currentOxygen += refillRate * Time.deltaTime;            
+            currentOxygen += refillRate * Time.deltaTime;    
+            oxygenBar.fillAmount = currentOxygen / startingOxygen;        
         }
     }
 
