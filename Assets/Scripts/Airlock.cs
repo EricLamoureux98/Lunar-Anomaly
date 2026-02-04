@@ -12,6 +12,7 @@ public class Airlock : MonoBehaviour
 
     bool isCycling = false;
     bool playerInside = false;
+    public bool cancelCycle; // Use this if/when the player is killed or level reset etc
 
     [SerializeField] bool testEnterFromExterior = false;
     [SerializeField] bool testEnterFromInterior = false;
@@ -24,17 +25,7 @@ public class Airlock : MonoBehaviour
 
     void Update()
     {
-        if (testEnterFromExterior)
-        {
-            testEnterFromExterior = false;
-            EnterFromExterior();
-        }
-
-        if (testEnterFromInterior)
-        {
-            testEnterFromInterior = false;
-            EnterFromInterior();
-        }
+        AirlockTesting();
     }
 
     public void EnterFromExterior()
@@ -58,7 +49,13 @@ public class Airlock : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         // Check if player has entered
-        yield return new WaitUntil(() => playerInside); // <--- How does this work? 
+        yield return new WaitUntil(() => playerInside || cancelCycle);
+
+        if (cancelCycle)
+        {
+            ResetAirlock();
+            yield break; // End coroutine early if cancelled
+        }
 
         // Close exterior
         animExt.SetBool("IsOpen", false);
@@ -96,7 +93,13 @@ public class Airlock : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         // Check if player has entered
-        yield return new WaitUntil(() => playerInside);
+        yield return new WaitUntil(() => playerInside || cancelCycle);
+
+        if (cancelCycle)
+        {
+            ResetAirlock();
+            yield break;
+        }
 
         // Close interior
         animInt.SetBool("IsOpen", false);
@@ -116,5 +119,30 @@ public class Airlock : MonoBehaviour
     {
         Debug.Log("Player inside airlock");
         playerInside = true;
+    }
+
+    void ResetAirlock()
+    {
+        animExt.SetBool("IsOpen", false);
+        animInt.SetBool("IsOpen", false);
+
+        isCycling = false;
+        playerInside = false;
+        cancelCycle = false;
+    }
+
+    void AirlockTesting()
+    {
+        if (testEnterFromExterior)
+        {
+            testEnterFromExterior = false;
+            EnterFromExterior();
+        }
+
+        if (testEnterFromInterior)
+        {
+            testEnterFromInterior = false;
+            EnterFromInterior();
+        }
     }
 }

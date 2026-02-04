@@ -7,6 +7,7 @@ public class AtmosphereZone : MonoBehaviour
 
     public bool IsPressurized => isPressurized;
 
+    // Sent to AtmosphereTracker
     public static event Action<bool> OnZonePressureChanged;
 
     public void SetPressuized(bool value)

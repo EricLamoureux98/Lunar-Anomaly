@@ -1,5 +1,6 @@
 using UnityEngine.UI;
 using UnityEngine;
+using System;
 
 public class Oxygen : MonoBehaviour
 {
@@ -11,7 +12,10 @@ public class Oxygen : MonoBehaviour
     [SerializeField] bool oxygenDraining = false;
     [SerializeField] bool oxygenRefilling = false;
 
-    public float currentOxygen; // public for debugging
+    float currentOxygen; // public for debugging
+
+    // Sent to PlayerState
+    public static event Action OnOxygenDepleted; 
 
     void OnEnable()
     {
@@ -32,24 +36,24 @@ public class Oxygen : MonoBehaviour
     {
         if (oxygenDraining)
         {
-            drainOxygen();
+            DrainOxygen();
         }
 
         if (oxygenRefilling)
         {
-            refillOxygen();
+            RefillOxygen();
         }
     }
 
-    void drainOxygen()
+    void DrainOxygen()
     {
         currentOxygen -= drainRate * Time.deltaTime;
         oxygenBar.fillAmount = currentOxygen / startingOxygen;
 
-        if (currentOxygen <= 0) oxygenDepleted();
+        if (currentOxygen <= 0) OxygenDepleted();
     }
 
-    void refillOxygen()
+    void RefillOxygen()
     {
         if (currentOxygen < startingOxygen)
         {
@@ -58,25 +62,23 @@ public class Oxygen : MonoBehaviour
         }
     }
 
-    void oxygenDepleted()
+    void OxygenDepleted()
     {
-        // Add visuals and sound 
-        // Kill player after 0 oxygen for a short period
-
-        gameObject.SetActive(false);
+        OnOxygenDepleted?.Invoke();
+        //Debug.Log("Oxygen event sent to Player State");
     }
 
     void AtmosphereUpdated(bool pressurized)
     {
         if (pressurized)
         {
-            Debug.Log("Player entered pressurized area");
+            //Debug.Log("Player entered pressurized area");
             oxygenDraining = false;
             oxygenRefilling = true;
         }
         else
         {
-            Debug.Log("Player exited pressurized area");
+            //Debug.Log("Player exited pressurized area");
             oxygenDraining = true;
             oxygenRefilling = false;
         }
