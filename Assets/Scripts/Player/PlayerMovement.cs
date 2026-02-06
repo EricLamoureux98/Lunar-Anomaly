@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] Transform cam;
@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     
     bool exitingSlope;
     bool readyToJump;
+    bool movementActive;
 
     // Add variable jump height
 
@@ -35,12 +36,15 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        movementActive = true;
         currentSpeed = walkSpeed;
         readyToJump = true;
     }
 
     void FixedUpdate()
     {
+        if (!movementActive) return; 
+
         ApplyExtraGravity();
         MovePlayer();
         HandleDrag();
@@ -154,6 +158,11 @@ public class PlayerController : MonoBehaviour
         {
             rb.AddForce(Vector3.down * extraFallForce, ForceMode.Force);           
         }
+    }
+
+    public void SetActive(bool active)
+    {
+        movementActive = active;
     }
 
     public void Move(InputAction.CallbackContext context)

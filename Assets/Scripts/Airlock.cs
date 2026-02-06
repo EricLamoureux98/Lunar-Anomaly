@@ -121,8 +121,9 @@ public class Airlock : MonoBehaviour
         playerInside = true;
     }
 
-    void ResetAirlock()
+    public void ResetAirlock()
     {
+        atmosphereZone.SetPressuized(true); // This needs to be smarter
         animExt.SetBool("IsOpen", false);
         animInt.SetBool("IsOpen", false);
 

@@ -12,7 +12,8 @@ public class Oxygen : MonoBehaviour
     [SerializeField] bool oxygenDraining = false;
     [SerializeField] bool oxygenRefilling = false;
 
-    float currentOxygen; // public for debugging
+    float currentOxygen;
+    bool oxygenActive;
 
     // Sent to PlayerState
     public static event Action OnOxygenDepleted; 
@@ -29,11 +30,19 @@ public class Oxygen : MonoBehaviour
 
     void Start()
     {
+        oxygenActive = true;
         currentOxygen = startingOxygen;
     }
 
     void Update()
     {
+        UpdateOxygen();
+    }
+
+    void UpdateOxygen()
+    {
+        if (!oxygenActive) return; 
+
         if (oxygenDraining)
         {
             DrainOxygen();
@@ -82,6 +91,18 @@ public class Oxygen : MonoBehaviour
             oxygenDraining = true;
             oxygenRefilling = false;
         }
+    }
+
+    public void SetActive(bool active)
+    {
+        oxygenActive = active;
+    }
+
+    public void ResetOxygen()
+    {
+        currentOxygen = startingOxygen;
+        oxygenBar.fillAmount = startingOxygen;   
+        oxygenActive = true;
     }
 }
 

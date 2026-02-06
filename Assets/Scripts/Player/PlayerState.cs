@@ -1,20 +1,23 @@
+using System;
 using UnityEngine;
 
 public class PlayerState : MonoBehaviour
 {
+    [Header("Refernces")]
+    [SerializeField] Airlock airlock;
+    Oxygen oxygen;
+    PlayerMovement playerMovement;
+
+    [SerializeField] Transform respawnPoint;
     [SerializeField] float oxygenGracePeriod = 3f;
 
-    float graceTimer;
     CurrentState currentState;
+    float graceTimer;
 
-    void Update()
+    void Awake()
     {
-        switch (currentState)
-        {
-            case CurrentState.Suffocating:
-                HandleSuffocating();
-                break;
-        }
+        oxygen = GetComponent<Oxygen>();
+        playerMovement = GetComponent<PlayerMovement>();
     }
 
     void OnEnable()
@@ -27,6 +30,16 @@ public class PlayerState : MonoBehaviour
         Oxygen.OnOxygenDepleted -= OnOxygenDepleted;
     }
 
+    void Update()
+    {
+        switch (currentState)
+        {
+            case CurrentState.Suffocating:
+                HandleSuffocating();
+                break;
+        }
+    }
+
     void OnOxygenDepleted()
     {
         ChangeState(CurrentState.Suffocating);
@@ -34,7 +47,7 @@ public class PlayerState : MonoBehaviour
 
     void HandleAlive()
     {
-        // Not sure if needed. Maybe use for UI
+        // Probably not needed. Maybe use for UI
     }
 
     void HandleSuffocating()
@@ -50,14 +63,30 @@ public class PlayerState : MonoBehaviour
 
     void HandleDeath()
     {
-        // Airlock.cancelCycle
-        // Signal to RespawnManager
-        Debug.Log("Player dead");
+        oxygen.SetActive(false);
+        playerMovement.SetActive(false);
+        airlock.ResetAirlock();
+        
+        Invoke("HandleRespawn", 1f); // <--- Make this a UI button eventually
+        //Debug.Log("Player dead");
     }
 
-    void HandleRespawning()
+    void HandleRespawn()
     {
-        // Refill oxygen
+        if (respawnPoint == null) return;
+
+        Rigidbody rb = GetComponent<Rigidbody>();
+        
+        // Reset velocity to prevent unexpected movement
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        // Move player
+        rb.position = respawnPoint.position;
+        rb.rotation = respawnPoint.rotation;
+
+        oxygen.ResetOxygen();
+        ChangeState(CurrentState.Alive);
     }
 
     void ChangeState(CurrentState newState)
@@ -86,7 +115,7 @@ public class PlayerState : MonoBehaviour
 
     void ExitState(CurrentState state)
     {
-        // Not used yet - This is for turning off things like audio and UI
+        // This is for turning off things like audio and UI
         switch (state)
         {
             case CurrentState.Suffocating:
@@ -94,6 +123,11 @@ public class PlayerState : MonoBehaviour
                 // Stop suffocation SFX
                 // Hide oxygen warning UI
                 // Reset post-processing effects
+                break;
+            
+            case CurrentState.Dead:
+                playerMovement.SetActive(true);
+                oxygen.SetActive(true);
                 break;
         }
     }
