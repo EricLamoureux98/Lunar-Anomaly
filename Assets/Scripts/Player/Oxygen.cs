@@ -1,19 +1,27 @@
 using UnityEngine.UI;
 using UnityEngine;
 using System;
+using System.Collections;
 
 public class Oxygen : MonoBehaviour
 {
     [SerializeField] Image oxygenBar;
+    [SerializeField] GameObject oxygenUI50; // These might be able to be combined into a single TMP 
+    [SerializeField] GameObject oxygenUI10;
     [SerializeField] float startingOxygen = 120f;
     [SerializeField] float drainRate = 1f;
     [SerializeField] float refillRate = 2f;
+    [SerializeField] float flashDuration = 2f;
+    [SerializeField] float flashInterval = 0.25f;
 
     [SerializeField] bool oxygenDraining = false;
     [SerializeField] bool oxygenRefilling = false;
 
     float currentOxygen;
     bool oxygenActive;
+
+    bool show50Oxy;
+    bool show10Oxy;
 
     // Sent to PlayerState
     public static event Action OnOxygenDepleted; 
@@ -36,12 +44,13 @@ public class Oxygen : MonoBehaviour
 
     void Update()
     {
-        UpdateOxygen();
+        UpdateOxygen();        
     }
 
     void UpdateOxygen()
     {
         if (!oxygenActive) return; 
+        OxygenLowWarning();
 
         if (oxygenDraining)
         {
@@ -57,7 +66,7 @@ public class Oxygen : MonoBehaviour
     void DrainOxygen()
     {
         currentOxygen -= drainRate * Time.deltaTime;
-        oxygenBar.fillAmount = currentOxygen / startingOxygen;
+        UpdateOxygenBar(currentOxygen / startingOxygen);
 
         if (currentOxygen <= 0) OxygenDepleted();
     }
@@ -66,15 +75,14 @@ public class Oxygen : MonoBehaviour
     {
         if (currentOxygen < startingOxygen)
         {
-            currentOxygen += refillRate * Time.deltaTime;    
-            oxygenBar.fillAmount = currentOxygen / startingOxygen;        
+            currentOxygen += refillRate * Time.deltaTime;          
+            UpdateOxygenBar(currentOxygen / startingOxygen);
         }
     }
 
     void OxygenDepleted()
     {
         OnOxygenDepleted?.Invoke();
-        //Debug.Log("Oxygen event sent to Player State");
     }
 
     void AtmosphereUpdated(bool pressurized)
@@ -93,6 +101,49 @@ public class Oxygen : MonoBehaviour
         }
     }
 
+    void UpdateOxygenBar(float fillAmount)
+    {
+        oxygenBar.fillAmount = fillAmount;
+    }
+
+    void OxygenLowWarning()
+    {
+        if (!show50Oxy && currentOxygen <= startingOxygen / 2f)
+        {
+            show50Oxy = true; // <--- These need to be smarter... What if the oxygen does not reach 100%
+            StartCoroutine(OxygenWarningFlash(oxygenUI50));
+            //Debug.Log("Oxygen Half");
+        }
+        
+        if (!show10Oxy && currentOxygen <= (startingOxygen * 0.1f))
+        {
+            show10Oxy = true;
+            StartCoroutine(OxygenWarningFlash(oxygenUI10));
+            //Debug.Log("Oxygen at 10%");
+        }
+    }
+
+    IEnumerator OxygenWarningFlash(GameObject canvas)
+    {
+        float timer = 0f;
+        while (timer < flashDuration)
+        {
+            if (canvas != null)
+            {
+                canvas.SetActive(!canvas.activeSelf);
+            }
+
+            yield return new WaitForSeconds(flashInterval);
+            timer += flashInterval;
+        }
+        
+        if (canvas != null)
+        {
+            canvas.SetActive(false);
+        }
+    }
+    
+
     public void SetActive(bool active)
     {
         oxygenActive = active;
@@ -100,12 +151,11 @@ public class Oxygen : MonoBehaviour
 
     public void ResetOxygen()
     {
-        currentOxygen = startingOxygen;
-        oxygenBar.fillAmount = startingOxygen;   
+        currentOxygen = startingOxygen; 
+        UpdateOxygenBar(startingOxygen);
+        show50Oxy = false;
+        show10Oxy = false;
         oxygenActive = true;
     }
 }
 
-// Future features
-
-// Add warning when oxygen is half and at 10%
