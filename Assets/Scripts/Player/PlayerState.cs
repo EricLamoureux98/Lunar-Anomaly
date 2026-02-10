@@ -1,5 +1,6 @@
-using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerState : MonoBehaviour
 {
@@ -7,6 +8,9 @@ public class PlayerState : MonoBehaviour
     [SerializeField] Airlock airlock;
     Oxygen oxygen;
     PlayerMovement playerMovement;
+
+    [Header("UI")]
+    [SerializeField] Image fadeToBlack; // This should eventually be moved to its own script
 
     [SerializeField] Transform respawnPoint;
     [SerializeField] float oxygenGracePeriod = 3f;
@@ -37,6 +41,24 @@ public class PlayerState : MonoBehaviour
             case CurrentState.Suffocating:
                 HandleSuffocating();
                 break;
+        }
+    }
+
+    IEnumerator FadeToBlack()
+    {
+        float time = 0f;
+
+        while (time < oxygenGracePeriod)
+        {
+            time += Time.deltaTime;
+            float t = time / oxygenGracePeriod;
+
+            Color color = fadeToBlack.color;
+                                // alpha
+            color.a = Mathf.Lerp(0, 1, t);
+            fadeToBlack.color = color;
+
+            yield return null;
         }
     }
 
@@ -87,6 +109,9 @@ public class PlayerState : MonoBehaviour
 
         oxygen.ResetOxygen();
         ChangeState(CurrentState.Alive);
+        Color color = fadeToBlack.color; // Clean this up
+        color.a = 0f;
+        fadeToBlack.color = color;
     }
 
     void ChangeState(CurrentState newState)
@@ -104,6 +129,7 @@ public class PlayerState : MonoBehaviour
         {
             case CurrentState.Suffocating:
                 // Add visuals and sound 
+                StartCoroutine(FadeToBlack());
                 graceTimer = oxygenGracePeriod;
                 break;
             

@@ -5,15 +5,16 @@ using System.Collections;
 
 public class Oxygen : MonoBehaviour
 {
-    [SerializeField] Image oxygenBar;
-    [SerializeField] GameObject oxygenUI50; // These might be able to be combined into a single TMP 
-    [SerializeField] GameObject oxygenUI10;
-    [SerializeField] float startingOxygen = 120f;
-    [SerializeField] float drainRate = 1f;
-    [SerializeField] float refillRate = 2f;
+    [Header("UI")]
+    [SerializeField] Image oxygenBar; // This should eventually be moved to its own script
+    [SerializeField] GameObject oxygenUI50; // These could be combined into a single TMP 
+    [SerializeField] GameObject oxygenUI10;    
     [SerializeField] float flashDuration = 2f;
     [SerializeField] float flashInterval = 0.25f;
 
+    [SerializeField] float startingOxygen = 120f;
+    [SerializeField] float drainRate = 1f;
+    [SerializeField] float refillRate = 2f;
     [SerializeField] bool oxygenDraining = false;
     [SerializeField] bool oxygenRefilling = false;
 
