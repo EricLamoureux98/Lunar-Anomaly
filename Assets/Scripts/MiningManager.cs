@@ -31,7 +31,9 @@ public class MiningManager : MonoBehaviour
     {
         rocksRemaining--;
         Debug.Log("Rocks remaining: " + rocksRemaining);
-    }
-
-    
+    }   
 }
+
+// Rock samples collected
+// Maybe different rock types
+

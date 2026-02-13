@@ -38,4 +38,8 @@ public class Rock : MonoBehaviour
     }
 }
 
-// Add breaking damage
+// Screen shake
+// Time freeze when hit lands 
+// Debris particles
+// Sounds
+// Scale down when being mined --- Stretch goal would be 3d models
