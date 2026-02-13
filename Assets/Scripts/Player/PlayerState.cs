@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerState : MonoBehaviour
@@ -13,8 +14,8 @@ public class PlayerState : MonoBehaviour
     CurrentState currentState;
     float graceTimer;
 
-    // Add eventually -> UIManager
-    //public static event Action OnPlayerDying;
+    // To UIManager
+    public static event Action<float> OnPlayerDying;
 
     void Awake()
     {
@@ -106,7 +107,8 @@ public class PlayerState : MonoBehaviour
         {
             case CurrentState.Suffocating:
                 // Add visuals and sound 
-                StartCoroutine(UIManager.Instance.FadeToBlack(oxygenGracePeriod));
+                // StartCoroutine(UIManager.Instance.FadeToBlack(oxygenGracePeriod));
+                OnPlayerDying?.Invoke(oxygenGracePeriod);
                 graceTimer = oxygenGracePeriod;
                 break;
             

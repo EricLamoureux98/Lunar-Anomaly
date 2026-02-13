@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,36 +9,40 @@ public class UIManager : MonoBehaviour
 
     [Header("Oxygen UI")]
     [SerializeField] GameObject oxygenUI50;
-    [SerializeField] GameObject oxygenUI10;    
+    [SerializeField] GameObject oxygenUI10;
     [SerializeField] Image fadeToBlack;
     [SerializeField] Image oxygenBar;
     [SerializeField] float flashDuration = 2f;
     [SerializeField] float flashInterval = 0.25f;
     bool flashed50;
     bool flashed10;
-    
 
-    void Awake()
+    Coroutine currentFade;
+
+    void OnEnable()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            // DontDestroyOnLoad(gameObject); <--- Gives me a warning
-        }
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-        }
+        Oxygen.OnOxygenChanged += UpdateOxygenUI;
+        Oxygen.OnOxygenReset += ResetOxygenWarnings;
+        PlayerState.OnPlayerDying += PlayerDying;
     }
 
-    public void UpdateOxygenBar(float fillAmount)
+    void OnDisable()
+    {
+        Oxygen.OnOxygenChanged -= UpdateOxygenUI;
+        Oxygen.OnOxygenReset -= ResetOxygenWarnings;
+        PlayerState.OnPlayerDying -= PlayerDying;
+    }
+
+    // Oxygen UI might be worth creating a new script
+    void UpdateOxygenUI(float fillAmount)
     {
         oxygenBar.fillAmount = fillAmount;
+
+        CheckOxygenWarnings(fillAmount);
     }
 
-    public void CheckOxygenWarnings(float currentOxygen, float startingOxygen)
+    void CheckOxygenWarnings(float percent)
     {
-        float percent = currentOxygen / startingOxygen;
 
         if (!flashed50 && percent <= 0.5f)
         {
@@ -52,14 +57,13 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ResetOxygenWarnings()
+    void ResetOxygenWarnings()
     {
         flashed50 = false;
         flashed10 = false;
 
-        Color color = fadeToBlack.color; // Clean this up
-        color.a = 0f;
-        fadeToBlack.color = color;
+        //SetFadeAlpha(0f);
+        oxygenBar.fillAmount = 1f;
     }
 
     IEnumerator OxygenWarningFlash(GameObject canvas)
@@ -76,28 +80,53 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(flashInterval);
             timer += flashInterval;
         }
-        
+
         if (canvas != null)
         {
             canvas.SetActive(false);
         }
     }
 
-    public IEnumerator FadeToBlack(float oxygenGracePeriod)
+    void SetFadeAlpha(float alpha)
+    {
+        fadeToBlack.color = new Color(0f, 0f, 0f, alpha);
+    }
+
+    void PlayerDying(float fadeLength)
+    {
+        StartCoroutine(DeathSequence(fadeLength));
+    }
+
+    IEnumerator DeathSequence(float duration)
+    {
+        StartFade(0f, 1f, duration);
+        yield return new WaitForSeconds(4f); // Adjust this for respawn timing
+        StartFade(1f, 0f, duration / 2);
+    }
+
+    void StartFade(float startAlpha, float endAlpha, float duration)
+    {
+        if (currentFade != null)
+        StopCoroutine(currentFade);
+
+        currentFade = StartCoroutine(ScreenFade(startAlpha, endAlpha, duration));
+    }
+
+    // Consider making this its own class - ScreenFader
+    IEnumerator ScreenFade(float startAlpha, float endAlpha, float duration)
     {
         float time = 0f;
 
-        while (time < oxygenGracePeriod)
+        while (time < duration)
         {
             time += Time.deltaTime;
-            float t = time / oxygenGracePeriod;
+            float t = time / duration;
 
-            Color color = fadeToBlack.color;
-                                // alpha
-            color.a = Mathf.Lerp(0, 1, t);
-            fadeToBlack.color = color;
+            SetFadeAlpha(Mathf.Lerp(startAlpha, endAlpha, t));
 
             yield return null;
         }
+
+        SetFadeAlpha(endAlpha);
     }
 }

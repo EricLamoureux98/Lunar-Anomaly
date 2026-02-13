@@ -2307,9 +2307,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
   oxygenUI50: {fileID: 1835885521}
   oxygenUI10: {fileID: 1390830960}
+  fadeToBlack: {fileID: 558059094}
+  oxygenBar: {fileID: 435307654}
   flashDuration: 2
   flashInterval: 0.25
-  oxygenBar: {fileID: 435307654}
 --- !u!1 &1087388742
 GameObject:
   m_ObjectHideFlags: 0
@@ -3442,8 +3443,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 558059093}
   - {fileID: 2014390320}
+  - {fileID: 558059093}
   - {fileID: 1835885522}
   - {fileID: 1390830961}
   m_Father: {fileID: 48571734}
@@ -4439,6 +4440,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 988392927802740686, guid: 35ac4db3dd21229419ae7e912615aa66, type: 3}
+      propertyPath: drainRate
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 988392927802740686, guid: 35ac4db3dd21229419ae7e912615aa66, type: 3}
       propertyPath: oxygenBar
       value: 
       objectReference: {fileID: 435307654}
@@ -4478,6 +4483,14 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 330585546}
+    - target: {fileID: 4624461531798685161, guid: 35ac4db3dd21229419ae7e912615aa66, type: 3}
+      propertyPath: walkSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4624461531798685161, guid: 35ac4db3dd21229419ae7e912615aa66, type: 3}
+      propertyPath: sprintSpeed
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 5520289281215148931, guid: 35ac4db3dd21229419ae7e912615aa66, type: 3}
       propertyPath: m_LocalPosition.x
       value: 113.20658

@@ -16,8 +16,9 @@ public class Oxygen : MonoBehaviour
     // Sent to PlayerState
     public static event Action OnOxygenDepleted; 
 
-    // Add eventually -> UIManager
-    //public static event Action<float> OnOxygenChanged;
+    // Sent to UIManager
+    public static event Action<float> OnOxygenChanged;
+    public static event Action OnOxygenReset;
 
     void OnEnable()
     {
@@ -59,7 +60,8 @@ public class Oxygen : MonoBehaviour
     void DrainOxygen()
     {
         currentOxygen -= drainRate * Time.deltaTime;
-        UIManager.Instance.UpdateOxygenBar(currentOxygen / startingOxygen);
+                                 // Sends fill %
+        OnOxygenChanged?.Invoke(currentOxygen / startingOxygen);
 
         if (currentOxygen <= 0) OxygenDepleted();
     }
@@ -69,7 +71,7 @@ public class Oxygen : MonoBehaviour
         if (currentOxygen < startingOxygen)
         {
             currentOxygen += refillRate * Time.deltaTime;          
-            UIManager.Instance.UpdateOxygenBar(currentOxygen / startingOxygen);
+            OnOxygenChanged?.Invoke(currentOxygen / startingOxygen);
         }
     }
 
@@ -98,12 +100,12 @@ public class Oxygen : MonoBehaviour
     {
         if (currentOxygen <= startingOxygen / 2f)
         {
-            UIManager.Instance.CheckOxygenWarnings(currentOxygen, startingOxygen);
+            //UIManager.Instance.CheckOxygenWarnings(currentOxygen, startingOxygen);
         }
         
         if (currentOxygen <= (startingOxygen * 0.1f))
         {
-            UIManager.Instance.CheckOxygenWarnings(currentOxygen, startingOxygen);
+            //UIManager.Instance.CheckOxygenWarnings(currentOxygen, startingOxygen);
         }
     }    
 
@@ -115,8 +117,9 @@ public class Oxygen : MonoBehaviour
     public void ResetOxygen()
     {
         currentOxygen = startingOxygen; 
-        UIManager.Instance.UpdateOxygenBar(startingOxygen);
-        UIManager.Instance.ResetOxygenWarnings();
+        //UIManager.Instance.UpdateOxygenBar(startingOxygen);
+        OnOxygenReset?.Invoke(); 
+        //UIManager.Instance.ResetOxygenWarnings();
         oxygenActive = true;
     }
 }
