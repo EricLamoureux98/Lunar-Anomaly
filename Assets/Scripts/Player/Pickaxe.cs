@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 
 public class Pickaxe : MonoBehaviour
 {
+    [SerializeField] ParticleSystem rockParticles;
     [SerializeField] SphereCollider sphereCollider;
     [SerializeField] float pickaxeDamage = 1f;
     [SerializeField] float miningCooldown = 0.5f;
@@ -91,6 +92,7 @@ public class Pickaxe : MonoBehaviour
         while (isMining && currentRock != null)
         {
             currentRock.DamageRock(pickaxeDamage);
+            if (rockParticles != null && !rockParticles.isPlaying) rockParticles.Play();
             yield return new WaitForSeconds(miningCooldown);
         }
 

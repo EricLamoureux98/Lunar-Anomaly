@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerState : MonoBehaviour
 {
-    [Header("Refernces")]
+    [Header("References")]
     [SerializeField] Airlock airlock;
     PlayerMovement playerMovement;
     Oxygen oxygen;

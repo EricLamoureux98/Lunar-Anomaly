@@ -1,5 +1,5 @@
-using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,14 +16,17 @@ public class UIManager : MonoBehaviour
     [SerializeField] float flashInterval = 0.25f;
     bool flashed50;
     bool flashed10;
-
     Coroutine currentFade;
+
+    [Header("Mining UI")]
+    [SerializeField] TextMeshProUGUI samplesCollectedText;
 
     void OnEnable()
     {
         Oxygen.OnOxygenChanged += UpdateOxygenUI;
         Oxygen.OnOxygenReset += ResetOxygenWarnings;
         PlayerState.OnPlayerDying += PlayerDying;
+        MiningManager.OnSampleObjectiveUpdate += UpdateMiningSampleUI;
     }
 
     void OnDisable()
@@ -31,6 +34,17 @@ public class UIManager : MonoBehaviour
         Oxygen.OnOxygenChanged -= UpdateOxygenUI;
         Oxygen.OnOxygenReset -= ResetOxygenWarnings;
         PlayerState.OnPlayerDying -= PlayerDying;
+        MiningManager.OnSampleObjectiveUpdate -= UpdateMiningSampleUI;
+    }
+
+    void Start()
+    {
+        UpdateMiningSampleUI(0, 4);
+    }
+
+    void UpdateMiningSampleUI(int samples, int remaining)
+    {
+        samplesCollectedText.text = string.Format("Samples collected: {0}/{1}", samples, remaining);
     }
 
     // Oxygen UI might be worth creating a new script
