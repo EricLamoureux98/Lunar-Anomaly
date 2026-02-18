@@ -43,12 +43,12 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Interact",
+                    "name": "Mine",
                     "type": "Button",
                     "id": "be37b738-6fe6-47ba-a572-a8873b8a726e",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "Hold",
+                    "interactions": "",
                     "initialStateCheck": false
                 },
                 {
@@ -228,11 +228,11 @@
                 {
                     "name": "",
                     "id": "a06bb7f2-b4d8-4947-9698-ad0c47afc15a",
-                    "path": "<Keyboard>/e",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Interact",
+                    "action": "Mine",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
