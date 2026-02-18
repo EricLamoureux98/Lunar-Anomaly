@@ -1,9 +1,11 @@
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Pickaxe : MonoBehaviour
 {
     [Header("References")]
+    [SerializeField] CinemachineImpulseSource impulseSource;
     [SerializeField] ParticleSystem rockParticles;
     [SerializeField] SphereCollider sphereCollider;
     [SerializeField] LayerMask rockLayer;
@@ -24,6 +26,7 @@ public class Pickaxe : MonoBehaviour
         {
             if (hit.TryGetComponent(out Rock rock))
             {
+                CameraShakeManager.Instance.CameraShake(impulseSource);
                 rock.DamageRock(pickaxeDamage);
                 rockHit = true;
             }
