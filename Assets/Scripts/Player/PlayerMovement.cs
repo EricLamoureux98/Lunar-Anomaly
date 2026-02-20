@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("References")]
     [SerializeField] Transform cam;
     [SerializeField] Transform orientation;
+    PlayerInput playerInput;
     GroundChecker groundChecker;
     Rigidbody rb;
 
@@ -25,12 +26,16 @@ public class PlayerMovement : MonoBehaviour
     bool exitingSlope;
     bool readyToJump;
     bool movementActive;
+    bool isSprinting;
+    bool jumpingHeld;
+    bool wasJumpingHeldLastFrame;
 
     // Add variable jump height
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        playerInput = GetComponent<PlayerInput>();
         groundChecker = GetComponent<GroundChecker>();
     }
 
@@ -39,6 +44,12 @@ public class PlayerMovement : MonoBehaviour
         movementActive = true;
         currentSpeed = walkSpeed;
         readyToJump = true;
+    }
+
+    void Update()
+    {
+        ReadInput();
+        HandleInputs();
     }
 
     void FixedUpdate()
@@ -91,12 +102,14 @@ public class PlayerMovement : MonoBehaviour
     {
         readyToJump = true;
         exitingSlope = false;
+        wasJumpingHeldLastFrame = false;
     }
 
     void ApplyJumpInput()
     {
         if (readyToJump && groundChecker.CoyoteReady() && groundChecker.IsGrounded)
         {
+            wasJumpingHeldLastFrame = true;
             readyToJump = false;
             ApplyJump();
             Invoke(nameof(ResetJump), jumpCooldown);
@@ -165,20 +178,27 @@ public class PlayerMovement : MonoBehaviour
         movementActive = active;
     }
 
-    public void Move(InputAction.CallbackContext context)
+    void ReadInput()
     {
-        moveInput = context.ReadValue<Vector2>();
+        moveInput = playerInput.MoveInput;
+        isSprinting = playerInput.SprintHeld;
+        jumpingHeld = playerInput.JumpHeld;
     }
 
-    public void Sprint(InputAction.CallbackContext context)
+    void HandleInputs()
     {
-        if (context.performed) currentSpeed = sprintSpeed;
+        if (isSprinting)
+        {
+            currentSpeed = sprintSpeed;
+        }
+        else
+        {
+            currentSpeed = walkSpeed;
+        }
 
-        if (context.canceled) currentSpeed = walkSpeed;
-    }
-
-    public void Jump(InputAction.CallbackContext context)
-    {
-        if (context.performed) ApplyJumpInput();
+        if (jumpingHeld && !wasJumpingHeldLastFrame)
+        {
+            ApplyJumpInput();
+        }
     }
 }

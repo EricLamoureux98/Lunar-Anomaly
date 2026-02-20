@@ -10,11 +10,25 @@ public class Pickaxe : MonoBehaviour
     [SerializeField] SphereCollider sphereCollider;
     [SerializeField] LayerMask rockLayer;
     [SerializeField] Animator anim;
+    PlayerInput playerInput;
 
     [Header("Mining")]
     [SerializeField] float pickaxeDamage = 1f;
+    bool isMining;
 
     const string MINING_BOOL = "IsMining";
+
+    void Awake()
+    {
+        playerInput = GetComponentInParent<PlayerInput>();
+        if (playerInput == null) Debug.Log("PlayerInput not found!");
+    }
+
+    void Update()
+    {
+        ReadInput();
+        HandleMiningInput();
+    }
 
     void CheckForRock()
     {
@@ -43,17 +57,21 @@ public class Pickaxe : MonoBehaviour
         CheckForRock();
     }
 
-    public void Mine(InputAction.CallbackContext context)
+    void HandleMiningInput()
     {
-        if (context.performed) 
+        if (isMining)
         {
             anim.SetBool(MINING_BOOL, true);
         }
-
-        if (context.canceled)
+        else
         {
             anim.SetBool(MINING_BOOL, false);
         }
+    }
+
+    void ReadInput()
+    {
+        isMining = playerInput.UseToolHeld;
     }
 }
 
@@ -64,5 +82,5 @@ public class Pickaxe : MonoBehaviour
 // Add basic animation - done
 // Run mine command with animation - done
 
-// Screen shake
+// Screen shake - done
 // different sounds for hitting/not mining rock

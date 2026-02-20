@@ -4937,6 +4937,7 @@ GameObject:
   - component: {fileID: 5520289281215148931}
   - component: {fileID: 7961070693707883161}
   - component: {fileID: 7351414823712553533}
+  - component: {fileID: 460813887139432588}
   - component: {fileID: 2206683905478849010}
   - component: {fileID: 3863893203420497876}
   - component: {fileID: 4624461531798685161}
@@ -5023,8 +5024,8 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4624461531798685161}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+      - m_Target: {fileID: 460813887139432588}
+        m_TargetAssemblyTypeName: PlayerInput, Assembly-CSharp
         m_MethodName: Move
         m_Mode: 0
         m_Arguments:
@@ -5039,8 +5040,8 @@ MonoBehaviour:
     m_ActionName: 'Player/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2206683905478849010}
-        m_TargetAssemblyTypeName: PlayerLook, Assembly-CSharp
+      - m_Target: {fileID: 460813887139432588}
+        m_TargetAssemblyTypeName: PlayerInput, Assembly-CSharp
         m_MethodName: Look
         m_Mode: 0
         m_Arguments:
@@ -5054,7 +5055,19 @@ MonoBehaviour:
     m_ActionId: 4271a14a-640b-402e-8897-3b3d025df44c
     m_ActionName: 'Player/Look[/Mouse/delta]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 460813887139432588}
+        m_TargetAssemblyTypeName: PlayerInput, Assembly-CSharp
+        m_MethodName: UseTool
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 223fa7d4-f232-4d65-bb00-2097de064c86
     m_ActionName: 'Player/Left Button[/Mouse/leftButton]'
   - m_PersistentCalls:
@@ -5063,9 +5076,9 @@ MonoBehaviour:
     m_ActionName: 'Player/Right Button[/Mouse/rightButton]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6344130051990304590}
-        m_TargetAssemblyTypeName: Pickaxe, Assembly-CSharp
-        m_MethodName: Mine
+      - m_Target: {fileID: 460813887139432588}
+        m_TargetAssemblyTypeName: PlayerInput, Assembly-CSharp
+        m_MethodName: SystemInteract
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5079,8 +5092,8 @@ MonoBehaviour:
     m_ActionName: 'Player/Interact[/Keyboard/e]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4624461531798685161}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+      - m_Target: {fileID: 460813887139432588}
+        m_TargetAssemblyTypeName: PlayerInput, Assembly-CSharp
         m_MethodName: Jump
         m_Mode: 0
         m_Arguments:
@@ -5095,8 +5108,8 @@ MonoBehaviour:
     m_ActionName: 'Player/Jump[/Keyboard/space]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4624461531798685161}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+      - m_Target: {fileID: 460813887139432588}
+        m_TargetAssemblyTypeName: PlayerInput, Assembly-CSharp
         m_MethodName: Sprint
         m_Mode: 0
         m_Arguments:
@@ -5114,6 +5127,18 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &460813887139432588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3831262497156072695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7a18f5b9135e6849a5b303ae7ed72f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInput
 --- !u!114 &2206683905478849010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10489,7 +10514,7 @@ PrefabInstance:
     - target: {fileID: -1461304994638716399, guid: bfb102e8c753ce544baefe289a5b05f1, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: c6b66583851f52847bd2e8bd54cde2b9, type: 2}
+      objectReference: {fileID: -876546973899608171, guid: bfb102e8c753ce544baefe289a5b05f1, type: 3}
     - target: {fileID: 919132149155446097, guid: bfb102e8c753ce544baefe289a5b05f1, type: 3}
       propertyPath: m_Name
       value: Pickaxe
