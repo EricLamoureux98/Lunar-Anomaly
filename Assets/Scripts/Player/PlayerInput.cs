@@ -13,7 +13,7 @@ public class PlayerInput : MonoBehaviour
     // Should a middle man script read this? 
     void LateUpdate()
     {
-        JumpHeld = false; // Add variable jump height 
+        //JumpHeld = false; // Add variable jump height 
         SystemInteractPressed = false;
     }
 
@@ -59,7 +59,7 @@ public class PlayerInput : MonoBehaviour
         if (context.performed)
             SystemInteractPressed = true;
 
-        if (context.canceled)
-            SystemInteractPressed = false;
+        // if (context.canceled)
+        //     SystemInteractPressed = false;
     }
 }

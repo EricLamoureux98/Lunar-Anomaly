@@ -26,7 +26,7 @@ public class UIManager : MonoBehaviour
         Oxygen.OnOxygenChanged += UpdateOxygenUI;
         Oxygen.OnOxygenReset += ResetOxygenWarnings;
         PlayerState.OnPlayerDying += PlayerDying;
-        MiningManager.OnSampleObjectiveUpdate += UpdateMiningSampleUI;
+        MiningManager.OnSamplesCarriedChanged += UpdateMiningSampleUI;
     }
 
     void OnDisable()
@@ -34,17 +34,18 @@ public class UIManager : MonoBehaviour
         Oxygen.OnOxygenChanged -= UpdateOxygenUI;
         Oxygen.OnOxygenReset -= ResetOxygenWarnings;
         PlayerState.OnPlayerDying -= PlayerDying;
-        MiningManager.OnSampleObjectiveUpdate -= UpdateMiningSampleUI;
+        MiningManager.OnSamplesCarriedChanged -= UpdateMiningSampleUI;
     }
 
     void Start()
     {
-        UpdateMiningSampleUI(0, 4);
+        UpdateMiningSampleUI(0);
     }
 
-    void UpdateMiningSampleUI(int samples, int remaining)
+    void UpdateMiningSampleUI(int samples)
     {
-        samplesCollectedText.text = string.Format("Samples collected: {0}/{1}", samples, remaining);
+        //samplesCollectedText.text = string.Format("Samples collected: {0}/{1}", samples, remaining);
+        samplesCollectedText.text = string.Format("Samples collected: {0}", samples);
     }
 
     // Oxygen UI might be worth creating a new script

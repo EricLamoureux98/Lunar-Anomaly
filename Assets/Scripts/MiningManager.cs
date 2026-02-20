@@ -3,25 +3,13 @@ using UnityEngine;
 
 public class MiningManager : MonoBehaviour
 {
-    //[SerializeField] GameObject[] rocks;
-    [SerializeField] int samplesRequired;
+    public int samplesCollected { get; private set; }
 
-    int samplesCollected;
-
-    // To UIManager                     // Consider updating this name
-    public static event Action<int, int> OnSampleObjectiveUpdate;
-
-    //float rocksRemaining;
-
-    void OnValidate()
-    {
-        //rocksRemaining = rocks.Length;
-        //Debug.Log("Rocks remaining: " + rocksRemaining);
-    }
+    // To UIManager                     
+    public static event Action<int> OnSamplesCarriedChanged;
 
     void OnEnable()
     {
-        //Rock.OnRockDestroyed += RockDestroyed;
         RockSample.OnRockSampleCollected += SampleCollected;
     }
 
@@ -33,26 +21,22 @@ public class MiningManager : MonoBehaviour
 
     void Start()
     {
-        //rocksRemaining = rocks.Length;
-        OnSampleObjectiveUpdate?.Invoke(samplesCollected, samplesRequired);
         samplesCollected = 0;
+        OnSamplesCarriedChanged?.Invoke(samplesCollected);
     }
-
-    // void RockDestroyed(Rock rock)
-    // {
-    //     rocksRemaining--;
-    //     Debug.Log("Rocks remaining: " + rocksRemaining);
-    // }   
 
     void SampleCollected()
     {
-        if (samplesCollected < samplesRequired)
-        {
-            samplesCollected++;
-            OnSampleObjectiveUpdate?.Invoke(samplesCollected, samplesRequired);
-        }
+        samplesCollected++;
+        OnSamplesCarriedChanged?.Invoke(samplesCollected);
+    }
+
+    public void ClearSamples()
+    {
+        samplesCollected = 0;
+        OnSamplesCarriedChanged?.Invoke(samplesCollected);
     }
 }
 
-// Maybe different rock types
+// Different sample/rock types
 
