@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    public static UIManager Instance { get; private set; }
+    //public static UIManager Instance { get; private set; }
 
     [Header("Oxygen UI")]
     [SerializeField] GameObject oxygenUI50;
@@ -21,12 +21,16 @@ public class UIManager : MonoBehaviour
     [Header("Mining UI")]
     [SerializeField] TextMeshProUGUI samplesCollectedText;
 
+    [Header("Terminal UI")]
+    [SerializeField] GameObject terminalInteractText;
+
     void OnEnable()
     {
         Oxygen.OnOxygenChanged += UpdateOxygenUI;
         Oxygen.OnOxygenReset += ResetOxygenWarnings;
         PlayerState.OnPlayerDying += PlayerDying;
         MiningManager.OnSamplesCarriedChanged += UpdateMiningSampleUI;
+        Terminal.OnTerminalInteract += TerminalInteract;
     }
 
     void OnDisable()
@@ -35,6 +39,7 @@ public class UIManager : MonoBehaviour
         Oxygen.OnOxygenReset -= ResetOxygenWarnings;
         PlayerState.OnPlayerDying -= PlayerDying;
         MiningManager.OnSamplesCarriedChanged -= UpdateMiningSampleUI;
+        Terminal.OnTerminalInteract += TerminalInteract;
     }
 
     void Start()
@@ -110,6 +115,11 @@ public class UIManager : MonoBehaviour
     void PlayerDying(float fadeLength)
     {
         StartCoroutine(DeathSequence(fadeLength));
+    }
+
+    void TerminalInteract(bool value)
+    {
+        terminalInteractText.SetActive(value);
     }
 
     IEnumerator DeathSequence(float duration)

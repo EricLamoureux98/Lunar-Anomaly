@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Terminal : MonoBehaviour
@@ -5,6 +6,7 @@ public class Terminal : MonoBehaviour
     [SerializeField] PlayerInput playerInput;
     [SerializeField] MiningManager miningManager;
     [SerializeField] LayerMask playerLayer;
+    [SerializeField] Animator anim;
 
     [Header("Rock Samples")]
     [SerializeField] int samplesRequired;
@@ -17,6 +19,9 @@ public class Terminal : MonoBehaviour
 
     bool wasDepositingLastFrame;
 
+    // To UIManager
+    public static event Action<bool> OnTerminalInteract;
+
     void Update()
     {
         ReadInput();
@@ -27,13 +32,17 @@ public class Terminal : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (!other.gameObject.CompareTag("Player")) return;
+        OnTerminalInteract?.Invoke(true);
         terminalActive = true;
+        anim.SetBool("isActive", true);
     }
 
     void OnTriggerExit(Collider other)
     {
         if (!other.gameObject.CompareTag("Player")) return;
+        OnTerminalInteract?.Invoke(false);
         terminalActive = false;
+        anim.SetBool("isActive", false);
     }
 
     void HandleDepositInput()

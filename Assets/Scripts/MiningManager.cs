@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class MiningManager : MonoBehaviour
 {
+    [SerializeField] int debugSamplesCollected;
     public int samplesCollected { get; private set; }
 
     // To UIManager                     
@@ -15,7 +16,6 @@ public class MiningManager : MonoBehaviour
 
     void OnDisable()
     {
-        //Rock.OnRockDestroyed -= RockDestroyed;
         RockSample.OnRockSampleCollected -= SampleCollected;
     }
 
@@ -23,6 +23,17 @@ public class MiningManager : MonoBehaviour
     {
         samplesCollected = 0;
         OnSamplesCarriedChanged?.Invoke(samplesCollected);
+
+        DebugSamplesCollected();
+    }
+
+    void DebugSamplesCollected()
+    {
+        if (debugSamplesCollected > 0)
+        {
+            samplesCollected = debugSamplesCollected;
+            OnSamplesCarriedChanged?.Invoke(samplesCollected);
+        }
     }
 
     void SampleCollected()
