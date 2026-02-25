@@ -1,103 +1,113 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using LunarAnomaly.Gameplay;
 
-public class Terminal : MonoBehaviour
+namespace LunarAnomaly.UI
 {
-    [SerializeField] PlayerInput playerInput;
-    [SerializeField] MiningManager miningManager;
-    [SerializeField] LayerMask playerLayer;
-    [SerializeField] Animator anim;
-
-    [Header("Rock Samples")]
-    [SerializeField] int samplesRequired;
-    
-    // public for testing
-    public int samplesDelivered;
-    public bool sampleObjectiveComplete;
-    public bool terminalActive; 
-    public bool playerDepositing;
-
-    bool wasDepositingLastFrame;
-
-    // To UIManager
-    public static event Action<bool> OnTerminalInteract;
-
-    void Update()
+    public class Terminal : MonoBehaviour
     {
-        ReadInput();
-        HandleDepositInput();
-        wasDepositingLastFrame = playerDepositing;
-    }
+        [SerializeField] PlayerInput playerInput;
+        [SerializeField] MiningManager miningManager;
+        [SerializeField] LayerMask playerLayer;
+        [SerializeField] Animator anim;
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (!other.gameObject.CompareTag("Player")) return;
-        OnTerminalInteract?.Invoke(true);
-        terminalActive = true;
-        anim.SetBool("isActive", true);
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (!other.gameObject.CompareTag("Player")) return;
-        OnTerminalInteract?.Invoke(false);
-        terminalActive = false;
-        anim.SetBool("isActive", false);
-    }
-
-    void HandleDepositInput()
-    {
-        if (terminalActive && playerDepositing && !wasDepositingLastFrame) 
-        {
-            DepositSamples();
-        }
-    }
-
-    void DepositSamples()
-    {
-        if (!terminalActive) return;
-        if (sampleObjectiveComplete) return;
-
-        int samples = miningManager.samplesCollected;
+        [Header("Rock Samples")]
+        [SerializeField] int samplesRequired;
         
-        if (samples <= 0) return;
+        // public for testing
+        public int samplesDelivered;
+        public bool sampleObjectiveComplete;
+        public bool terminalActive; 
+        public bool playerDepositing;
 
-        AddDeliveredSamples(samples);
-        miningManager.ClearSamples(); // <--- Consider not clearing all samples later
-    }
+        bool wasDepositingLastFrame;
 
-    void AddDeliveredSamples(int amount)
-    {
-        samplesDelivered += amount;
+        // To UIManager
+        public static event Action<bool> OnTerminalInteract;
 
-        Debug.Log($"Samples: {samplesDelivered} / {samplesRequired}");
-
-        if (samplesDelivered >= samplesRequired)
+        void Update()
         {
-            CompleteObjectives();
+            ReadInput();
+            HandleDepositInput();
+            wasDepositingLastFrame = playerDepositing;
         }
-    }
 
-    void CompleteObjectives()
-    {
-        sampleObjectiveComplete = true;
-        Debug.Log("Sample objective complete!");
-    }
+        void OnTriggerEnter(Collider other)
+        {
+            if (!other.gameObject.CompareTag("Player")) return;
+            OnTerminalInteract?.Invoke(true);
+            terminalActive = true;
+            anim.SetBool("isActive", true);
+        }
 
-    void ReadInput()
-    {
-        playerDepositing = playerInput.SystemInteractPressed;
-    }
+        void OnTriggerExit(Collider other)
+        {
+            if (!other.gameObject.CompareTag("Player")) return;
+            OnTerminalInteract?.Invoke(false);
+            terminalActive = false;
+            anim.SetBool("isActive", false);
+        }
 
-    void OnDrawGizmos()
-    {
-        SphereCollider terminalCollider = GetComponent<SphereCollider>();
-        float worldRadius = terminalCollider.radius * terminalCollider.transform.lossyScale.x;
+        void HandleDepositInput()
+        {
+            if (terminalActive && playerDepositing && !wasDepositingLastFrame) 
+            {
+                DepositSamples();
+            }
+        }
 
-        if (terminalCollider == null) return;
+        void DepositSamples()
+        {
+            if (!terminalActive) return;
+            if (sampleObjectiveComplete) return;
 
-        Gizmos.color = terminalActive ? Color.green : Color.red;
+            int samples = miningManager.samplesCollected;
+            
+            if (samples <= 0) return;
 
-        Gizmos.DrawWireSphere(terminalCollider.transform.position, worldRadius);
+            AddDeliveredSamples(samples);
+            miningManager.ClearSamples(); // <--- Consider not clearing all samples later
+        }
+
+        void AddDeliveredSamples(int amount)
+        {
+            samplesDelivered += amount;
+
+            Debug.Log($"Samples: {samplesDelivered} / {samplesRequired}");
+
+            if (samplesDelivered >= samplesRequired)
+            {
+                CompleteObjectives();
+            }
+        }
+
+        void CompleteObjectives()
+        {
+            sampleObjectiveComplete = true;
+            Debug.Log("Sample objective complete!");
+        }
+
+        void ReadInput()
+        {
+            // Disabled for new UI system
+            //playerDepositing = playerInput.SystemInteractPressed;
+
+            // Move this out of here!!!!!!
+            //playerInput.SwitchCurrentActionMap("UI");
+            Debug.Log(playerInput.currentActionMap);
+        }
+
+        void OnDrawGizmos()
+        {
+            SphereCollider terminalCollider = GetComponent<SphereCollider>();
+            float worldRadius = terminalCollider.radius * terminalCollider.transform.lossyScale.x;
+
+            if (terminalCollider == null) return;
+
+            Gizmos.color = terminalActive ? Color.green : Color.red;
+
+            Gizmos.DrawWireSphere(terminalCollider.transform.position, worldRadius);
+        }
     }
 }

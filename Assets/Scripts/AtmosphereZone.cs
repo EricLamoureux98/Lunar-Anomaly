@@ -1,20 +1,23 @@
 using System;
 using UnityEngine;
 
-public class AtmosphereZone : MonoBehaviour
+namespace LunarAnomaly.Gameplay
 {
-    [SerializeField] bool isPressurized;
-
-    public bool IsPressurized => isPressurized;
-
-    // Sent to AtmosphereTracker
-    public static event Action<bool> OnZonePressureChanged;
-
-    public void SetPressuized(bool value)
+    public class AtmosphereZone : MonoBehaviour
     {
-        if (isPressurized == value) return;
+        [SerializeField] bool isPressurized;
 
-        isPressurized = value;
-        OnZonePressureChanged?.Invoke(isPressurized);
+        public bool IsPressurized => isPressurized;
+
+        // Sent to AtmosphereTracker
+        public static event Action<bool> OnZonePressureChanged;
+
+        public void SetPressuized(bool value)
+        {
+            if (isPressurized == value) return;
+
+            isPressurized = value;
+            OnZonePressureChanged?.Invoke(isPressurized);
+        }
     }
 }

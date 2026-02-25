@@ -1,41 +1,44 @@
 using UnityEngine;
 
-public class AirlockSensor : MonoBehaviour
+namespace LunarAnomaly.Gameplay
 {
-    public enum SensorType {Interior, Exterior, Inside}
-
-    [SerializeField] SensorType sensorType;
-
-    Airlock airlock;
-
-    void Awake()
+    public class AirlockSensor : MonoBehaviour
     {
-        airlock = GetComponentInParent<Airlock>();
+        public enum SensorType {Interior, Exterior, Inside}
 
-        if (airlock == null) Debug.Log("airlock not found");
-    }
+        [SerializeField] SensorType sensorType;
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (!other.CompareTag("Player")) return;
+        Airlock airlock;
 
-        switch (sensorType)
+        void Awake()
         {
-            case SensorType.Interior:
-                airlock.EnterFromInterior();
-                break;
+            airlock = GetComponentInParent<Airlock>();
 
-            case SensorType.Exterior:
-                airlock.EnterFromExterior();
-                break;
+            if (airlock == null) Debug.Log("airlock not found");
+        }
 
-            case SensorType.Inside:
-                airlock.PlayerInsideAirlock();
-                break;
+        void OnTriggerEnter(Collider other)
+        {
+            if (!other.CompareTag("Player")) return;
 
-            default:
-                Debug.Log("Unknown state");
-                break;
+            switch (sensorType)
+            {
+                case SensorType.Interior:
+                    airlock.EnterFromInterior();
+                    break;
+
+                case SensorType.Exterior:
+                    airlock.EnterFromExterior();
+                    break;
+
+                case SensorType.Inside:
+                    airlock.PlayerInsideAirlock();
+                    break;
+
+                default:
+                    Debug.Log("Unknown state");
+                    break;
+            }
         }
     }
 }

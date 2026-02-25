@@ -1,79 +1,83 @@
+using LunarAnomaly.Gameplay;
+using LunarAnomaly.Input;
 using Unity.Cinemachine;
 using UnityEngine;
 
-public class Pickaxe : MonoBehaviour
+namespace LunarAnomaly.Player
 {
-    [Header("References")]
-    [SerializeField] CinemachineImpulseSource impulseSource;
-    [SerializeField] ParticleSystem rockParticles;
-    [SerializeField] SphereCollider sphereCollider;
-    [SerializeField] LayerMask rockLayer;
-    [SerializeField] Animator anim;
-    PlayerInput playerInput;
-
-    [Header("Mining")]
-    [SerializeField] float pickaxeDamage = 1f;
-    bool isMining;
-
-    const string MINING_BOOL = "IsMining";
-
-    void Awake()
+    public class Pickaxe : MonoBehaviour
     {
-        playerInput = GetComponentInParent<PlayerInput>();
-        if (playerInput == null) Debug.Log("PlayerInput not found!");
-    }
+        [Header("References")]
+        [SerializeField] CinemachineImpulseSource impulseSource;
+        [SerializeField] ParticleSystem rockParticles;
+        [SerializeField] SphereCollider sphereCollider;
+        [SerializeField] LayerMask rockLayer;
+        [SerializeField] Animator anim;
+        InputHandler inputHandler;
 
-    void Update()
-    {
-        ReadInput();
-        HandleMiningInput();
-    }
+        [Header("Mining")]
+        [SerializeField] float pickaxeDamage = 1f;
+        bool isMining;
 
-    void CheckForRock()
-    {
-        bool rockHit = false;
+        const string MINING_BOOL = "IsMining";
 
-        Collider[] hits = Physics.OverlapSphere(sphereCollider.transform.position, sphereCollider.radius, rockLayer);
-
-        foreach (var hit in hits)
+        void Awake()
         {
-            if (hit.TryGetComponent(out Rock rock))
+            inputHandler = GetComponentInParent<InputHandler>();
+            if (inputHandler == null) Debug.Log("InputHandler not found!");
+        }
+
+        void Update()
+        {
+            ReadInput();
+            HandleMiningInput();
+        }
+
+        void CheckForRock()
+        {
+            bool rockHit = false;
+
+            Collider[] hits = Physics.OverlapSphere(sphereCollider.transform.position, sphereCollider.radius, rockLayer);
+
+            foreach (var hit in hits)
             {
-                CameraShakeManager.Instance.CameraShake(impulseSource);
-                rock.DamageRock(pickaxeDamage);
-                rockHit = true;
+                if (hit.TryGetComponent(out Rock rock))
+                {
+                    CameraShakeManager.Instance.CameraShake(impulseSource);
+                    rock.DamageRock(pickaxeDamage);
+                    rockHit = true;
+                }
+            }
+
+            if (rockHit && rockParticles != null)
+            {
+                rockParticles.Play();
             }
         }
 
-        if (rockHit && rockParticles != null)
+        public void OnPickImpact()
         {
-            rockParticles.Play();
+            CheckForRock();
         }
-    }
 
-    public void OnPickImpact()
-    {
-        CheckForRock();
-    }
-
-    void HandleMiningInput()
-    {
-        if (isMining)
+        void HandleMiningInput()
         {
-            anim.SetBool(MINING_BOOL, true);
+            if (isMining)
+            {
+                anim.SetBool(MINING_BOOL, true);
+            }
+            else
+            {
+                anim.SetBool(MINING_BOOL, false);
+            }
         }
-        else
-        {
-            anim.SetBool(MINING_BOOL, false);
-        }
-    }
 
-    void ReadInput()
-    {
-        isMining = playerInput.UseToolHeld;
+        void ReadInput()
+        {
+            isMining = inputHandler.UseToolHeld;
+        }
     }
 }
-
 // NOTES
 
 // Allow hold to mine - done

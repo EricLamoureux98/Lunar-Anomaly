@@ -1,17 +1,20 @@
 using System;
 using UnityEngine;
 
-public class RockSample : MonoBehaviour
+namespace LunarAnomaly.Gameplay
 {
-    // To MiningManager
-    public static event Action OnRockSampleCollected;
-
-    void OnCollisionEnter(Collision collision)
+    public class RockSample : MonoBehaviour
     {
-        if (collision.gameObject.CompareTag("Player"))
+        // To MiningManager
+        public static event Action OnRockSampleCollected;
+
+        void OnCollisionEnter(Collision collision)
         {
-            OnRockSampleCollected?.Invoke();
-            Destroy(gameObject);
+            if (collision.gameObject.CompareTag("Player"))
+            {
+                OnRockSampleCollected?.Invoke();
+                Destroy(gameObject);
+            }
         }
     }
 }

@@ -1,204 +1,208 @@
+using LunarAnomaly.Input;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerMovement : MonoBehaviour
+namespace LunarAnomaly.Player
 {
-    [Header("References")]
-    [SerializeField] Transform cam;
-    [SerializeField] Transform orientation;
-    PlayerInput playerInput;
-    GroundChecker groundChecker;
-    Rigidbody rb;
-
-    [Header("Movement")]
-    [SerializeField] float walkSpeed;
-    [SerializeField] float sprintSpeed;
-    [SerializeField] float jumpHeight;
-    [SerializeField] float groundDrag;
-    [SerializeField] float airDrag = 0.05f;
-    [SerializeField] float airControlSpeed;
-    [SerializeField] float extraFallForce;
-    [SerializeField] float jumpCooldown;
-    Vector3 moveDirection;
-    Vector2 moveInput;
-    float currentSpeed;
-    
-    bool exitingSlope;
-    bool readyToJump;
-    bool movementActive;
-    bool isSprinting;
-    bool jumpingHeld;
-    bool wasJumpingHeldLastFrame;
-
-    // Add variable jump height
-
-    void Awake()
+    public class PlayerMovement : MonoBehaviour
     {
-        rb = GetComponent<Rigidbody>();
-        playerInput = GetComponent<PlayerInput>();
-        groundChecker = GetComponent<GroundChecker>();
-    }
+        [Header("References")]
+        [SerializeField] Transform cam;
+        [SerializeField] Transform orientation;
+        InputHandler inputHandler;
+        GroundChecker groundChecker;
+        Rigidbody rb;
 
-    void Start()
-    {
-        movementActive = true;
-        currentSpeed = walkSpeed;
-        readyToJump = true;
-    }
-
-    void Update()
-    {
-        ReadInput();
-        HandleInputs();
-    }
-
-    void FixedUpdate()
-    {
-        if (!movementActive) return; 
-
-        ApplyExtraGravity();
-        MovePlayer();
-        HandleDrag();
-    }
-
-    void MovePlayer()
-    {
-        Vector3 camForward = cam.forward;
-        Vector3 camRight = cam.right;
-
-        camForward.y = 0f;
-        camRight.y = 0f;
-
-        orientation.forward = camForward.normalized;
-        orientation.right = camRight.normalized;
-
-        moveDirection = orientation.forward * moveInput.y + orientation.right * moveInput.x; 
+        [Header("Movement")]
+        [SerializeField] float walkSpeed;
+        [SerializeField] float sprintSpeed;
+        [SerializeField] float jumpHeight;
+        [SerializeField] float groundDrag;
+        [SerializeField] float airDrag = 0.05f;
+        [SerializeField] float airControlSpeed;
+        [SerializeField] float extraFallForce;
+        [SerializeField] float jumpCooldown;
+        Vector3 moveDirection;
+        Vector2 moveInput;
+        float currentSpeed;
         
-        if (groundChecker.IsStandingOnSlope() && !exitingSlope)
+        bool exitingSlope;
+        bool readyToJump;
+        bool movementActive;
+        bool isSprinting;
+        bool jumpingHeld;
+        bool wasJumpingHeldLastFrame;
+
+        // Add variable jump height
+
+        void Awake()
         {
-            HandleSlopeMovement();
+            rb = GetComponent<Rigidbody>();
+            inputHandler = GetComponent<InputHandler>();
+            groundChecker = GetComponent<GroundChecker>();
         }
-        else if (groundChecker.IsGrounded)
+
+        void Start()
         {
-            HandleGroundMovement();
-        }
-        else if (!groundChecker.IsGrounded)
-        {
-            HandleAirMovement();
-        }
-    }
-
-    void ApplyJump()
-    {
-        exitingSlope = true;
-
-        // Reset y velocity - Makes jump height consistent
-        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z); // Directly setting velocity – overrides physics
-
-        rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);
-    }
-
-    void ResetJump()
-    {
-        readyToJump = true;
-        exitingSlope = false;
-        wasJumpingHeldLastFrame = false;
-    }
-
-    void ApplyJumpInput()
-    {
-        if (readyToJump && groundChecker.CoyoteReady() && groundChecker.IsGrounded)
-        {
-            wasJumpingHeldLastFrame = true;
-            readyToJump = false;
-            ApplyJump();
-            Invoke(nameof(ResetJump), jumpCooldown);
-        }           
-    }
-
-    void HandleDrag()
-    {
-        if(groundChecker.IsGrounded)
-        {
-            rb.linearDamping = groundDrag;
-        }
-        else
-        {
-            rb.linearDamping = airDrag;
-        }
-    }
-
-    void HandleGroundMovement()
-    {
-        rb.AddForce(moveDirection.normalized * currentSpeed * 10f, ForceMode.Force);
-        
-        // Extra downward force to stick to ground
-        rb.AddForce(Vector3.down * 2f, ForceMode.Force);
-        // if (groundChecker.IsGrounded && rb.linearVelocity.y > 0f)
-        // {
-        //     rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-        // }
-    }
-
-    void HandleSlopeMovement()
-    {        
-        Vector3 slopeDir = groundChecker.GetSlopeMoveDirection(moveDirection);
-
-        rb.AddForce(slopeDir * currentSpeed * 10, ForceMode.Force);
-
-        // Stick to slope
-        if (rb.linearVelocity.y > 0)
-        {
-            rb.AddForce(Vector3.down * 10f, ForceMode.Force);
-        }
-    }
-
-    void HandleAirMovement()
-    {
-        Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-
-        // Prevents constant acceleration
-        if (horizontalVel.magnitude < currentSpeed)
-        {
-            rb.AddForce(moveDirection.normalized * currentSpeed * 10f * airControlSpeed, ForceMode.Force);
-        }        
-    }
-
-    void ApplyExtraGravity()
-    {
-        // Stronger gravity while falling
-        if (rb.linearVelocity.y < 0)
-        {
-            rb.AddForce(Vector3.down * extraFallForce, ForceMode.Force);           
-        }
-    }
-
-    public void SetActive(bool active)
-    {
-        movementActive = active;
-    }
-
-    void ReadInput()
-    {
-        moveInput = playerInput.MoveInput;
-        isSprinting = playerInput.SprintHeld;
-        jumpingHeld = playerInput.JumpHeld;
-    }
-
-    void HandleInputs()
-    {
-        if (isSprinting)
-        {
-            currentSpeed = sprintSpeed;
-        }
-        else
-        {
+            movementActive = true;
             currentSpeed = walkSpeed;
+            readyToJump = true;
         }
 
-        if (jumpingHeld && !wasJumpingHeldLastFrame)
+        void Update()
         {
-            ApplyJumpInput();
+            ReadInput();
+            HandleInputs();
+        }
+
+        void FixedUpdate()
+        {
+            if (!movementActive) return; 
+
+            ApplyExtraGravity();
+            MovePlayer();
+            HandleDrag();
+        }
+
+        void MovePlayer()
+        {
+            Vector3 camForward = cam.forward;
+            Vector3 camRight = cam.right;
+
+            camForward.y = 0f;
+            camRight.y = 0f;
+
+            orientation.forward = camForward.normalized;
+            orientation.right = camRight.normalized;
+
+            moveDirection = orientation.forward * moveInput.y + orientation.right * moveInput.x; 
+            
+            if (groundChecker.IsStandingOnSlope() && !exitingSlope)
+            {
+                HandleSlopeMovement();
+            }
+            else if (groundChecker.IsGrounded)
+            {
+                HandleGroundMovement();
+            }
+            else if (!groundChecker.IsGrounded)
+            {
+                HandleAirMovement();
+            }
+        }
+
+        void ApplyJump()
+        {
+            exitingSlope = true;
+
+            // Reset y velocity - Makes jump height consistent
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z); // Directly setting velocity – overrides physics
+
+            rb.AddForce(transform.up * jumpHeight, ForceMode.Impulse);
+        }
+
+        void ResetJump()
+        {
+            readyToJump = true;
+            exitingSlope = false;
+            wasJumpingHeldLastFrame = false;
+        }
+
+        void ApplyJumpInput()
+        {
+            if (readyToJump && groundChecker.CoyoteReady() && groundChecker.IsGrounded)
+            {
+                wasJumpingHeldLastFrame = true;
+                readyToJump = false;
+                ApplyJump();
+                Invoke(nameof(ResetJump), jumpCooldown);
+            }           
+        }
+
+        void HandleDrag()
+        {
+            if(groundChecker.IsGrounded)
+            {
+                rb.linearDamping = groundDrag;
+            }
+            else
+            {
+                rb.linearDamping = airDrag;
+            }
+        }
+
+        void HandleGroundMovement()
+        {
+            rb.AddForce(moveDirection.normalized * currentSpeed * 10f, ForceMode.Force);
+            
+            // Extra downward force to stick to ground
+            rb.AddForce(Vector3.down * 2f, ForceMode.Force);
+            // if (groundChecker.IsGrounded && rb.linearVelocity.y > 0f)
+            // {
+            //     rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+            // }
+        }
+
+        void HandleSlopeMovement()
+        {        
+            Vector3 slopeDir = groundChecker.GetSlopeMoveDirection(moveDirection);
+
+            rb.AddForce(slopeDir * currentSpeed * 10, ForceMode.Force);
+
+            // Stick to slope
+            if (rb.linearVelocity.y > 0)
+            {
+                rb.AddForce(Vector3.down * 10f, ForceMode.Force);
+            }
+        }
+
+        void HandleAirMovement()
+        {
+            Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+
+            // Prevents constant acceleration
+            if (horizontalVel.magnitude < currentSpeed)
+            {
+                rb.AddForce(moveDirection.normalized * currentSpeed * 10f * airControlSpeed, ForceMode.Force);
+            }        
+        }
+
+        void ApplyExtraGravity()
+        {
+            // Stronger gravity while falling
+            if (rb.linearVelocity.y < 0)
+            {
+                rb.AddForce(Vector3.down * extraFallForce, ForceMode.Force);           
+            }
+        }
+
+        public void SetActive(bool active)
+        {
+            movementActive = active;
+        }
+
+        void ReadInput()
+        {
+            moveInput = inputHandler.MoveInput;
+            isSprinting = inputHandler.SprintHeld;
+            jumpingHeld = inputHandler.JumpHeld;
+        }
+
+        void HandleInputs()
+        {
+            if (isSprinting)
+            {
+                currentSpeed = sprintSpeed;
+            }
+            else
+            {
+                currentSpeed = walkSpeed;
+            }
+
+            if (jumpingHeld && !wasJumpingHeldLastFrame)
+            {
+                ApplyJumpInput();
+            }
         }
     }
 }

@@ -3,147 +3,150 @@ using System.Collections;
 
 using UnityEngine;
 
-public class Airlock : MonoBehaviour
+namespace LunarAnomaly.Gameplay
 {
-    [SerializeField] Animator animExt;
-    [SerializeField] Animator animInt;
-    [SerializeField] AtmosphereZone atmosphereZone;
-    [SerializeField] float pressurizationTime = 3f;
-
-    bool isCycling = false;
-    bool playerInside = false;
-    public bool cancelCycle; // Use this if/when the player is killed or level reset etc
-
-    [SerializeField] bool testEnterFromExterior = false;
-    [SerializeField] bool testEnterFromInterior = false;
-
-    void Awake()
+    public class Airlock : MonoBehaviour
     {
-        atmosphereZone = GetComponentInChildren<AtmosphereZone>();
-        if (atmosphereZone == null) Debug.Log("Atmosphere zone not found");
-    }
+        [SerializeField] Animator animExt;
+        [SerializeField] Animator animInt;
+        [SerializeField] AtmosphereZone atmosphereZone;
+        [SerializeField] float pressurizationTime = 3f;
 
-    void Update()
-    {
-        AirlockTesting();
-    }
+        bool isCycling = false;
+        bool playerInside = false;
+        public bool cancelCycle; // Use this if/when the player is killed or level reset etc
 
-    public void EnterFromExterior()
-    {
-        if (isCycling) return;
-        StartCoroutine(CycleFromExterior());
-    }
+        [SerializeField] bool testEnterFromExterior = false;
+        [SerializeField] bool testEnterFromInterior = false;
 
-    IEnumerator CycleFromExterior()
-    {
-        isCycling = true;
-
-        // Ensure interior is closed
-        animInt.SetBool("IsOpen", false);
-        //Debug.Log("Interior closing");
-        yield return new WaitForSeconds(1f);
-
-        // Open exterior
-        animExt.SetBool("IsOpen", true);
-        //Debug.Log("Exterior opening");
-        yield return new WaitForSeconds(2f);
-
-        // Check if player has entered
-        yield return new WaitUntil(() => playerInside || cancelCycle);
-
-        if (cancelCycle)
+        void Awake()
         {
-            ResetAirlock();
-            yield break; // End coroutine early if cancelled
+            atmosphereZone = GetComponentInChildren<AtmosphereZone>();
+            if (atmosphereZone == null) Debug.Log("Atmosphere zone not found");
         }
 
-        // Close exterior
-        animExt.SetBool("IsOpen", false);
-        //Debug.Log("Exterior closing");
-        yield return new WaitForSeconds(pressurizationTime);
-
-        // Pressurize chamber
-        atmosphereZone.SetPressuized(true);
-
-        // Open interior
-        animInt.SetBool("IsOpen", true);
-        //Debug.Log("Interior opening");
-
-        isCycling = false;
-        playerInside = false;
-    }
-
-    // Can this be optimized? Not D.R.Y
-    public void EnterFromInterior()
-    {
-        if (isCycling) return;
-        StartCoroutine(CycleFromInterior());
-    }
-
-    IEnumerator CycleFromInterior()
-    {
-        isCycling = true;
-
-        // Ensure exterior is closed
-        animExt.SetBool("IsOpen", false);
-        yield return new WaitForSeconds(1f);
-
-        // Open interior
-        animInt.SetBool("IsOpen", true);
-        yield return new WaitForSeconds(2f);
-
-        // Check if player has entered
-        yield return new WaitUntil(() => playerInside || cancelCycle);
-
-        if (cancelCycle)
+        void Update()
         {
-            ResetAirlock();
-            yield break;
+            AirlockTesting();
         }
 
-        // Close interior
-        animInt.SetBool("IsOpen", false);
-        yield return new WaitForSeconds(pressurizationTime);
-
-        // Pressurize chamber
-        atmosphereZone.SetPressuized(false);
-
-        // Open exterior
-        animExt.SetBool("IsOpen", true);
-
-        isCycling = false;
-        playerInside = false;
-    }
-
-    public void PlayerInsideAirlock()
-    {
-        Debug.Log("Player inside airlock");
-        playerInside = true;
-    }
-
-    public void ResetAirlock()
-    {
-        atmosphereZone.SetPressuized(true); // This needs to be smarter
-        animExt.SetBool("IsOpen", false);
-        animInt.SetBool("IsOpen", false);
-
-        isCycling = false;
-        playerInside = false;
-        cancelCycle = false;
-    }
-
-    void AirlockTesting()
-    {
-        if (testEnterFromExterior)
+        public void EnterFromExterior()
         {
-            testEnterFromExterior = false;
-            EnterFromExterior();
+            if (isCycling) return;
+            StartCoroutine(CycleFromExterior());
         }
 
-        if (testEnterFromInterior)
+        IEnumerator CycleFromExterior()
         {
-            testEnterFromInterior = false;
-            EnterFromInterior();
+            isCycling = true;
+
+            // Ensure interior is closed
+            animInt.SetBool("IsOpen", false);
+            //Debug.Log("Interior closing");
+            yield return new WaitForSeconds(1f);
+
+            // Open exterior
+            animExt.SetBool("IsOpen", true);
+            //Debug.Log("Exterior opening");
+            yield return new WaitForSeconds(2f);
+
+            // Check if player has entered
+            yield return new WaitUntil(() => playerInside || cancelCycle);
+
+            if (cancelCycle)
+            {
+                ResetAirlock();
+                yield break; // End coroutine early if cancelled
+            }
+
+            // Close exterior
+            animExt.SetBool("IsOpen", false);
+            //Debug.Log("Exterior closing");
+            yield return new WaitForSeconds(pressurizationTime);
+
+            // Pressurize chamber
+            atmosphereZone.SetPressuized(true);
+
+            // Open interior
+            animInt.SetBool("IsOpen", true);
+            //Debug.Log("Interior opening");
+
+            isCycling = false;
+            playerInside = false;
+        }
+
+        // Can this be optimized? Not D.R.Y
+        public void EnterFromInterior()
+        {
+            if (isCycling) return;
+            StartCoroutine(CycleFromInterior());
+        }
+
+        IEnumerator CycleFromInterior()
+        {
+            isCycling = true;
+
+            // Ensure exterior is closed
+            animExt.SetBool("IsOpen", false);
+            yield return new WaitForSeconds(1f);
+
+            // Open interior
+            animInt.SetBool("IsOpen", true);
+            yield return new WaitForSeconds(2f);
+
+            // Check if player has entered
+            yield return new WaitUntil(() => playerInside || cancelCycle);
+
+            if (cancelCycle)
+            {
+                ResetAirlock();
+                yield break;
+            }
+
+            // Close interior
+            animInt.SetBool("IsOpen", false);
+            yield return new WaitForSeconds(pressurizationTime);
+
+            // Pressurize chamber
+            atmosphereZone.SetPressuized(false);
+
+            // Open exterior
+            animExt.SetBool("IsOpen", true);
+
+            isCycling = false;
+            playerInside = false;
+        }
+
+        public void PlayerInsideAirlock()
+        {
+            Debug.Log("Player inside airlock");
+            playerInside = true;
+        }
+
+        public void ResetAirlock()
+        {
+            atmosphereZone.SetPressuized(true); // This needs to be smarter
+            animExt.SetBool("IsOpen", false);
+            animInt.SetBool("IsOpen", false);
+
+            isCycling = false;
+            playerInside = false;
+            cancelCycle = false;
+        }
+
+        void AirlockTesting()
+        {
+            if (testEnterFromExterior)
+            {
+                testEnterFromExterior = false;
+                EnterFromExterior();
+            }
+
+            if (testEnterFromInterior)
+            {
+                testEnterFromInterior = false;
+                EnterFromInterior();
+            }
         }
     }
 }
