@@ -7,6 +7,7 @@ using LunarAnomaly.Player;
 
 namespace LunarAnomaly.UI
 {
+    // Disable overlay UI when in terminal
     public class UIManager : MonoBehaviour
     {
         [Header("Oxygen UI")]
@@ -23,16 +24,12 @@ namespace LunarAnomaly.UI
         [Header("Mining UI")]
         [SerializeField] TextMeshProUGUI samplesCollectedText;
 
-        [Header("Terminal UI")]
-        [SerializeField] GameObject terminalInteractText;
-
         void OnEnable()
         {
             Oxygen.OnOxygenChanged += UpdateOxygenUI;
             Oxygen.OnOxygenReset += ResetOxygenWarnings;
             PlayerState.OnPlayerDying += PlayerDying;
             MiningManager.OnSamplesCarriedChanged += UpdateMiningSampleUI;
-            Terminal.OnTerminalInteract += TerminalInteract;
         }
 
         void OnDisable()
@@ -41,12 +38,6 @@ namespace LunarAnomaly.UI
             Oxygen.OnOxygenReset -= ResetOxygenWarnings;
             PlayerState.OnPlayerDying -= PlayerDying;
             MiningManager.OnSamplesCarriedChanged -= UpdateMiningSampleUI;
-            Terminal.OnTerminalInteract += TerminalInteract;
-        }
-
-        void Start()
-        {
-            UpdateMiningSampleUI(0);
         }
 
         void UpdateMiningSampleUI(int samples)
@@ -117,11 +108,6 @@ namespace LunarAnomaly.UI
         void PlayerDying(float fadeLength)
         {
             StartCoroutine(DeathSequence(fadeLength));
-        }
-
-        void TerminalInteract(bool value)
-        {
-            terminalInteractText.SetActive(value);
         }
 
         IEnumerator DeathSequence(float duration)

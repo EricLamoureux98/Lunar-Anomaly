@@ -23,10 +23,9 @@ namespace LunarAnomaly.Gameplay
 
         void Start()
         {
-            samplesCollected = 0;
-            OnSamplesCarriedChanged?.Invoke(samplesCollected);
-
+            //samplesCollected = 0;
             DebugSamplesCollected();
+            OnSamplesCarriedChanged?.Invoke(samplesCollected);
         }
 
         void DebugSamplesCollected()

@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using Object = UnityEngine.Object; // What is this?
+using Object = UnityEngine.Object;
 
 namespace LunarAnomaly.UI
 {
@@ -18,7 +18,7 @@ namespace LunarAnomaly.UI
         // Typewriter functionality
         int currentVisibleCharacterIndex;
         Coroutine typewriterCoroutine;
-        bool readyForNewText = true;
+        //bool readyForNewText = true;
         
         WaitForSeconds delay;
         WaitForSeconds interpunctuationDelayWait;
@@ -33,7 +33,7 @@ namespace LunarAnomaly.UI
 
         [Header("Skip Options")]
         [SerializeField] bool quickSkip;
-        [SerializeField] [Min(1)] int skipSpeedup = 5; // <--- This is cool
+        [SerializeField] [Min(1)] int skipSpeedupMultiplier = 5; // <--- This is cool
 
         // Event Functionality
         WaitForSeconds textboxFulEventDelay;
@@ -60,21 +60,20 @@ namespace LunarAnomaly.UI
         void UpdateDelays()
         {
             delay = new WaitForSeconds(1 / charactersPerSecond);
-            skipDelay = new WaitForSeconds(1 / (charactersPerSecond * skipSpeedup));
+            skipDelay = new WaitForSeconds(1 / (charactersPerSecond * skipSpeedupMultiplier));
         }
 
-        void OnEnable()
-        {
+        //void OnEnable()
+        //{
             // What is this?
             //TMPro_EventManager.TEXT_CHANGED_EVENT.Add(PrepareForNewText);
-        }
+        //}
 
-        void OnDisable()
-        {
+        //void OnDisable()
+        //{
             //TMPro_EventManager.TEXT_CHANGED_EVENT.Remove(PrepareForNewText);
-        }
+        //}
 
-        // What is this? - (UnityEngine.Object obj)
         // public void PrepareForNewText(UnityEngine.Object obj)
         // {
         //     if (!readyForNewText) return;
@@ -110,11 +109,12 @@ namespace LunarAnomaly.UI
             currentVisibleCharacterIndex = 0;
 
             typewriterCoroutine = StartCoroutine(TypewriterText());
-        }
-        
+        }        
 
         IEnumerator TypewriterText()
         {
+            // Ensure characterCount is accurate
+            textBox.ForceMeshUpdate();
             TMP_TextInfo textInfo = textBox.textInfo;
 
             //while (currentVisibleCharacterIndex < textInfo.characterCount + 1)
@@ -127,7 +127,7 @@ namespace LunarAnomaly.UI
                     textBox.maxVisibleCharacters++;
                     yield return textboxFulEventDelay;
                     CompleteTextRevealed?.Invoke();
-                    readyForNewText = true;
+                    //readyForNewText = true;
                     yield break;
                 }
 
@@ -153,7 +153,7 @@ namespace LunarAnomaly.UI
             }
         }
 
-        void Skip()
+        public void Skip()
         {
             if (CurrentlySkipping) return;
 
@@ -167,7 +167,7 @@ namespace LunarAnomaly.UI
 
             StopCoroutine(typewriterCoroutine);
             textBox.maxVisibleCharacters = textBox.textInfo.characterCount;
-            readyForNewText = true;
+            //readyForNewText = true;
             CompleteTextRevealed?.Invoke();
         }
 
@@ -177,11 +177,6 @@ namespace LunarAnomaly.UI
             yield return new WaitUntil(() => textBox.maxVisibleCharacters == textBox.textInfo.characterCount -1);
             // Then sets back to false
             CurrentlySkipping = false;
-        }
-
-        void ReadInput()
-        {
-            
         }
     }
 }

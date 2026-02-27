@@ -3,7 +3,7 @@
     "name": "PlayerInput",
     "maps": [
         {
-            "name": "Player",
+            "name": "Gameplay",
             "id": "a17a4af4-fd88-4f2e-a20e-391a68fecf18",
             "actions": [
                 {
@@ -243,9 +243,18 @@
             "id": "500c1362-d0ea-4c98-a54f-b6b6f2956c2d",
             "actions": [
                 {
-                    "name": "Left Click",
+                    "name": "Skip",
                     "type": "Button",
                     "id": "042956ca-8695-4d79-b861-c7c7ab3efc63",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Exit",
+                    "type": "Button",
+                    "id": "e0bcf770-f206-449d-9e37-d9aa6a0dd51c",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -256,11 +265,33 @@
                 {
                     "name": "",
                     "id": "392dd756-ae79-4bd8-9ab7-d445e19dbbb8",
-                    "path": "<Mouse>/leftButton",
+                    "path": "<Keyboard>/anyKey",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Left Click",
+                    "action": "Skip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "35ccec88-dea3-428f-bfd9-663fc2ec35f8",
+                    "path": "<Mouse>/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6177e33e-1ca1-4c62-87f2-1e1d4b006aa8",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Exit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

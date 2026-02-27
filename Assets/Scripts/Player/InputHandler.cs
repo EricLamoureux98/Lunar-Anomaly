@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,14 +11,9 @@ namespace LunarAnomaly.Input
         public bool JumpHeld { get; private set; }
         public bool SprintHeld { get; private set; }
         public bool UseToolHeld { get; private set; }
-        public bool SystemInteractPressed { get; private set; }
 
-        // Should a middle man script read this? 
-        void LateUpdate()
-        {
-            //JumpHeld = false; // Add variable jump height 
-            SystemInteractPressed = false;
-        }
+        public static event Action OnInteractPressed;
+        public static event Action OnCloseUI;
 
         public void Look(InputAction.CallbackContext context)
         {
@@ -58,11 +54,19 @@ namespace LunarAnomaly.Input
 
         public void SystemInteract(InputAction.CallbackContext context)
         {
-            if (context.performed)
-                SystemInteractPressed = true;
+            OnInteractPressed?.Invoke();
+        }
 
-            // if (context.canceled)
-            //     SystemInteractPressed = false;
+        //----------------------------UI---------------------------------//
+
+        public void InteractWithUI(InputAction.CallbackContext context)
+        {
+            
+        }
+
+        public void ExitUI(InputAction.CallbackContext context)
+        {
+            OnCloseUI?.Invoke();
         }
     }
 }

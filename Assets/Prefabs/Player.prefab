@@ -5122,9 +5122,17 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 186730ff-e896-42c3-8e18-acf052793c70
     m_ActionName: 'Player/Sprint[/Keyboard/leftShift]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 042956ca-8695-4d79-b861-c7c7ab3efc63
+    m_ActionName: 'UI/Left Click[/Mouse/leftButton]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e0bcf770-f206-449d-9e37-d9aa6a0dd51c
+    m_ActionName: 'UI/Exit[/Keyboard/escape]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
+  m_DefaultActionMap: Gameplay
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!114 &460813887139432588
@@ -5223,10 +5231,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a6bf725c2f0eab4b9146ae1b40b42a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Oxygen
-  startingOxygen: 180
+  startingOxygen: 5
   drainRate: 1
-  refillRate: 10
-  oxygenDraining: 1
+  refillRate: 1
+  oxygenDraining: 0
   oxygenRefilling: 0
 --- !u!114 &4969400197681252508
 MonoBehaviour:

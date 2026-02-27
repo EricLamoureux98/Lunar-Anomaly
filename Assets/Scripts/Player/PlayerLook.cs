@@ -16,8 +16,17 @@ namespace LunarAnomaly.Player
 
         void Start()
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            UpdateCursorLock(false);
+        }
+
+        void OnEnable()
+        {
+            PlayerState.OnTerminalUIActive += UpdateCursorLock;
+        }
+
+        void OnDisable()
+        {
+            PlayerState.OnTerminalUIActive -= UpdateCursorLock;
         }
 
         void Awake()
@@ -32,10 +41,20 @@ namespace LunarAnomaly.Player
             HandleLook();
         }
 
-        void ReadInput()
+        void UpdateCursorLock(bool unlocked)
         {
-            lookInput = inputHandler.CameraInput;
-        }
+            if (!unlocked)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+            else if (unlocked)
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+                Cursor.visible = true;
+            }
+            
+        }        
 
         void HandleLook()
         {
@@ -49,6 +68,11 @@ namespace LunarAnomaly.Player
             xRotation -= mouseY;
             xRotation = Mathf.Clamp(xRotation, -maxLookAngle, maxLookAngle);
             vision.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        }
+
+        void ReadInput()
+        {
+            lookInput = inputHandler.CameraInput;
         }
     }
 }

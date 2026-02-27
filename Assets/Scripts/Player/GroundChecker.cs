@@ -48,7 +48,8 @@ namespace LunarAnomaly.Player
             {
                 float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
 
-                if (angle > 0f && angle <= maxSlopeAngle)
+                // Slope detection bug. Changed to 1f
+                if (angle > 1f && angle <= maxSlopeAngle)
                 {
                     IsOnSlope = true;
                     SlopeNormal = slopeHit.normal;

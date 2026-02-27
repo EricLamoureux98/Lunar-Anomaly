@@ -1,4 +1,3 @@
-using UnityEngine.UI;
 using UnityEngine;
 using System;
 
@@ -14,9 +13,10 @@ namespace LunarAnomaly.Player
 
         float currentOxygen;
         bool oxygenActive;
+        bool oxygenDepleted;
 
         // Sent to PlayerState
-        public static event Action OnOxygenDepleted; 
+        public static event Action<bool> OnOxygenDepleted; 
 
         // Sent to UIManager
         public static event Action<float> OnOxygenChanged;
@@ -46,7 +46,8 @@ namespace LunarAnomaly.Player
         void UpdateOxygen()
         {
             if (!oxygenActive) return; 
-            OxygenLowWarning();
+
+            //OxygenLowWarning();
 
             if (oxygenDraining)
             {
@@ -61,7 +62,8 @@ namespace LunarAnomaly.Player
 
         void DrainOxygen()
         {
-            currentOxygen -= drainRate * Time.deltaTime;
+            // Cap to 0 min
+            currentOxygen = Mathf.Max(0f, currentOxygen - drainRate * Time.deltaTime);
                                     // Sends fill %
             OnOxygenChanged?.Invoke(currentOxygen / startingOxygen);
 
@@ -70,6 +72,11 @@ namespace LunarAnomaly.Player
 
         void RefillOxygen()
         {
+            if (oxygenDepleted && currentOxygen > 0)
+            {
+                oxygenDepleted = false;
+                OnOxygenDepleted?.Invoke(false);
+            }
             if (currentOxygen < startingOxygen)
             {
                 currentOxygen += refillRate * Time.deltaTime;          
@@ -79,7 +86,11 @@ namespace LunarAnomaly.Player
 
         void OxygenDepleted()
         {
-            OnOxygenDepleted?.Invoke();
+            if (!oxygenDepleted && currentOxygen <= 0)
+            {
+                oxygenDepleted = true;
+                OnOxygenDepleted?.Invoke(true);
+            }  
         }
 
         void AtmosphereUpdated(bool pressurized)
@@ -98,18 +109,18 @@ namespace LunarAnomaly.Player
             }
         }    
 
-        void OxygenLowWarning()
-        {
-            if (currentOxygen <= startingOxygen / 2f)
-            {
-                //UIManager.Instance.CheckOxygenWarnings(currentOxygen, startingOxygen);
-            }
+        // void OxygenLowWarning()
+        // {
+        //     if (currentOxygen <= startingOxygen / 2f)
+        //     {
+        //         //UIManager.Instance.CheckOxygenWarnings(currentOxygen, startingOxygen);
+        //     }
             
-            if (currentOxygen <= (startingOxygen * 0.1f))
-            {
-                //UIManager.Instance.CheckOxygenWarnings(currentOxygen, startingOxygen);
-            }
-        }    
+        //     if (currentOxygen <= (startingOxygen * 0.1f))
+        //     {
+        //         //UIManager.Instance.CheckOxygenWarnings(currentOxygen, startingOxygen);
+        //     }
+        // }    
 
         public void SetActive(bool active)
         {
@@ -119,9 +130,7 @@ namespace LunarAnomaly.Player
         public void ResetOxygen()
         {
             currentOxygen = startingOxygen; 
-            //UIManager.Instance.UpdateOxygenBar(startingOxygen);
             OnOxygenReset?.Invoke(); 
-            //UIManager.Instance.ResetOxygenWarnings();
             oxygenActive = true;
         }
     }

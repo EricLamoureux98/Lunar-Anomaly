@@ -1,13 +1,10 @@
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using LunarAnomaly.Gameplay;
 
-namespace LunarAnomaly.UI
+namespace LunarAnomaly.Gameplay
 {
-    public class Terminal : MonoBehaviour
+    public class TerminalController : MonoBehaviour
     {
-        [SerializeField] PlayerInput playerInput;
         [SerializeField] MiningManager miningManager;
         [SerializeField] LayerMask playerLayer;
         [SerializeField] Animator anim;
@@ -19,24 +16,20 @@ namespace LunarAnomaly.UI
         public int samplesDelivered;
         public bool sampleObjectiveComplete;
         public bool terminalActive; 
-        public bool playerDepositing;
 
-        bool wasDepositingLastFrame;
+        // To TerminalUI and PlayerState
+        public static event Action<bool> OnTerminalProximity;
+        public static event Action<int, int> OnTerminalDeposit;
 
-        // To UIManager
-        public static event Action<bool> OnTerminalInteract;
-
-        void Update()
+        void Start()
         {
-            ReadInput();
-            HandleDepositInput();
-            wasDepositingLastFrame = playerDepositing;
+            AddDeliveredSamples(0);
         }
 
         void OnTriggerEnter(Collider other)
         {
             if (!other.gameObject.CompareTag("Player")) return;
-            OnTerminalInteract?.Invoke(true);
+            OnTerminalProximity?.Invoke(true);
             terminalActive = true;
             anim.SetBool("isActive", true);
         }
@@ -44,14 +37,15 @@ namespace LunarAnomaly.UI
         void OnTriggerExit(Collider other)
         {
             if (!other.gameObject.CompareTag("Player")) return;
-            OnTerminalInteract?.Invoke(false);
+            OnTerminalProximity?.Invoke(false);
             terminalActive = false;
             anim.SetBool("isActive", false);
         }
 
-        void HandleDepositInput()
+        public void HandleDepositButton()
         {
-            if (terminalActive && playerDepositing && !wasDepositingLastFrame) 
+            //if (terminalActive && playerDepositing && !wasDepositingLastFrame) 
+            if (terminalActive) 
             {
                 DepositSamples();
             }
@@ -73,12 +67,14 @@ namespace LunarAnomaly.UI
         void AddDeliveredSamples(int amount)
         {
             samplesDelivered += amount;
+            OnTerminalDeposit?.Invoke(samplesDelivered, samplesRequired);
 
-            Debug.Log($"Samples: {samplesDelivered} / {samplesRequired}");
+            //Debug.Log($"Samples: {samplesDelivered} / {samplesRequired}");
 
             if (samplesDelivered >= samplesRequired)
             {
                 CompleteObjectives();
+                // Notify terminal UI
             }
         }
 
@@ -88,22 +84,12 @@ namespace LunarAnomaly.UI
             Debug.Log("Sample objective complete!");
         }
 
-        void ReadInput()
-        {
-            // Disabled for new UI system
-            //playerDepositing = playerInput.SystemInteractPressed;
-
-            // Move this out of here!!!!!!
-            //playerInput.SwitchCurrentActionMap("UI");
-            Debug.Log(playerInput.currentActionMap);
-        }
-
-        void OnDrawGizmos()
+        void OnDrawGizmosSelected()
         {
             SphereCollider terminalCollider = GetComponent<SphereCollider>();
-            float worldRadius = terminalCollider.radius * terminalCollider.transform.lossyScale.x;
-
             if (terminalCollider == null) return;
+
+            float worldRadius = terminalCollider.radius * terminalCollider.transform.lossyScale.x;
 
             Gizmos.color = terminalActive ? Color.green : Color.red;
 
