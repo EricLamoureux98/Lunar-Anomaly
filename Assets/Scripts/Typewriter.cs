@@ -94,7 +94,7 @@ namespace LunarAnomaly.UI
 
         void Start()
         {
-            SetText(testText);
+            //SetText(testText);
         }
 
         public void SetText(string text)

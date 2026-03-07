@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afbb38bc41a78a042b66c672c06400b0, type: 3}
+  m_Name: TerminalTextDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::TerminalTextDatabase
+  entries:
+  - id: 0
+    text: Hello, and welcome to the terminal. Here, you will find objectives that
+      probably won't get you killed!
+  - id: 1
+    text: Samples received.
+  - id: 2
+    text: Objective complete.

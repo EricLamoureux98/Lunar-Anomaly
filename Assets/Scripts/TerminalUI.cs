@@ -4,9 +4,14 @@ using TMPro;
 using UnityEngine;
 	
 namespace LunarAnomaly.UI
-	{
+{
 	public class TerminalUI : MonoBehaviour
-	{
+	{   
+        [Header("References")]
+        [SerializeField] TerminalTextDatabase database;
+        [SerializeField] Typewriter typewriter;
+        [SerializeField] TerminalController terminalController;
+
 		[Header("Terminal UI")]
         [SerializeField] TextMeshProUGUI samplesCollectedText;
         [SerializeField] GameObject terminalUIPanel;
@@ -17,6 +22,7 @@ namespace LunarAnomaly.UI
             TerminalController.OnTerminalProximity += TerminalInteract;
             PlayerState.OnTerminalUIActive += TerminalPanel;
             TerminalController.OnTerminalDeposit += UpdateSamplesDeposited;
+            TerminalController.OnTerminalMessage += ShowText;
         }
 
         void OnDisable()
@@ -24,6 +30,15 @@ namespace LunarAnomaly.UI
             TerminalController.OnTerminalProximity -= TerminalInteract;
             PlayerState.OnTerminalUIActive -= TerminalPanel;
             TerminalController.OnTerminalDeposit -= UpdateSamplesDeposited;
+            TerminalController.OnTerminalMessage -= ShowText;
+        }
+
+        void ShowText(int id)
+        {
+            if (typewriter == null) return;
+
+            string text = database.GetText(id);
+            typewriter.SetText(text);
         }
 
         void UpdateSamplesDeposited(int samples, int required)
@@ -39,7 +54,12 @@ namespace LunarAnomaly.UI
         
         void TerminalPanel(bool value)
         {
-            terminalUIPanel.SetActive(value);
+            terminalUIPanel.SetActive(value);        
+
+            if (value)
+            {
+                terminalController.RequestCurrentMessage();
+            }
         }
 	}
 }

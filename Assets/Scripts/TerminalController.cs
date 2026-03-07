@@ -13,17 +13,20 @@ namespace LunarAnomaly.Gameplay
         [SerializeField] int samplesRequired;
         
         // public for testing
-        public int samplesDelivered;
-        public bool sampleObjectiveComplete;
-        public bool terminalActive; 
+        int samplesDelivered;
+        bool sampleObjectiveComplete;
+        bool terminalActive; 
+        int currentTerminalEntry;
 
         // To TerminalUI and PlayerState
         public static event Action<bool> OnTerminalProximity;
         public static event Action<int, int> OnTerminalDeposit;
+        public static event Action<int> OnTerminalMessage;
 
         void Start()
         {
-            AddDeliveredSamples(0);
+            //AddDeliveredSamples(0);
+            currentTerminalEntry = 0;  
         }
 
         void OnTriggerEnter(Collider other)
@@ -40,6 +43,11 @@ namespace LunarAnomaly.Gameplay
             OnTerminalProximity?.Invoke(false);
             terminalActive = false;
             anim.SetBool("isActive", false);
+        }
+
+        public void RequestCurrentMessage()
+        {
+            OnTerminalMessage?.Invoke(currentTerminalEntry);
         }
 
         public void HandleDepositButton()
@@ -73,15 +81,15 @@ namespace LunarAnomaly.Gameplay
 
             if (samplesDelivered >= samplesRequired)
             {
-                CompleteObjectives();
-                // Notify terminal UI
+                currentTerminalEntry = 2;
+                OnTerminalMessage?.Invoke(currentTerminalEntry);
+                sampleObjectiveComplete = true;
             }
-        }
-
-        void CompleteObjectives()
-        {
-            sampleObjectiveComplete = true;
-            Debug.Log("Sample objective complete!");
+            else
+            {
+                currentTerminalEntry = 1;
+                OnTerminalMessage?.Invoke(currentTerminalEntry);
+            }
         }
 
         void OnDrawGizmosSelected()

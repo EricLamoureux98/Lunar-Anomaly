@@ -327,7 +327,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -143.44, y: 0}
   m_SizeDelta: {x: 965.78, y: 915}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &75709490
@@ -346,7 +346,7 @@ MonoBehaviour:
     this working? Please help me god. I am going to lose my mind. \n\nMuch time has
     passed and it is still not working. I have not figured out why this isn't working"
   charactersPerSecond: 20
-  interpunctuationDelay: 0.5
+  interpunctuationDelay: 0.4
   quickSkip: 0
   skipSpeedupMultiplier: 5
   sendDoneDelay: 0.25
@@ -404,7 +404,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -653,7 +653,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b579f42f6e4c549439ce89cd1d306396, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiningManager
-  debugSamplesCollected: 10
+  debugSamplesCollected: 2
 --- !u!4 &286766577
 Transform:
   m_ObjectHideFlags: 0
@@ -1287,9 +1287,6 @@ MonoBehaviour:
     m_Bits: 1024
   anim: {fileID: 404443428}
   samplesRequired: 5
-  samplesDelivered: 0
-  sampleObjectiveComplete: 0
-  terminalActive: 0
 --- !u!135 &421719920
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -4196,6 +4193,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8427085b8e2f86b4dba4502faffb55ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LunarAnomaly.UI.TerminalUI
+  database: {fileID: 11400000, guid: 52f2b93fad3caf248afb46ecfbe0db64, type: 2}
+  typewriter: {fileID: 75709490}
+  terminalController: {fileID: 421719919}
   samplesCollectedText: {fileID: 271506124}
   terminalUIPanel: {fileID: 642600972}
   terminalOpenText: {fileID: 1712975049}
