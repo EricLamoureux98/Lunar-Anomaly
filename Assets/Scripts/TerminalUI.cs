@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using LunarAnomaly.Gameplay;
 using LunarAnomaly.Player;
 using TMPro;
 using UnityEngine;
-	
+
 namespace LunarAnomaly.UI
 {
 	public class TerminalUI : MonoBehaviour
@@ -16,6 +17,9 @@ namespace LunarAnomaly.UI
         [SerializeField] TextMeshProUGUI samplesCollectedText;
         [SerializeField] GameObject terminalUIPanel;
 		[SerializeField] GameObject terminalOpenText;
+        //[SerializeField] TextMeshProUGUI dialogTextField;
+
+        HashSet<TerminalMessage> revealedMessages = new HashSet<TerminalMessage>();
 
 		void OnEnable()
         {
@@ -33,18 +37,45 @@ namespace LunarAnomaly.UI
             TerminalController.OnTerminalMessage -= ShowText;
         }
 
-        void ShowText(int id)
+        // void ShowText(TerminalMessage message)
+        // {
+        //     if (typewriter == null) return;
+
+        //     string text = database.GetText(message);
+        //     typewriter.SetText(text);
+        // }
+        
+        void ShowText(TerminalMessage message)
         {
             if (typewriter == null) return;
 
-            string text = database.GetText(id);
+            string text = database.GetText(message);
+            
+            if (revealedMessages.Contains(message))
+            {
+                ShowInstantText(text);
+            }
+            else
+            {
+                ShowWithTypewriter(text);
+                revealedMessages.Add(message);
+            }
+        }
+
+        public void ShowInstantText(string text)
+        {
+            typewriter.SetTextInstant(text);
+        }
+
+        public void ShowWithTypewriter(string text)
+        {
             typewriter.SetText(text);
         }
 
         void UpdateSamplesDeposited(int samples, int required)
         {
             //samplesCollectedText.text = string.Format("Samples collected: {0}/{1}", samples, remaining);
-            samplesCollectedText.text = string.Format("Samples deposited: {0}/{1}", Mathf.Min(samples, required), required);
+            samplesCollectedText.text = string.Format("Samples delivered: {0}/{1}", Mathf.Min(samples, required), required);
         }
 
 		void TerminalInteract(bool value)

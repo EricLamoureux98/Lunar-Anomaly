@@ -6,16 +6,17 @@ public class TerminalTextDatabase : ScriptableObject
 {
     public List<TerminalEntry> entries;
 
-    public string GetText(int id)
+    public string GetText(TerminalMessage message)
     {
         foreach (var entry in entries)
         {
-            if (entry.id == id)
+            if (entry.message == message)
             {
                 return entry.text;
             }
         }
-        //return "";
-        return "Text not found!";
+        
+        Debug.LogWarning($"Terminal message {message} not found in database!");
+        return "Termianl message not found!";
     }
 }

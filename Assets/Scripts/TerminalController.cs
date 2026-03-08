@@ -16,17 +16,17 @@ namespace LunarAnomaly.Gameplay
         int samplesDelivered;
         bool sampleObjectiveComplete;
         bool terminalActive; 
-        int currentTerminalEntry;
+        TerminalMessage currentTerminalEntry;
 
         // To TerminalUI and PlayerState
         public static event Action<bool> OnTerminalProximity;
         public static event Action<int, int> OnTerminalDeposit;
-        public static event Action<int> OnTerminalMessage;
+        public static event Action<TerminalMessage> OnTerminalMessage;
 
         void Start()
         {
             //AddDeliveredSamples(0);
-            currentTerminalEntry = 0;  
+            currentTerminalEntry = TerminalMessage.Intro;  
         }
 
         void OnTriggerEnter(Collider other)
@@ -81,13 +81,13 @@ namespace LunarAnomaly.Gameplay
 
             if (samplesDelivered >= samplesRequired)
             {
-                currentTerminalEntry = 2;
+                currentTerminalEntry = TerminalMessage.ObjectiveComplete;
                 OnTerminalMessage?.Invoke(currentTerminalEntry);
                 sampleObjectiveComplete = true;
             }
             else
             {
-                currentTerminalEntry = 1;
+                currentTerminalEntry = TerminalMessage.DepositSuccess;
                 OnTerminalMessage?.Invoke(currentTerminalEntry);
             }
         }

@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: TerminalTextDatabase
   m_EditorClassIdentifier: Assembly-CSharp::TerminalTextDatabase
   entries:
-  - id: 0
+  - message: 0
     text: Hello, and welcome to the terminal. Here, you will find objectives that
       probably won't get you killed!
-  - id: 1
+  - message: 1
     text: Samples received.
-  - id: 2
+  - message: 2
     text: Objective complete.

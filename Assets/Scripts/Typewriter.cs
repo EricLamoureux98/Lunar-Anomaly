@@ -109,7 +109,18 @@ namespace LunarAnomaly.UI
             currentVisibleCharacterIndex = 0;
 
             typewriterCoroutine = StartCoroutine(TypewriterText());
-        }        
+        }     
+
+        public void SetTextInstant(string text)
+        {
+            if (typewriterCoroutine != null)
+            {
+                StopCoroutine(typewriterCoroutine);
+            }
+
+            textBox.text = text;
+            textBox.maxVisibleCharacters = textBox.textInfo.characterCount;
+        }   
 
         IEnumerator TypewriterText()
         {
