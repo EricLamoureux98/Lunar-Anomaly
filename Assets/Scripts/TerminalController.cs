@@ -52,7 +52,6 @@ namespace LunarAnomaly.Gameplay
 
         public void HandleDepositButton()
         {
-            //if (terminalActive && playerDepositing && !wasDepositingLastFrame) 
             if (terminalActive) 
             {
                 DepositSamples();

@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections;
 
 using UnityEngine;
@@ -18,6 +19,9 @@ namespace LunarAnomaly.Gameplay
 
         [SerializeField] bool testEnterFromExterior = false;
         [SerializeField] bool testEnterFromInterior = false;
+
+        // To UIManager
+        public static event Action<bool> OnEnterAtmosphere;
 
         void Awake()
         {
@@ -42,12 +46,12 @@ namespace LunarAnomaly.Gameplay
 
             // Ensure interior is closed
             animInt.SetBool("IsOpen", false);
-            //Debug.Log("Interior closing");
+
             yield return new WaitForSeconds(1f);
 
             // Open exterior
             animExt.SetBool("IsOpen", true);
-            //Debug.Log("Exterior opening");
+
             yield return new WaitForSeconds(2f);
 
             // Check if player has entered
@@ -61,15 +65,15 @@ namespace LunarAnomaly.Gameplay
 
             // Close exterior
             animExt.SetBool("IsOpen", false);
-            //Debug.Log("Exterior closing");
+
             yield return new WaitForSeconds(pressurizationTime);
 
             // Pressurize chamber
             atmosphereZone.SetPressuized(true);
+            OnEnterAtmosphere?.Invoke(true);
 
             // Open interior
             animInt.SetBool("IsOpen", true);
-            //Debug.Log("Interior opening");
 
             isCycling = false;
             playerInside = false;
@@ -109,6 +113,7 @@ namespace LunarAnomaly.Gameplay
 
             // Pressurize chamber
             atmosphereZone.SetPressuized(false);
+            OnEnterAtmosphere?.Invoke(false);
 
             // Open exterior
             animExt.SetBool("IsOpen", true);
@@ -119,7 +124,6 @@ namespace LunarAnomaly.Gameplay
 
         public void PlayerInsideAirlock()
         {
-            Debug.Log("Player inside airlock");
             playerInside = true;
         }
 

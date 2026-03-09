@@ -62,12 +62,12 @@ namespace LunarAnomaly.UI
             }
         }
 
-        public void ShowInstantText(string text)
+        void ShowInstantText(string text)
         {
             typewriter.SetTextInstant(text);
         }
 
-        public void ShowWithTypewriter(string text)
+        void ShowWithTypewriter(string text)
         {
             typewriter.SetText(text);
         }

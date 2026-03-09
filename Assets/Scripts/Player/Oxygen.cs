@@ -47,8 +47,6 @@ namespace LunarAnomaly.Player
         {
             if (!oxygenActive) return; 
 
-            //OxygenLowWarning();
-
             if (oxygenDraining)
             {
                 DrainOxygen();
@@ -64,6 +62,7 @@ namespace LunarAnomaly.Player
         {
             // Cap to 0 min
             currentOxygen = Mathf.Max(0f, currentOxygen - drainRate * Time.deltaTime);
+
                                     // Sends fill %
             OnOxygenChanged?.Invoke(currentOxygen / startingOxygen);
 
@@ -108,19 +107,6 @@ namespace LunarAnomaly.Player
                 oxygenRefilling = false;
             }
         }    
-
-        // void OxygenLowWarning()
-        // {
-        //     if (currentOxygen <= startingOxygen / 2f)
-        //     {
-        //         //UIManager.Instance.CheckOxygenWarnings(currentOxygen, startingOxygen);
-        //     }
-            
-        //     if (currentOxygen <= (startingOxygen * 0.1f))
-        //     {
-        //         //UIManager.Instance.CheckOxygenWarnings(currentOxygen, startingOxygen);
-        //     }
-        // }    
 
         public void SetActive(bool active)
         {
