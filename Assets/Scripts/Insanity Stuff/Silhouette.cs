@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 	
@@ -5,14 +6,32 @@ namespace LunarAnomaly.Gameplay
 {
 	public class Silhouette : MonoBehaviour
 	{
-		Transform silhouettePos;
-		Camera cameraPos;
+		[Header("References")]
+		Collider silhouetteCollider;
+		SpriteRenderer spriteRenderer;
+
+		[Header("Detection")]
 		[SerializeField] LayerMask playerLayer;
 		[SerializeField] float playerWatchingFOV = 0.95f;
 		[SerializeField] float playerCanSeeFOV = 0.5f;
+		Transform silhouettePos;
+		Camera cameraPos;
 
+		[SerializeField] float maxWatchTime = 4f;
+		[SerializeField] float fadeBlackTime = 0.75f;
+		float watchTime;
 
 		bool playerWatching;
+		bool playerWasWatching;
+
+		// To UIManager
+		public static event Action<float> OnSilhouetteFlash;
+
+        void Awake()
+        {
+            silhouetteCollider = GetComponentInChildren<BoxCollider>();
+			spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        }
 
         void Start()
         {
@@ -23,44 +42,54 @@ namespace LunarAnomaly.Gameplay
 
         void Update()
         {
-			playerWatching = PlayerVision.IsPointVisible(cameraPos, silhouettePos.position, playerWatchingFOV, playerLayer);
-			if (playerWatching)
-			{
-				//Debug.Log("Player is looking at silhouette");
-				// Send this to InsanityManager
-				// ScreenFader + disappear after being watched too long
-			}
-			else
-			{
-				//Debug.Log("Cannot see silhouette");
-				// if player WAS looking, but no longer looking, despawn. Also add a small delay
-				// Use screenfader here too
-			}
+			CheckPlayerWatching();
         }
 
-		public bool CanPlayerSeeSilhouetteSpawn()
+		void CheckPlayerWatching()
 		{
-			bool playerCanSee = PlayerVision.IsPointVisible(cameraPos, silhouettePos.position, playerCanSeeFOV, playerLayer);
-			if (playerCanSee)
+			playerWatching = PlayerVision.IsPointVisible(cameraPos, silhouettePos, playerWatchingFOV, playerLayer);
+
+			if (playerWatching)
 			{
-				return true;
+				// Send this to InsanityManager
+				playerWasWatching = true;
+
+				if (watchTime < maxWatchTime)
+				{
+					watchTime += Time.deltaTime;
+				}	
+				else
+				{
+					OnSilhouetteFlash?.Invoke(fadeBlackTime);
+					UpdateSilhouetteVisibility(false);
+				}			
 			}
-			else
+			
+			if (!SilhouetteOnScreen() && playerWasWatching)
 			{
-				return false;
+				// Consider adding a delay here!
+				UpdateSilhouetteVisibility(false);
 			}
+		}
+
+		public bool SilhouetteOnScreen()
+		{
+			return PlayerVision.IsPointVisible(cameraPos, silhouettePos, playerCanSeeFOV, playerLayer);
 		}
 
 		public void UpdateSilhouetteVisibility(bool visible)
 		{
-			Collider collider = GetComponentInChildren<BoxCollider>();
-			SpriteRenderer renderer = GetComponentInChildren<SpriteRenderer>();
+			if (spriteRenderer == null || silhouetteCollider == null) return;
 
-			if (renderer == null || collider == null) return;
+			spriteRenderer.enabled = visible;
+			silhouetteCollider.enabled = visible;
 
-			renderer.enabled = visible;
-			collider.enabled = visible;
+			// Double check this
+			playerWasWatching = false;
+			watchTime = 0f;
 		}
+
+		////////////////// OLD /////////////////////
 
         // void CheckIfPlayerWatching()
 		// {

@@ -19,18 +19,32 @@ namespace LunarAnomaly.UI
         {
             PlayerState.OnPlayerDying += PlayerDying;
             MiningManager.OnSamplesCarriedChanged += UpdateMiningSampleUI;
+            Silhouette.OnSilhouetteFlash += SilhouetteFlash;
         }
 
         void OnDisable()
         {
             PlayerState.OnPlayerDying -= PlayerDying;
             MiningManager.OnSamplesCarriedChanged -= UpdateMiningSampleUI;
+            Silhouette.OnSilhouetteFlash -= SilhouetteFlash;
         }
 
         void UpdateMiningSampleUI(int samples)
         {
             //samplesCollectedText.text = string.Format("Samples collected: {0}/{1}", samples, remaining);
             samplesCollectedText.text = string.Format("Samples collected: {0}", samples);
+        }
+
+        void SilhouetteFlash(float fadeLength)
+        {
+            StartCoroutine(BlackScreenFlash(fadeLength));
+        }
+
+        IEnumerator BlackScreenFlash(float duration)
+        {
+            screenFader.StartFade(0f, 1f, 0.1f);
+            yield return new WaitForSeconds(duration); // Adjust this for timing
+            screenFader.StartFade(1f, 0f, 1.5f);
         }
 
         void PlayerDying(float fadeLength)

@@ -16,6 +16,7 @@ namespace LunarAnomaly.Gameplay
 
         void Start()
         {
+            // For testing
             SelectSilhouette();
         }
 
@@ -43,7 +44,8 @@ namespace LunarAnomaly.Gameplay
                     continue;
                 }
 
-                if (!candidate.CanPlayerSeeSilhouetteSpawn())
+                // Add a distance check so Silhouettes spawn far away
+                if (!candidate.SilhouetteOnScreen())
                 {
                     activeSilhouette = candidate;
                     activeSilhouette.UpdateSilhouetteVisibility(true);
