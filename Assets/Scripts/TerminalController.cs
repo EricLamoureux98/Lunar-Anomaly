@@ -86,6 +86,11 @@ namespace LunarAnomaly.Gameplay
             }
             else
             {
+                // Consider adding this. Needs updates to TerminalUI.ShowText
+                // Samples received: {0}/{1}
+                //string template = database.GetText(TerminalMessage.DepositInProgress);
+                //string message = string.Format(template, samplesRemaining);
+
                 currentTerminalEntry = TerminalMessage.DepositSuccess;
                 OnTerminalMessage?.Invoke(currentTerminalEntry);
             }

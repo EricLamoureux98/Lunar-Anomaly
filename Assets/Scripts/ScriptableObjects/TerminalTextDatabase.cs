@@ -17,6 +17,6 @@ public class TerminalTextDatabase : ScriptableObject
         }
         
         Debug.LogWarning($"Terminal message {message} not found in database!");
-        return "Termianl message not found!";
+        return "Terminal message not found!";
     }
 }
