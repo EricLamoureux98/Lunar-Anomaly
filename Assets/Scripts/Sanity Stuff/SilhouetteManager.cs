@@ -5,9 +5,20 @@ namespace LunarAnomaly.Gameplay
 {
 	public class SilhouetteManager : MonoBehaviour
 	{
-		[SerializeField] GameObject silhouettePrefab;
+        [SerializeField] float minSilhouetteDistance = 500f;
+
 		Silhouette[] silhouetteSpawnPoints;
         Silhouette activeSilhouette;
+
+        void OnEnable()
+        {
+            SanityManager.OnSilhouetteRequest += RequestSilhouette;
+        }
+
+        void OnDisable()
+        {
+            SanityManager.OnSilhouetteRequest -= RequestSilhouette;
+        }
 
         void Awake()
         {
@@ -23,11 +34,12 @@ namespace LunarAnomaly.Gameplay
         // This should be called by insanity manager
         void RequestSilhouette()
         {
-            
+            SelectSilhouette();
         }
 
         void SelectSilhouette()
         {
+            // Consider shuffle then pick in order so that there are no repeats!
             if (silhouetteSpawnPoints.Length == 0) return;
 
             int attempts = 0;
@@ -44,8 +56,7 @@ namespace LunarAnomaly.Gameplay
                     continue;
                 }
 
-                // Add a distance check so Silhouettes spawn far away
-                if (!candidate.SilhouetteOnScreen())
+                if (!candidate.SilhouetteOnScreen() && candidate.SilhouetteDistance() > minSilhouetteDistance)
                 {
                     activeSilhouette = candidate;
                     activeSilhouette.UpdateSilhouetteVisibility(true);

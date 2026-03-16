@@ -23,9 +23,14 @@ namespace LunarAnomaly.Gameplay
 
 		bool playerWatching;
 		bool playerWasWatching;
+		bool silhouetteEnabled;
 
 		// To UIManager
 		public static event Action<float> OnSilhouetteFlash;
+		public static event Action PlayerWatchingSilhouette;
+
+		// To SanityManager
+		public static event Action OnSilhouetteWatched;
 
         void Awake()
         {
@@ -42,7 +47,8 @@ namespace LunarAnomaly.Gameplay
 
         void Update()
         {
-			CheckPlayerWatching();
+			if (silhouetteEnabled)
+				CheckPlayerWatching();
         }
 
 		void CheckPlayerWatching()
@@ -51,7 +57,9 @@ namespace LunarAnomaly.Gameplay
 
 			if (playerWatching)
 			{
-				// Send this to InsanityManager
+				// Send this to SanityManager
+				OnSilhouetteWatched?.Invoke();
+
 				playerWasWatching = true;
 
 				if (watchTime < maxWatchTime)
@@ -67,7 +75,7 @@ namespace LunarAnomaly.Gameplay
 			
 			if (!SilhouetteOnScreen() && playerWasWatching)
 			{
-				// Consider adding a delay here!
+				// Consider adding a delay and min watch timer here!
 				UpdateSilhouetteVisibility(false);
 			}
 		}
@@ -77,10 +85,16 @@ namespace LunarAnomaly.Gameplay
 			return PlayerVision.IsPointVisible(cameraPos, silhouettePos, playerCanSeeFOV, playerLayer);
 		}
 
+		public float SilhouetteDistance()
+		{
+			return Vector3.Distance(cameraPos.transform.position, silhouettePos.transform.position);
+		}
+
 		public void UpdateSilhouetteVisibility(bool visible)
 		{
 			if (spriteRenderer == null || silhouetteCollider == null) return;
 
+			silhouetteEnabled = visible;
 			spriteRenderer.enabled = visible;
 			silhouetteCollider.enabled = visible;
 
@@ -89,7 +103,7 @@ namespace LunarAnomaly.Gameplay
 			watchTime = 0f;
 		}
 
-		////////////////// OLD /////////////////////
+		////////////////// OLD - Has been replaced by PlayerVision /////////////////////
 
         // void CheckIfPlayerWatching()
 		// {
