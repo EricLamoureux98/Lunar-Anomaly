@@ -24,13 +24,14 @@ namespace LunarAnomaly.Gameplay
 		bool playerWatching;
 		bool playerWasWatching;
 		bool silhouetteEnabled;
+		bool debugNotif;
 
 		// To UIManager
 		public static event Action<float> OnSilhouetteFlash;
-		public static event Action PlayerWatchingSilhouette;
 
 		// To SanityManager
 		public static event Action OnSilhouetteWatched;
+		public static event Action OnSilhouetteVanished;
 
         void Awake()
         {
@@ -48,7 +49,15 @@ namespace LunarAnomaly.Gameplay
         void Update()
         {
 			if (silhouetteEnabled)
+			{
+				if (!debugNotif)
+				{
+					Debug.Log("Silhouette Spawned: " + gameObject.name);
+					debugNotif = true;
+				}
+
 				CheckPlayerWatching();
+			}
         }
 
 		void CheckPlayerWatching()
@@ -57,7 +66,6 @@ namespace LunarAnomaly.Gameplay
 
 			if (playerWatching)
 			{
-				// Send this to SanityManager
 				OnSilhouetteWatched?.Invoke();
 
 				playerWasWatching = true;
@@ -69,6 +77,7 @@ namespace LunarAnomaly.Gameplay
 				else
 				{
 					OnSilhouetteFlash?.Invoke(fadeBlackTime);
+					OnSilhouetteVanished?.Invoke();
 					UpdateSilhouetteVisibility(false);
 				}			
 			}
@@ -77,6 +86,7 @@ namespace LunarAnomaly.Gameplay
 			{
 				// Consider adding a delay and min watch timer here!
 				UpdateSilhouetteVisibility(false);
+				
 			}
 		}
 
@@ -100,6 +110,7 @@ namespace LunarAnomaly.Gameplay
 
 			// Double check this
 			playerWasWatching = false;
+			debugNotif = false;
 			watchTime = 0f;
 		}
 

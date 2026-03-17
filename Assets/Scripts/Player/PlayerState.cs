@@ -17,7 +17,7 @@ namespace LunarAnomaly.Player
         [SerializeField] Transform respawnPoint;
         [SerializeField] float oxygenGracePeriod = 3f;
 
-        CurrentState currentState;
+        PlayerCurrentState currentState;
         float graceTimer;
 
         bool terminalProximity;     
@@ -54,7 +54,7 @@ namespace LunarAnomaly.Player
         {
             switch (currentState)
             {
-                case CurrentState.Suffocating:
+                case PlayerCurrentState.Suffocating:
                     HandleSuffocating();
                     break;
             }
@@ -63,9 +63,9 @@ namespace LunarAnomaly.Player
         void OnOxygenDepleted(bool isSuffocating)
         {
             if (isSuffocating)
-                ChangeState(CurrentState.Suffocating);
+                ChangeState(PlayerCurrentState.Suffocating);
             else
-                ChangeState(CurrentState.Alive);
+                ChangeState(PlayerCurrentState.Alive);
         }
 
         void HandleAlive()
@@ -79,7 +79,7 @@ namespace LunarAnomaly.Player
 
             if (graceTimer <= 0f)
             {
-                ChangeState(CurrentState.Dead);
+                ChangeState(PlayerCurrentState.Dead);
             }
         }
 
@@ -107,7 +107,7 @@ namespace LunarAnomaly.Player
             rb.rotation = respawnPoint.rotation;
 
             oxygen.ResetOxygen();
-            ChangeState(CurrentState.Alive);
+            ChangeState(PlayerCurrentState.Alive);
         }
 
         void TerminalProximity(bool proximity)
@@ -117,7 +117,7 @@ namespace LunarAnomaly.Player
         
         void TerminalInteract()
         {
-            if (currentState != CurrentState.Alive) return;
+            if (currentState != PlayerCurrentState.Alive) return;
 
             TryEnterTerminal();
         }
@@ -126,18 +126,18 @@ namespace LunarAnomaly.Player
         {
             if (!terminalProximity) return;
 
-            ChangeState(CurrentState.UsingTerminal);
+            ChangeState(PlayerCurrentState.UsingTerminal);
         }
 
         void TryExitTerminal()
         {
-            if (currentState == CurrentState.UsingTerminal)
+            if (currentState == PlayerCurrentState.UsingTerminal)
             {
-                ChangeState(CurrentState.Alive);
+                ChangeState(PlayerCurrentState.Alive);
             }
         }
 
-        void ChangeState(CurrentState newState)
+        void ChangeState(PlayerCurrentState newState)
         {
             if (newState == currentState) return;
 
@@ -146,45 +146,45 @@ namespace LunarAnomaly.Player
             EnterState(newState);
         }
 
-        void EnterState(CurrentState state)
+        void EnterState(PlayerCurrentState state)
         {
             switch (state)
             {
-                case CurrentState.Suffocating:
+                case PlayerCurrentState.Suffocating:
                     // Add visuals and sound 
                     OnPlayerDying?.Invoke(oxygenGracePeriod);
                     graceTimer = oxygenGracePeriod;
                     break;
                 
-                case CurrentState.Dead:
+                case PlayerCurrentState.Dead:
                     HandleDeath();
                     break;
                 
-                case CurrentState.UsingTerminal:
+                case PlayerCurrentState.UsingTerminal:
                     playerInput.SwitchCurrentActionMap("UI");
                     OnTerminalUIActive?.Invoke(true);
                     break;
             }
         }
 
-        void ExitState(CurrentState state)
+        void ExitState(PlayerCurrentState state)
         {
             // This is for turning off things like audio and UI
             switch (state)
             {
-                case CurrentState.Suffocating:
+                case PlayerCurrentState.Suffocating:
                     graceTimer = 0f;
                     // Stop suffocation SFX
                     // Hide oxygen warning UI
                     // Reset post-processing effects
                     break;
                 
-                case CurrentState.Dead:
+                case PlayerCurrentState.Dead:
                     playerMovement.SetActive(true);
                     oxygen.SetActive(true);
                     break;
 
-                case CurrentState.UsingTerminal:
+                case PlayerCurrentState.UsingTerminal:
                     playerInput.SwitchCurrentActionMap("Gameplay");
                     OnTerminalUIActive?.Invoke(false);
                     break;
@@ -192,7 +192,7 @@ namespace LunarAnomaly.Player
         }
     }
 
-    public enum CurrentState
+    public enum PlayerCurrentState
     {   Alive, 
         Suffocating, 
         Dead, 

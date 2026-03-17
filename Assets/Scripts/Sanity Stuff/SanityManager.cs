@@ -8,12 +8,16 @@ namespace LunarAnomaly.Gameplay
 	public class SanityManager : MonoBehaviour
 	{		
 		[SerializeField] float maxSanity = 20f; // Should be around 15 - 20 minutes
+		[SerializeField] float trySpawnSilhouetteTime = 90f; // Probably needs adjusting
 
 		// Consider allowing events to decide
 		[SerializeField] float spikeAmount = 1f;
 		[SerializeField] float extraDrainAmount = 0.15f;
 		public float currentSanity; // Public for testing
-		//float silhouetteSpawnChance; // Update with ENUM
+		float silhouetteSpawnChance = 0f;
+		float spawnTimer;
+
+		public SanityState sanityState; // Public for testing
 
 		// To SilhouetteManager
 		public static event Action OnSilhouetteRequest;
@@ -25,22 +29,26 @@ namespace LunarAnomaly.Gameplay
         {
             AtmosphereTracker.OnPressurized += HandleSanityStateChange;
 			Silhouette.OnSilhouetteWatched += InsanityExtraDrain;
+			Silhouette.OnSilhouetteVanished += InsanitySpike;
         }
 
         void OnDisable()
         {
             AtmosphereTracker.OnPressurized -= HandleSanityStateChange;
 			Silhouette.OnSilhouetteWatched -= InsanityExtraDrain;
+			Silhouette.OnSilhouetteVanished -= InsanitySpike;
         }
 
         void Start()
         {
             currentSanity = maxSanity;
+			ChangeState(SanityState.HighSanity);
         }
 
         void Update()
         {
 			SanityDrain();
+			HandleSilhouetteSpawning();
         }
 
         void SanityDrain()
@@ -49,10 +57,23 @@ namespace LunarAnomaly.Gameplay
 			{
             	currentSanity -= Time.deltaTime / 60f;	
 
-				if(currentSanity >= maxSanity * 0.25)
+				// Remove these magic numebrs
+				if (currentSanity <= maxSanity * 0.1f)
 				{
-					//OnSilhouetteRequest?.Invoke();
-				} 			
+					ChangeState(SanityState.CriticalSanity);
+				}
+				else if (currentSanity <= maxSanity * 0.3f)
+				{
+					ChangeState(SanityState.LowSanity);
+				}
+				else if (currentSanity <= maxSanity * 0.6f)
+				{
+					ChangeState(SanityState.MediumSanity);
+				}
+				else
+				{
+					ChangeState(SanityState.HighSanity);
+				}			
 			}
 		}
 
@@ -61,7 +82,6 @@ namespace LunarAnomaly.Gameplay
 			sanityDraining = !sane;
 		}
 
-		// Implement spike when player watches until vanish
 		void InsanitySpike()
 		{
 			currentSanity -= spikeAmount;
@@ -72,21 +92,83 @@ namespace LunarAnomaly.Gameplay
 			currentSanity -= extraDrainAmount * Time.deltaTime;
 		}
 
-		// void RequestSilhouette()
-		// {
-		// 	if(currentInsanity >= maxInsanity * 0.25)
-		// 	{
-		// 		OnSilhouetteRequest?.Invoke();
-		// 	} 	
-		// }
+		void HandleSilhouetteSpawning()
+		{
+			if (sanityState == SanityState.HighSanity) return;
+
+			spawnTimer += Time.deltaTime;
+
+			if (spawnTimer >= trySpawnSilhouetteTime)
+			{
+				if (UnityEngine.Random.value < silhouetteSpawnChance)
+				{
+					OnSilhouetteRequest?.Invoke();
+					spawnTimer = 0f;
+				}
+			}
+		}
+
+		void ChangeState(SanityState newState)
+		{
+			if (newState == sanityState) return;
+
+			ExitState(sanityState);
+			sanityState = newState;
+			EnterState(newState);
+		}
+
+		void EnterState(SanityState state)
+		{
+			switch (state)
+			{
+				case SanityState.HighSanity:
+					silhouetteSpawnChance = 0f; // <-- Maybe remove these magic numbers
+					break;	
+
+				case SanityState.MediumSanity:
+					silhouetteSpawnChance = 0.25f;
+					break;
+
+				case SanityState.LowSanity:
+					silhouetteSpawnChance = 0.5f;
+					break;
+
+				case SanityState.CriticalSanity:
+					silhouetteSpawnChance = 1f;
+					break;
+
+			}
+		}
+
+		void ExitState(SanityState state)
+		{
+			// Immediately spawn a silhouette when changing state
+			switch (state)
+			{
+				case SanityState.HighSanity:	
+					OnSilhouetteRequest?.Invoke();				
+					break;	
+
+				case SanityState.MediumSanity:
+					OnSilhouetteRequest?.Invoke();
+					break;
+
+				case SanityState.LowSanity:
+					OnSilhouetteRequest?.Invoke();
+					break;
+
+				case SanityState.CriticalSanity:
+					break;
+
+			}
+		}
     }
 }
 
-// Implement sanity states
-public enum InsanityState
+public enum SanityState
 {
-	HighSanity, // 75
-	MediumSanity, // 50
-	LowSanity, // 25
-	CriticalSanity // 10
+	HighSanity, 
+	MediumSanity, 
+	LowSanity, 
+	CriticalSanity 
 }

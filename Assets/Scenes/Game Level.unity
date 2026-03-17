@@ -352,15 +352,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8961943931608602061, guid: e31ea8d09dbd4ec47adf93cef1fabba1, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5
+      value: 1.9999999
       objectReference: {fileID: 0}
     - target: {fileID: 8961943931608602061, guid: e31ea8d09dbd4ec47adf93cef1fabba1, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5
+      value: 1.9999999
       objectReference: {fileID: 0}
     - target: {fileID: 8961943931608602061, guid: e31ea8d09dbd4ec47adf93cef1fabba1, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.5
+      value: 1.9999999
       objectReference: {fileID: 0}
     - target: {fileID: 8961943931608602061, guid: e31ea8d09dbd4ec47adf93cef1fabba1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3385,15 +3385,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8961943931608602061, guid: e31ea8d09dbd4ec47adf93cef1fabba1, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8961943931608602061, guid: e31ea8d09dbd4ec47adf93cef1fabba1, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8961943931608602061, guid: e31ea8d09dbd4ec47adf93cef1fabba1, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8961943931608602061, guid: e31ea8d09dbd4ec47adf93cef1fabba1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3934,9 +3934,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LunarAnomaly.Gameplay.InsanityManager
   maxSanity: 20
+  trySpawnSilhouetteTime: 90
   spikeAmount: 1
   extraDrainAmount: 0.15
   currentSanity: 0
+  sanityState: 0
   sanityDraining: 1
 --- !u!1 &1321081982
 GameObject:
@@ -6102,6 +6104,14 @@ PrefabInstance:
     - target: {fileID: 5042340803709603429, guid: 609de0beb8273c340b899fa1e1316c66, type: 3}
       propertyPath: m_Name
       value: Dust Particles
+      objectReference: {fileID: 0}
+    - target: {fileID: 6094726167634612089, guid: 609de0beb8273c340b899fa1e1316c66, type: 3}
+      propertyPath: ShapeModule.type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6094726167634612089, guid: 609de0beb8273c340b899fa1e1316c66, type: 3}
+      propertyPath: ShapeModule.radius.value
+      value: 403.2
       objectReference: {fileID: 0}
     - target: {fileID: 8770611478896495818, guid: 609de0beb8273c340b899fa1e1316c66, type: 3}
       propertyPath: m_LocalPosition.x
