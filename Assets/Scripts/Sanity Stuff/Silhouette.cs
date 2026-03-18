@@ -17,7 +17,9 @@ namespace LunarAnomaly.Gameplay
 		Transform silhouettePos;
 		Camera cameraPos;
 
+		[Header("Behaviour")]
 		[SerializeField] float maxWatchTime = 4f;
+		[SerializeField] float minWatchBeforeVanish = 1.5f;
 		[SerializeField] float fadeBlackTime = 0.75f;
 		float watchTime;
 
@@ -46,6 +48,7 @@ namespace LunarAnomaly.Gameplay
 			UpdateSilhouetteVisibility(false);
         }
 
+		// Consider adding a max active time
         void Update()
         {
 			if (silhouetteEnabled)
@@ -81,10 +84,14 @@ namespace LunarAnomaly.Gameplay
 					UpdateSilhouetteVisibility(false);
 				}			
 			}
-			
-			if (!SilhouetteOnScreen() && playerWasWatching)
+			else
 			{
-				// Consider adding a delay and min watch timer here!
+				watchTime = 0f;
+			}
+			
+			if (!SilhouetteOnScreen() && playerWasWatching && watchTime > minWatchBeforeVanish)
+			{
+				// Consider adding a delay
 				UpdateSilhouetteVisibility(false);
 				
 			}
@@ -108,39 +115,9 @@ namespace LunarAnomaly.Gameplay
 			spriteRenderer.enabled = visible;
 			silhouetteCollider.enabled = visible;
 
-			// Double check this
 			playerWasWatching = false;
 			debugNotif = false;
 			watchTime = 0f;
 		}
-
-		////////////////// OLD - Has been replaced by PlayerVision /////////////////////
-
-        // void CheckIfPlayerWatching()
-		// {
-		// 	Vector3 directionToSilhouette = (silhouettePos.position - cameraPos.transform.position).normalized;
-		// 	float dot = Vector3.Dot(cameraPos.transform.forward, directionToSilhouette);
-
-		// 	if (dot > 0.95f)
-		// 	{
-		// 		RaycastHit hit;
-		// 		float distanceToSilhouette = Vector3.Distance(cameraPos.transform.position, silhouettePos.position);
-		// 		Debug.DrawRay(cameraPos.transform.position, directionToSilhouette * distanceToSilhouette, Color.red);
-
-		// 		int mask = ~playerLayer;
-
-		// 		if (Physics.Raycast(cameraPos.transform.position, directionToSilhouette, out hit, distanceToSilhouette, mask))
-		// 		{
-		// 			if (hit.collider.CompareTag("Silhouette"))
-		// 			{
-		// 				Debug.Log("Player is looking at silhouette"); 				
-		// 			}
-		// 		}
-		// 	}
-		// 	else if (dot <= 0)
-		// 	{
-		// 		Debug.Log("Player cannot see silhouette");
-		// 	}
-		// }
     }
 }

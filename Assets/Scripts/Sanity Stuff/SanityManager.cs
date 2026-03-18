@@ -5,25 +5,26 @@ using UnityEngine;
 	
 namespace LunarAnomaly.Gameplay
 {
+		// Sanity should drain when losing oxygen and witnessing events
 	public class SanityManager : MonoBehaviour
 	{		
-		[SerializeField] float maxSanity = 20f; // Should be around 15 - 20 minutes
-		[SerializeField] float trySpawnSilhouetteTime = 90f; // Probably needs adjusting
+		[Header("Sanity Behaviour")]
+		[SerializeField] float maxSanity = 20f; // Should be around 15 - 20 minutes of gameplay
+		[SerializeField] float trySpawnSilhouetteTime = 90f;		
+		[SerializeField] float spikeAmount = 1f; // Consider allowing events to decide
+		[SerializeField] float extraDrainAmount = 0.15f; // Consider allowing events to decide
 
-		// Consider allowing events to decide
-		[SerializeField] float spikeAmount = 1f;
-		[SerializeField] float extraDrainAmount = 0.15f;
+		[Header("Private trackers")]
 		public float currentSanity; // Public for testing
 		float silhouetteSpawnChance = 0f;
+		public bool sanityDraining; // public for testing
+		float bonusChance;
 		float spawnTimer;
 
 		public SanityState sanityState; // Public for testing
 
 		// To SilhouetteManager
-		public static event Action OnSilhouetteRequest;
-		
-		// Sanity should drain when losing oxygen and witnessing events
-		public bool sanityDraining; // public for testing
+		public static event Action OnSilhouetteRequest;		
 
 		 void OnEnable()
         {
@@ -96,13 +97,21 @@ namespace LunarAnomaly.Gameplay
 		{
 			if (sanityState == SanityState.HighSanity) return;
 
+			float currentChance = silhouetteSpawnChance + bonusChance;
+
 			spawnTimer += Time.deltaTime;
 
 			if (spawnTimer >= trySpawnSilhouetteTime)
 			{
-				if (UnityEngine.Random.value < silhouetteSpawnChance)
+				if (UnityEngine.Random.value < currentChance)
 				{
 					OnSilhouetteRequest?.Invoke();
+					spawnTimer = 0f;
+					bonusChance = 0f;
+				}
+				else
+				{
+					bonusChance += 0.05f;
 					spawnTimer = 0f;
 				}
 			}
