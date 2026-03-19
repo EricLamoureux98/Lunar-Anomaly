@@ -24,8 +24,14 @@ namespace LunarAnomaly.Player
 
         // To UIManager
         public static event Action<float> OnPlayerDying;
+        public static event Action<bool> OnHideGameplayUI;
+        public static event Action OnTriggerGameOver;
+
         // To TerminalUI and PlayerLook
         public static event Action<bool> OnTerminalUIActive;
+        
+        // To SanityManager -- Consider sending to oxygen
+        public static event Action OnRespawn;
 
         void Awake()
         {
@@ -40,6 +46,7 @@ namespace LunarAnomaly.Player
             TerminalController.OnTerminalProximity += TerminalProximity;
             InputHandler.OnInteractPressed += TerminalInteract;
             InputHandler.OnCloseUI += TryExitTerminal;
+            SanityManager.OnInsanity += HandleInsanity;
         }
 
         void OnDisable()
@@ -48,6 +55,7 @@ namespace LunarAnomaly.Player
             TerminalController.OnTerminalProximity -= TerminalProximity;
             InputHandler.OnInteractPressed -= TerminalInteract;
             InputHandler.OnCloseUI -= TryExitTerminal;
+            SanityManager.OnInsanity -= HandleInsanity;
         }
 
         void Update()
@@ -83,13 +91,26 @@ namespace LunarAnomaly.Player
             }
         }
 
+        void HandleInsanity()
+        {
+            ChangeState(PlayerCurrentState.Insane);
+        }
+
         void HandleDeath()
         {
+            OnHideGameplayUI?.Invoke(true);
             oxygen.SetActive(false);
             playerMovement.SetActive(false);
             airlock.ResetAirlock();
             
             Invoke("HandleRespawn", 1f); // <--- Make this a UI button eventually
+        }
+
+        void HandleGameOver()
+        {
+            playerMovement.SetActive(false);
+            OnHideGameplayUI?.Invoke(true);
+            OnTriggerGameOver?.Invoke();
         }
 
         void HandleRespawn()
@@ -107,6 +128,7 @@ namespace LunarAnomaly.Player
             rb.rotation = respawnPoint.rotation;
 
             oxygen.ResetOxygen();
+            OnRespawn?.Invoke();
             ChangeState(PlayerCurrentState.Alive);
         }
 
@@ -159,9 +181,14 @@ namespace LunarAnomaly.Player
                 case PlayerCurrentState.Dead:
                     HandleDeath();
                     break;
+
+                case PlayerCurrentState.Insane:
+                    HandleGameOver();
+                    break;
                 
                 case PlayerCurrentState.UsingTerminal:
                     playerInput.SwitchCurrentActionMap("UI");
+                    OnHideGameplayUI?.Invoke(true);
                     OnTerminalUIActive?.Invoke(true);
                     break;
             }
@@ -187,6 +214,7 @@ namespace LunarAnomaly.Player
                 case PlayerCurrentState.UsingTerminal:
                     playerInput.SwitchCurrentActionMap("Gameplay");
                     OnTerminalUIActive?.Invoke(false);
+                    OnHideGameplayUI?.Invoke(false);
                     break;
             }
         }
@@ -197,6 +225,7 @@ namespace LunarAnomaly.Player
         Suffocating, 
         Dead, 
         Respawning,
+        Insane,
         UsingTerminal
     } 
 }

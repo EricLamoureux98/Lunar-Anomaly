@@ -12,7 +12,6 @@ namespace LunarAnomaly.Gameplay
         [Header("Rock Samples")]
         [SerializeField] int samplesRequired;
         
-        // public for testing
         int samplesDelivered;
         bool sampleObjectiveComplete;
         bool terminalActive; 

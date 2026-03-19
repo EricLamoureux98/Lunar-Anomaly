@@ -15,11 +15,16 @@ namespace LunarAnomaly.UI
         [Header("Mining UI")]
         [SerializeField] TextMeshProUGUI samplesCollectedText;
 
+        [SerializeField] TextMeshProUGUI deathText;
+        [SerializeField] CanvasGroup canvasGroup;
+
         void OnEnable()
         {
             PlayerState.OnPlayerDying += PlayerDying;
             MiningManager.OnSamplesCarriedChanged += UpdateMiningSampleUI;
             Silhouette.OnSilhouetteFlash += SilhouetteFlash;
+            PlayerState.OnHideGameplayUI += HideGameplayUI;
+            PlayerState.OnTriggerGameOver += GameOver;
         }
 
         void OnDisable()
@@ -27,6 +32,16 @@ namespace LunarAnomaly.UI
             PlayerState.OnPlayerDying -= PlayerDying;
             MiningManager.OnSamplesCarriedChanged -= UpdateMiningSampleUI;
             Silhouette.OnSilhouetteFlash -= SilhouetteFlash;
+            PlayerState.OnHideGameplayUI -= HideGameplayUI;
+            PlayerState.OnTriggerGameOver -= GameOver;
+        }
+
+        void HideGameplayUI(bool hidden)
+        {
+            if (hidden)
+                canvasGroup.alpha = 0f;
+            else
+                canvasGroup.alpha = 1f;
         }
 
         void UpdateMiningSampleUI(int samples)
@@ -57,6 +72,18 @@ namespace LunarAnomaly.UI
             screenFader.StartFade(0f, 1f, duration);
             yield return new WaitForSeconds(4f); // Adjust this for respawn timing
             screenFader.StartFade(1f, 0f, duration / 2);
+        }
+
+        void GameOver()
+        {
+            StartCoroutine(GameoverSequence());
+        }
+
+        IEnumerator GameoverSequence()
+        {
+            screenFader.StartFade(0f, 1f, 0.1f);
+            yield return new WaitForSeconds(3f);
+            deathText.gameObject.SetActive(true);
         }
     }
 }

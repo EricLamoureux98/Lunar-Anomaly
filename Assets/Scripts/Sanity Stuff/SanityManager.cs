@@ -25,12 +25,15 @@ namespace LunarAnomaly.Gameplay
 
 		// To SilhouetteManager
 		public static event Action OnSilhouetteRequest;		
+		// To PlayerState
+		public static event Action OnInsanity;
 
 		 void OnEnable()
         {
             AtmosphereTracker.OnPressurized += HandleSanityStateChange;
 			Silhouette.OnSilhouetteWatched += InsanityExtraDrain;
 			Silhouette.OnSilhouetteVanished += InsanitySpike;
+			PlayerState.OnRespawn += HandleRespwn;
         }
 
         void OnDisable()
@@ -38,6 +41,7 @@ namespace LunarAnomaly.Gameplay
             AtmosphereTracker.OnPressurized -= HandleSanityStateChange;
 			Silhouette.OnSilhouetteWatched -= InsanityExtraDrain;
 			Silhouette.OnSilhouetteVanished -= InsanitySpike;
+			PlayerState.OnRespawn -= HandleRespwn;
         }
 
         void Start()
@@ -75,6 +79,11 @@ namespace LunarAnomaly.Gameplay
 				{
 					ChangeState(SanityState.HighSanity);
 				}			
+			}
+
+			if (currentSanity <= 0)
+			{
+				OnInsanity?.Invoke();
 			}
 		}
 
@@ -115,6 +124,11 @@ namespace LunarAnomaly.Gameplay
 					spawnTimer = 0f;
 				}
 			}
+		}
+
+		void HandleRespwn()
+		{
+			currentSanity = maxSanity;
 		}
 
 		void ChangeState(SanityState newState)
