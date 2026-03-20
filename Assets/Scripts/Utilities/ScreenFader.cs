@@ -7,12 +7,12 @@ public class ScreenFader : MonoBehaviour
     [SerializeField] Image fadeToBlack;
     Coroutine currentFade;
     
-    public void StartFade(float startAlpha, float endAlpha, float duration)
+    public void StartFade(float startAlpha, float endAlpha, float duration, bool useUnscaledTime)
     {
         if (currentFade != null)
         StopCoroutine(currentFade);
 
-        currentFade = StartCoroutine(ScreenFade(startAlpha, endAlpha, duration));
+        currentFade = StartCoroutine(ScreenFade(startAlpha, endAlpha, duration, useUnscaledTime));
     }
 
     void SetFadeAlpha(float alpha)
@@ -20,13 +20,15 @@ public class ScreenFader : MonoBehaviour
         fadeToBlack.color = new Color(0f, 0f, 0f, alpha);
     }
 
-    IEnumerator ScreenFade(float startAlpha, float endAlpha, float duration)
+    IEnumerator ScreenFade(float startAlpha, float endAlpha, float duration, bool useUnscaledTime)
     {
         float time = 0f;
 
         while (time < duration)
         {
-            time += Time.deltaTime;
+            // Unscaled can be used if Time.timeScale = 0
+            time += useUnscaledTime? Time.unscaledDeltaTime : Time.deltaTime;
+
             float t = time / duration;
 
             SetFadeAlpha(Mathf.Lerp(startAlpha, endAlpha, t));

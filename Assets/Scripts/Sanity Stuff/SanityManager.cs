@@ -33,7 +33,6 @@ namespace LunarAnomaly.Gameplay
             AtmosphereTracker.OnPressurized += HandleSanityStateChange;
 			Silhouette.OnSilhouetteWatched += InsanityExtraDrain;
 			Silhouette.OnSilhouetteVanished += InsanitySpike;
-			PlayerState.OnRespawn += HandleRespwn;
         }
 
         void OnDisable()
@@ -41,7 +40,6 @@ namespace LunarAnomaly.Gameplay
             AtmosphereTracker.OnPressurized -= HandleSanityStateChange;
 			Silhouette.OnSilhouetteWatched -= InsanityExtraDrain;
 			Silhouette.OnSilhouetteVanished -= InsanitySpike;
-			PlayerState.OnRespawn -= HandleRespwn;
         }
 
         void Start()
@@ -124,11 +122,6 @@ namespace LunarAnomaly.Gameplay
 					spawnTimer = 0f;
 				}
 			}
-		}
-
-		void HandleRespwn()
-		{
-			currentSanity = maxSanity;
 		}
 
 		void ChangeState(SanityState newState)

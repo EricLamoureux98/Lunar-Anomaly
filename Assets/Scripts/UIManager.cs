@@ -24,7 +24,7 @@ namespace LunarAnomaly.UI
             MiningManager.OnSamplesCarriedChanged += UpdateMiningSampleUI;
             Silhouette.OnSilhouetteFlash += SilhouetteFlash;
             PlayerState.OnHideGameplayUI += HideGameplayUI;
-            PlayerState.OnTriggerGameOver += GameOver;
+            GameManager.OnGameStateChanged += HandleGameStateChange;
         }
 
         void OnDisable()
@@ -33,7 +33,30 @@ namespace LunarAnomaly.UI
             MiningManager.OnSamplesCarriedChanged -= UpdateMiningSampleUI;
             Silhouette.OnSilhouetteFlash -= SilhouetteFlash;
             PlayerState.OnHideGameplayUI -= HideGameplayUI;
-            PlayerState.OnTriggerGameOver -= GameOver;
+            GameManager.OnGameStateChanged -= HandleGameStateChange;
+        }
+
+        void HandleGameStateChange(GameState newState)
+        {
+            switch (newState)
+            {
+                case GameState.MainMenu:
+                    // Show main menu canvas
+                    break;
+
+                case GameState.Playing:
+                    HideGameplayUI(false);
+                    break;
+                
+                case GameState.GameOver:
+                    HideGameplayUI(true);
+                    GameOver();
+                    break;
+                
+                case GameState.Paused:
+                    HideGameplayUI(true);
+                    break;
+            }
         }
 
         void HideGameplayUI(bool hidden)
@@ -52,14 +75,15 @@ namespace LunarAnomaly.UI
 
         void SilhouetteFlash(float fadeLength)
         {
+            if (GameManager.Instance.CurrentState != GameState.Playing) return;
             StartCoroutine(BlackScreenFlash(fadeLength));
         }
 
         IEnumerator BlackScreenFlash(float duration)
         {
-            screenFader.StartFade(0f, 1f, 0.1f);
+            screenFader.StartFade(0f, 1f, 0.1f, false);
             yield return new WaitForSeconds(duration); // Adjust this for timing
-            screenFader.StartFade(1f, 0f, 1.5f);
+            screenFader.StartFade(1f, 0f, 1.5f, false);
         }
 
         void PlayerDying(float fadeLength)
@@ -69,20 +93,23 @@ namespace LunarAnomaly.UI
 
         IEnumerator DeathSequence(float duration)
         {
-            screenFader.StartFade(0f, 1f, duration);
+            screenFader.StartFade(0f, 1f, duration, false);
             yield return new WaitForSeconds(4f); // Adjust this for respawn timing
-            screenFader.StartFade(1f, 0f, duration / 2);
+            screenFader.StartFade(1f, 0f, duration / 2, false);
         }
 
         void GameOver()
         {
+            // Prevents silhouette from interrupting
+            // BE CAREFUL WITH THIS
+            StopAllCoroutines();
             StartCoroutine(GameoverSequence());
         }
 
         IEnumerator GameoverSequence()
         {
-            screenFader.StartFade(0f, 1f, 0.1f);
-            yield return new WaitForSeconds(3f);
+            screenFader.StartFade(0f, 1f, 0.1f, true);
+            yield return new WaitForSecondsRealtime(3f);
             deathText.gameObject.SetActive(true);
         }
     }

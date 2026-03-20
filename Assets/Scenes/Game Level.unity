@@ -293,9 +293,9 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 423849647}
-  - {fileID: 558059093}
   - {fileID: 1013196801}
   - {fileID: 1881250283}
+  - {fileID: 558059093}
   - {fileID: 1422178637}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1924,6 +1924,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91a889b46114b584d9304d112242eebd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LunarAnomaly.GameManager
+  playerObject: {fileID: 1073882967}
 --- !u!1 &491514880
 GameObject:
   m_ObjectHideFlags: 0
@@ -3568,6 +3569,11 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &1073882967 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3831262497156072695, guid: 35ac4db3dd21229419ae7e912615aa66, type: 3}
+  m_PrefabInstance: {fileID: 7990310479857259032}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1082330470
 GameObject:
   m_ObjectHideFlags: 0
@@ -6294,6 +6300,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 988392927802740686, guid: 35ac4db3dd21229419ae7e912615aa66, type: 3}
+      propertyPath: drainRate
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 988392927802740686, guid: 35ac4db3dd21229419ae7e912615aa66, type: 3}
+      propertyPath: oxygenDraining
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 988392927802740686, guid: 35ac4db3dd21229419ae7e912615aa66, type: 3}
+      propertyPath: oxygenRefilling
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3307147392102827125, guid: 35ac4db3dd21229419ae7e912615aa66, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 

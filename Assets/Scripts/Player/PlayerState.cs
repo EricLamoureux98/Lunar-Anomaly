@@ -25,13 +25,9 @@ namespace LunarAnomaly.Player
         // To UIManager
         public static event Action<float> OnPlayerDying;
         public static event Action<bool> OnHideGameplayUI;
-        public static event Action OnTriggerGameOver;
 
         // To TerminalUI and PlayerLook
         public static event Action<bool> OnTerminalUIActive;
-        
-        // To SanityManager -- Consider sending to oxygen
-        public static event Action OnRespawn;
 
         void Awake()
         {
@@ -98,7 +94,6 @@ namespace LunarAnomaly.Player
 
         void HandleDeath()
         {
-            OnHideGameplayUI?.Invoke(true);
             oxygen.SetActive(false);
             playerMovement.SetActive(false);
             airlock.ResetAirlock();
@@ -108,9 +103,10 @@ namespace LunarAnomaly.Player
 
         void HandleGameOver()
         {
-            playerMovement.SetActive(false);
-            OnHideGameplayUI?.Invoke(true);
-            OnTriggerGameOver?.Invoke();
+            // This is redundant 
+            if (GameManager.Instance.CurrentState == GameState.GameOver) return; 
+
+            GameManager.Instance.TriggerGameOver();
         }
 
         void HandleRespawn()
@@ -128,7 +124,6 @@ namespace LunarAnomaly.Player
             rb.rotation = respawnPoint.rotation;
 
             oxygen.ResetOxygen();
-            OnRespawn?.Invoke();
             ChangeState(PlayerCurrentState.Alive);
         }
 
