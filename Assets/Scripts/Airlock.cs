@@ -66,6 +66,7 @@ namespace LunarAnomaly.Gameplay
             // Close exterior
             animExt.SetBool("IsOpen", false);
 
+            SoundManager.PlaySound(SoundType.Airlock, 1f);
             yield return new WaitForSeconds(pressurizationTime);
 
             // Pressurize chamber

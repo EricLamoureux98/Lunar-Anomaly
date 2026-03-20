@@ -66,10 +66,6 @@ namespace LunarAnomaly
 					Time.timeScale = 0f;
 					break;
 				
-				case GameState.GameOver:
-					StartCoroutine(GameOverSequence());
-					break;
-				
 				default:
 					Time.timeScale = 0f;
 					playerObject.SetActive(false);
@@ -77,14 +73,6 @@ namespace LunarAnomaly
 			}
 
 			OnGameStateChanged?.Invoke(gameState);
-		}
-
-		IEnumerator GameOverSequence()
-		{
-			yield return new WaitForSecondsRealtime(3f);
-			
-			Time.timeScale = 1f;
-			playerObject.SetActive(true);
 		}
 	}
 

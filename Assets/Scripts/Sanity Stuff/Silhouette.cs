@@ -82,6 +82,7 @@ namespace LunarAnomaly.Gameplay
 					OnSilhouetteFlash?.Invoke(fadeBlackTime);
 					OnSilhouetteVanished?.Invoke();
 					UpdateSilhouetteVisibility(false);
+					SoundManager.PlaySound(SoundType.Ambience);
 				}			
 			}
 			else
