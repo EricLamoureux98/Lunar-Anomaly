@@ -40,5 +40,15 @@ namespace LunarAnomaly.Gameplay
                     break;
             }
         }
+
+        void OnTriggerExit(Collider other)
+        {
+            if (!other.CompareTag("Player")) return;
+
+            if (sensorType == SensorType.Inside)
+            {
+                airlock.PlayerExitedAirlock();
+            }
+        }
     }
 }

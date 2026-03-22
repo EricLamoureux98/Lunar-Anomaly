@@ -10,12 +10,15 @@ namespace LunarAnomaly.Gameplay
     {
         [SerializeField] Animator animExt;
         [SerializeField] Animator animInt;
+        [SerializeField] Animator animLighting;
         [SerializeField] AtmosphereZone atmosphereZone;
         [SerializeField] float pressurizationTime = 3f;
+        [SerializeField] float cooldownTime = 2f;
+        float lastCycleTime = float.NegativeInfinity;
 
         bool isCycling = false;
         bool playerInside = false;
-        public bool cancelCycle; // Use this if/when the player is killed or level reset etc
+        bool cancelCycle; // Use this if/when the player is killed or level reset etc
 
         [SerializeField] bool testEnterFromExterior = false;
         [SerializeField] bool testEnterFromInterior = false;
@@ -34,73 +37,39 @@ namespace LunarAnomaly.Gameplay
             AirlockTesting();
         }
 
-        public void EnterFromExterior()
+        public void EnterFromExterior() => TryCycle(fromExterior: true);
+        public void EnterFromInterior() => TryCycle(fromExterior: false);
+
+        public void TryCycle(bool fromExterior)
         {
             if (isCycling) return;
-            StartCoroutine(CycleFromExterior());
+            if (Time.time - lastCycleTime < cooldownTime) return;
+            StartCoroutine(CycleAirlock(fromExterior));
         }
 
-        IEnumerator CycleFromExterior()
+        IEnumerator CycleAirlock(bool fromExterior)
         {
             isCycling = true;
+            cancelCycle = false;
 
-            // Ensure interior is closed
-            animInt.SetBool("IsOpen", false);
+            // Which animator is the entry/exit side
+            Animator entryAnim = fromExterior ? animExt : animInt;
+            Animator exitAnim = fromExterior ? animInt : animExt;
 
+            // Ensure exit is closed
+            exitAnim.SetBool("IsOpen", false);
             yield return new WaitForSeconds(1f);
 
-            // Open exterior
-            animExt.SetBool("IsOpen", true);
-
+            // Open entry side
+            entryAnim.SetBool("IsOpen", true);
+            SoundManager.PlaySound(SoundType.Airlock, 0.5f);
             yield return new WaitForSeconds(2f);
 
-            // Check if player has entered
+            // Wait for player to enter (or cancel)
             yield return new WaitUntil(() => playerInside || cancelCycle);
-
-            if (cancelCycle)
-            {
-                ResetAirlock();
-                yield break; // End coroutine early if cancelled
-            }
-
-            // Close exterior
-            animExt.SetBool("IsOpen", false);
-
-            SoundManager.PlaySound(SoundType.Airlock, 1f);
-            yield return new WaitForSeconds(pressurizationTime);
-
-            // Pressurize chamber
-            atmosphereZone.SetPressuized(true);
-            OnEnterAtmosphere?.Invoke(true);
-
-            // Open interior
-            animInt.SetBool("IsOpen", true);
-
-            isCycling = false;
-            playerInside = false;
-        }
-
-        // Can this be optimized? Not D.R.Y
-        public void EnterFromInterior()
-        {
-            if (isCycling) return;
-            StartCoroutine(CycleFromInterior());
-        }
-
-        IEnumerator CycleFromInterior()
-        {
-            isCycling = true;
-
-            // Ensure exterior is closed
-            animExt.SetBool("IsOpen", false);
-            yield return new WaitForSeconds(1f);
-
-            // Open interior
-            animInt.SetBool("IsOpen", true);
-            yield return new WaitForSeconds(2f);
-
-            // Check if player has entered
-            yield return new WaitUntil(() => playerInside || cancelCycle);
+            yield return new WaitForSeconds(0.5f);
+            animLighting.SetBool("isActive", true);
+            SoundManager.PlaySound(SoundType.Alarm, 1.25f, false);
 
             if (cancelCycle)
             {
@@ -108,19 +77,28 @@ namespace LunarAnomaly.Gameplay
                 yield break;
             }
 
-            // Close interior
-            animInt.SetBool("IsOpen", false);
+            // Close entry side and pressurize
+            entryAnim.SetBool("IsOpen", false);
+            SoundManager.PlaySound(fromExterior ? SoundType.GainAtmosphere : SoundType.LoseAtmosphere, 1f);
             yield return new WaitForSeconds(pressurizationTime);
 
-            // Pressurize chamber
-            atmosphereZone.SetPressuized(false);
-            OnEnterAtmosphere?.Invoke(false);
+            // Atmosphere state flips depending on direction
+            atmosphereZone.SetPressuized(fromExterior);
+            OnEnterAtmosphere?.Invoke(fromExterior);
 
-            // Open exterior
-            animExt.SetBool("IsOpen", true);
+            // Open exit side
+            animLighting.SetBool("isActive", false);
+            exitAnim.SetBool("IsOpen", true);
+            SoundManager.PlaySound(SoundType.Airlock, 0.5f);
 
+            // Wait for player to leave, then close exit door
+            yield return new WaitUntil(() => !playerInside || cancelCycle);
+            yield return new WaitForSeconds(1f);
+            exitAnim.SetBool("IsOpen", false);
+            SoundManager.PlaySound(SoundType.Airlock, 0.5f);
+
+            lastCycleTime = Time.time;
             isCycling = false;
-            playerInside = false;
         }
 
         public void PlayerInsideAirlock()
@@ -128,11 +106,16 @@ namespace LunarAnomaly.Gameplay
             playerInside = true;
         }
 
+        public void PlayerExitedAirlock()
+        {
+            playerInside = false;
+        }
+
         public void ResetAirlock()
         {
-            atmosphereZone.SetPressuized(true); // This needs to be smarter
             animExt.SetBool("IsOpen", false);
             animInt.SetBool("IsOpen", false);
+            animLighting.SetBool("isActive", false);
 
             isCycling = false;
             playerInside = false;

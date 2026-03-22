@@ -29,6 +29,9 @@ namespace LunarAnomaly.Player
         // To TerminalUI and PlayerLook
         public static event Action<bool> OnTerminalUIActive;
 
+        // To AtmosphereTracker
+        public static event Action OnResetPressure;
+
         void Awake()
         {
             playerInput = GetComponent<PlayerInput>();
@@ -123,6 +126,7 @@ namespace LunarAnomaly.Player
             rb.position = respawnPoint.position;
             rb.rotation = respawnPoint.rotation;
 
+            OnResetPressure?.Invoke();
             oxygen.ResetOxygen();
             ChangeState(PlayerCurrentState.Alive);
         }

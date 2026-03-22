@@ -18,14 +18,17 @@ namespace LunarAnomaly
 
 		void Awake()
 		{
-			if (Instance == null)
-			{
-				Instance = this;
-				DontDestroyOnLoad(gameObject);
-			}
-			else if (Instance != this)
+			if (Instance != null && Instance != this)
 			{
 				Destroy(gameObject);
+				return;
+			}
+			Instance = this;
+
+			if (Application.isPlaying)
+			{
+				transform.SetParent(null); // Make it root to prevent warning
+				DontDestroyOnLoad(gameObject);					
 			}
 
 			ChangeState(GameState.Playing);

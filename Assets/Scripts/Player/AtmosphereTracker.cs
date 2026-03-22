@@ -14,11 +14,13 @@ namespace LunarAnomaly.Player
         void OnEnable()
         {
             AtmosphereZone.OnZonePressureChanged += HandlePressureChanged;
+            PlayerState.OnResetPressure += RefreshPressureState;
         }
 
         void OnDisable()
         {
             AtmosphereZone.OnZonePressureChanged -= HandlePressureChanged;
+            PlayerState.OnResetPressure -= RefreshPressureState;
         }
 
         void OnTriggerEnter(Collider other)
@@ -29,6 +31,23 @@ namespace LunarAnomaly.Player
                 
                 IsPressurized = zone.IsPressurized;
                 OnPressurized?.Invoke(IsPressurized);
+            }
+        }
+
+        void RefreshPressureState()
+        {
+            Collider[] hits = Physics.OverlapSphere(transform.position, 1f);
+            foreach (var hit in hits)
+            {
+                if (hit.TryGetComponent(out AtmosphereZone zone))
+                {
+                    if (IsPressurized == zone.IsPressurized) return;
+
+                    IsPressurized = zone.IsPressurized;
+                    OnPressurized?.Invoke(IsPressurized);
+                    
+                    Debug.Log("Refresh Success. Player inside pressurized zone");
+                }
             }
         }
 
