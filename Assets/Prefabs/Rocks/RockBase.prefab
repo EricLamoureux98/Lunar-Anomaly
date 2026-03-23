@@ -161,5 +161,5 @@ MonoBehaviour:
   destructionParticlePrefab: {fileID: 4797638475288434468, guid: 92bd73d21f0fe524284d8f66fdd699f5, type: 3}
   rockSamplePrefab: {fileID: 2874632349983892717, guid: cd760536d84bcb4489cdc5842eaa78b5, type: 3}
   shrinkRate: 0.98
-  health: 2
-  sampleDropChance: 0.95
+  health: 3
+  sampleDropChance: 0.25
