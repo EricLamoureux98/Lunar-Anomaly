@@ -28,7 +28,7 @@ namespace LunarAnomaly.Gameplay
         void Start()
         {
             // For testing
-            SelectSilhouette();
+            //SelectSilhouette();
         }
 
         // This should be called by insanity manager
