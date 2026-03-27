@@ -6,7 +6,7 @@ using Object = UnityEngine.Object;
 
 namespace LunarAnomaly.UI
 {
-    [RequireComponent(typeof(TMP_Text))]
+    //[RequireComponent(typeof(TMP_Text))]
 
     public class Typewriter : MonoBehaviour
     {
@@ -44,7 +44,7 @@ namespace LunarAnomaly.UI
 
         void Awake()
         {
-            textBox = GetComponent<TMP_Text>();
+            //textBox = GetComponent<TMP_Text>();
 
             // Cached for performance        
             UpdateDelays();
@@ -97,12 +97,16 @@ namespace LunarAnomaly.UI
             //SetText(testText);
         }
 
-        public void SetText(string text)
-        {
+        public void SetText(string text, TMP_Text currentTextBox)
+        {          
             if (typewriterCoroutine != null)
             {
                 StopCoroutine(typewriterCoroutine);
+                typewriterCoroutine = null;
             }
+
+            if (text == null || currentTextBox == null) return;
+            textBox = currentTextBox;
             
             textBox.text = text;
             textBox.maxVisibleCharacters = 0;
@@ -111,12 +115,16 @@ namespace LunarAnomaly.UI
             typewriterCoroutine = StartCoroutine(TypewriterText());
         }     
 
-        public void SetTextInstant(string text)
-        {
+        public void SetTextInstant(string text, TMP_Text currentTextBox)
+        {           
             if (typewriterCoroutine != null)
             {
                 StopCoroutine(typewriterCoroutine);
+                typewriterCoroutine = null;
             }
+
+            if (text == null || currentTextBox == null) return;
+            textBox = currentTextBox;
 
             textBox.text = text;
             textBox.maxVisibleCharacters = textBox.textInfo.characterCount;

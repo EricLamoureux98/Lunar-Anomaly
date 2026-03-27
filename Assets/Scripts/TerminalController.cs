@@ -16,16 +16,29 @@ namespace LunarAnomaly.Gameplay
         bool sampleObjectiveComplete;
         bool terminalActive; 
         TerminalMessage currentTerminalEntry;
+        //ProgressionStage progressionStage;
 
         // To TerminalUI and PlayerState
         public static event Action<bool> OnTerminalProximity;
         public static event Action<int, int> OnTerminalDeposit;
         public static event Action<TerminalMessage> OnTerminalMessage;
+        // To ProgressionManager
+        public static event Action OnPlayerProgressed;
+
+        void OnEnable()
+        {
+            ProgressionManager.OnStageChanged += UpdateStage;
+        }
+
+        void OnDisable()
+        {
+            ProgressionManager.OnStageChanged -= UpdateStage;
+        }
 
         void Start()
         {
-            //AddDeliveredSamples(0);
             currentTerminalEntry = TerminalMessage.Intro;  
+            //UpdateStage(ProgressionStage.Intro);
         }
 
         void OnTriggerEnter(Collider other)
@@ -48,6 +61,15 @@ namespace LunarAnomaly.Gameplay
         {
             OnTerminalMessage?.Invoke(currentTerminalEntry);
         }
+        
+        public void HandleIntroProceed()
+        {
+            if (terminalActive)
+            {
+                UpdateStage(ProgressionStage.SampleObjective);
+                OnPlayerProgressed?.Invoke();
+            }
+        }
 
         public void HandleDepositButton()
         {
@@ -57,6 +79,13 @@ namespace LunarAnomaly.Gameplay
             }
         }
 
+        void SetupMiningSample()
+        {
+            //DepositSamples();
+            // Show Sample UI in TerminalUI
+            currentTerminalEntry = TerminalMessage.Greeting;
+        }
+
         void DepositSamples()
         {
             if (!terminalActive) return;
@@ -64,7 +93,7 @@ namespace LunarAnomaly.Gameplay
 
             int samples = miningManager.samplesCollected;
             
-            if (samples <= 0) return;
+            if (samples < 0) return;
 
             AddDeliveredSamples(samples);
             miningManager.ClearSamples(); // <--- Consider not clearing all samples later
@@ -72,6 +101,7 @@ namespace LunarAnomaly.Gameplay
 
         void AddDeliveredSamples(int amount)
         {
+            Debug.Log("Trying to deposit samples");
             samplesDelivered += amount;
             OnTerminalDeposit?.Invoke(samplesDelivered, samplesRequired);
 
@@ -81,6 +111,7 @@ namespace LunarAnomaly.Gameplay
             {
                 currentTerminalEntry = TerminalMessage.ObjectiveComplete;
                 OnTerminalMessage?.Invoke(currentTerminalEntry);
+                OnPlayerProgressed?.Invoke();
                 sampleObjectiveComplete = true;
             }
             else
@@ -91,8 +122,30 @@ namespace LunarAnomaly.Gameplay
                 //string message = string.Format(template, samplesRemaining);
 
                 currentTerminalEntry = TerminalMessage.DepositSuccess;
+
                 OnTerminalMessage?.Invoke(currentTerminalEntry);
             }
+        }
+
+        void UpdateStage(ProgressionStage newStage)
+        {
+            switch (newStage)
+            {
+                case ProgressionStage.Intro:
+                    currentTerminalEntry = TerminalMessage.Intro;
+                    break;
+                
+                case ProgressionStage.SampleObjective:
+                    SetupMiningSample();
+                    break;
+                
+                case ProgressionStage.RepairObjective:
+                    break;
+                
+                case ProgressionStage.Outro:
+                    break;
+            }
+
         }
 
         void OnDrawGizmosSelected()

@@ -14,9 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TerminalTextDatabase
   entries:
   - message: 0
+    text: 'Welcome to Lunar Station Artemis!
+
+      All systems are functioning within
+      normal parameters.
+
+      Please proceed with your duties.
+
+      And remember...
+      Report anything unusual.'
+  - message: 1
     text: Hello, and welcome to the terminal. Here, you will find objectives that
       probably won't get you killed!
-  - message: 1
-    text: Samples received.
   - message: 2
+    text: Deposit successful
+  - message: 3
     text: Objective complete.

@@ -54,7 +54,7 @@ namespace LunarAnomaly.UI
                     break;
                 
                 case GameState.Paused:
-                    HideGameplayUI(true);
+                    HideGameplayUI(true); // Implement this
                     break;
             }
         }

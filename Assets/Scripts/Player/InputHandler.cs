@@ -14,6 +14,7 @@ namespace LunarAnomaly.Input
 
         public static event Action OnInteractPressed;
         public static event Action OnCloseUI;
+        public static event Action OnTextSpeedup;
 
         public void Look(InputAction.CallbackContext context)
         {
@@ -61,12 +62,14 @@ namespace LunarAnomaly.Input
 
         public void InteractWithUI(InputAction.CallbackContext context)
         {
-            
+            if (context.performed)
+                OnTextSpeedup?.Invoke();
         }
 
         public void ExitUI(InputAction.CallbackContext context)
         {
-            OnCloseUI?.Invoke();
+            if (context.performed)
+                OnCloseUI?.Invoke();
         }
     }
 }
