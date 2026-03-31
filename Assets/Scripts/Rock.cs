@@ -1,6 +1,7 @@
 using System;
 using Unity.Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace LunarAnomaly.Gameplay
 {
@@ -8,9 +9,11 @@ namespace LunarAnomaly.Gameplay
     {
         [Header("References")]
         [SerializeField] ParticleSystem destructionParticlePrefab;
-        [SerializeField] GameObject rockSamplePrefab;
+        //[SerializeField] GameObject rockSamplePrefab;
+        [SerializeField] GameObject[] rockSamplePrefabs;
 
         [Header("Rock settings")]
+        [SerializeField] Transform sampleSpawnPoint;
         [SerializeField] float shrinkRate = 0.98f;
         [SerializeField] float health;
         [SerializeField] float sampleDropChance = 0.3f;
@@ -45,6 +48,8 @@ namespace LunarAnomaly.Gameplay
             if (isDestroyed) return; 
             isDestroyed = true;
 
+            SoundManager.PlaySound(SoundType.RockBreak, 0.4f);
+
             if (destructionParticlePrefab != null)
             {
                 transform.localScale *= 1.1f;
@@ -59,10 +64,10 @@ namespace LunarAnomaly.Gameplay
 
         void RandomSampleSpawn()
         {
-            // How do I remove the UnityEngine? 
-            if (UnityEngine.Random.value < sampleDropChance)
+            if (Random.value < sampleDropChance)
             {
-                Instantiate(rockSamplePrefab, transform.position, quaternion.identity);
+                int index = Random.Range(0, rockSamplePrefabs.Length);
+                Instantiate(rockSamplePrefabs[index], sampleSpawnPoint.position, quaternion.identity);
             }
         }
 
@@ -72,8 +77,8 @@ namespace LunarAnomaly.Gameplay
         }
     }
 }
-// Screen shake
+// Screen shake - done
 // Time freeze when hit lands 
 // Debris particles - done
-// Sounds
+// Sounds - done
 // Scale down when being mined --- Stretch goal would be 3d models

@@ -43,6 +43,7 @@ namespace LunarAnomaly.Player
             {
                 if (hit.TryGetComponent(out Rock rock))
                 {
+                    SoundManager.PlaySound(SoundType.Mining);
                     CameraShakeManager.Instance.CameraShake(impulseSource);
                     rock.DamageRock(pickaxeDamage);
                     rockHit = true;

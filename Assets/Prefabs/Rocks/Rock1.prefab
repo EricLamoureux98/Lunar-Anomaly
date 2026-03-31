@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1464011018744430391, guid: 7f23602c6e0521c43b9f89d5910ed05b, type: 3}
       propertyPath: m_Name
-      value: RockBase
+      value: Rock1
       objectReference: {fileID: 0}
     - target: {fileID: 1776683483061156964, guid: 7f23602c6e0521c43b9f89d5910ed05b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -51,6 +51,14 @@ PrefabInstance:
     - target: {fileID: 1776683483061156964, guid: 7f23602c6e0521c43b9f89d5910ed05b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3876803616083841511, guid: 7f23602c6e0521c43b9f89d5910ed05b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.166
+      objectReference: {fileID: 0}
+    - target: {fileID: 3876803616083841511, guid: 7f23602c6e0521c43b9f89d5910ed05b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.198
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

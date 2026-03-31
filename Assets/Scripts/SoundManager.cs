@@ -75,7 +75,9 @@ namespace LunarAnomaly
 		Footstep,
 		GainAtmosphere,
 		LoseAtmosphere,
-		Alarm
+		Alarm,
+		RockBreak,
+		Pickup
 	}
 
 	[Serializable]

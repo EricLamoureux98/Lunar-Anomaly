@@ -25,6 +25,12 @@ namespace LunarAnomaly.Player
         Vector3 moveDirection;
         Vector2 moveInput;
         float currentSpeed;
+
+        [Header("Sound")]
+        [SerializeField] float walkingSoundTime = 0.5f;
+        [SerializeField] float runningSoundTime = 0.25f;
+        float currentSoundTime;
+        float soundTimer;
         
         bool exitingSlope;
         bool readyToJump;
@@ -62,6 +68,7 @@ namespace LunarAnomaly.Player
             ApplyExtraGravity();
             MovePlayer();
             HandleDrag();
+            soundTimer += Time.fixedDeltaTime;
         }
 
         void MovePlayer()
@@ -133,6 +140,12 @@ namespace LunarAnomaly.Player
 
         void HandleGroundMovement()
         {
+            if (soundTimer >= currentSoundTime && Mathf.Abs(rb.linearVelocity.x) > 0.5f)
+            {
+                SoundManager.PlaySound(SoundType.Footstep, 0.1f, false);
+                soundTimer = 0f;
+            }
+
             rb.AddForce(moveDirection.normalized * currentSpeed * 10f, ForceMode.Force);
             
             // Extra downward force to stick to ground
@@ -145,6 +158,12 @@ namespace LunarAnomaly.Player
 
         void HandleSlopeMovement()
         {        
+            if (soundTimer >= currentSoundTime && Mathf.Abs(rb.linearVelocity.x) > 0.5f)
+            {
+                SoundManager.PlaySound(SoundType.Footstep, 0.1f, false);
+                soundTimer = 0f;
+            }
+
             Vector3 slopeDir = groundChecker.GetSlopeMoveDirection(moveDirection);
 
             rb.AddForce(slopeDir * currentSpeed * 10, ForceMode.Force);
@@ -193,10 +212,12 @@ namespace LunarAnomaly.Player
             if (isSprinting)
             {
                 currentSpeed = sprintSpeed;
+                currentSoundTime = runningSoundTime;
             }
             else
             {
                 currentSpeed = walkSpeed;
+                currentSoundTime = walkingSoundTime;
             }
 
             if (jumpingHeld && !wasJumpingHeldLastFrame)

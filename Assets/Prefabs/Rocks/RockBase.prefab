@@ -30,7 +30,39 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4851359918339944694}
+  - {fileID: 3876803616083841511}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4960902384210982771
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3876803616083841511}
+  m_Layer: 0
+  m_Name: Sample Spawn Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3876803616083841511
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4960902384210982771}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.178, y: 0.416, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1776683483061156964}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8347189689496766662
 GameObject:
@@ -159,7 +191,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Rock
   destructionParticlePrefab: {fileID: 4797638475288434468, guid: 92bd73d21f0fe524284d8f66fdd699f5, type: 3}
-  rockSamplePrefab: {fileID: 2874632349983892717, guid: cd760536d84bcb4489cdc5842eaa78b5, type: 3}
+  rockSamplePrefabs:
+  - {fileID: 879385780461181275, guid: 9d36ad266bd02154fbf33b5f9c634e61, type: 3}
+  - {fileID: 879385780461181275, guid: ff3716ccc63d0834cab6ee7d0ae6e66b, type: 3}
+  - {fileID: 879385780461181275, guid: 461392675275ccb4baa40bdda5ff19ec, type: 3}
+  sampleSpawnPoint: {fileID: 3876803616083841511}
   shrinkRate: 0.98
   health: 3
   sampleDropChance: 0.25
