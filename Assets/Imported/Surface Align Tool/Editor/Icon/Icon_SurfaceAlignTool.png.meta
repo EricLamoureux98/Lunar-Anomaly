@@ -136,6 +136,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 223640
   packageName: Surface Align Tool
-  packageVersion: 1.0.3
-  assetPath: Assets/Seppe Peelman/Editor Tools/Surface Align Tool/Editor/Icon/Icon_SurfaceAlignTool.png
-  uploadId: 664322
+  packageVersion: 1.0.4
+  assetPath: Assets/Imported/Surface Align Tool/Editor/Icon/Icon_SurfaceAlignTool.png
+  uploadId: 892222

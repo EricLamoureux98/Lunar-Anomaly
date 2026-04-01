@@ -16,7 +16,7 @@ namespace SeppePeelman.EditorTools.SurfaceAlignTool
         [SerializeField] Texture2D _toolIcon;
         GUIContent _iconContent;
 
-        private SurfaceAlignToolSettings _settings;
+        private static SurfaceAlignToolSettings _settings;
 
         private Transform _activeTransform;
         private List<Transform> _activeTransformChildren = new List<Transform>();
@@ -91,7 +91,7 @@ namespace SeppePeelman.EditorTools.SurfaceAlignTool
 
         private void OnPlayModeStateChanged(PlayModeStateChange playModeState)
         {
-            if(playModeState == PlayModeStateChange.ExitingEditMode)
+            if (playModeState == PlayModeStateChange.ExitingEditMode)
             {
                 if (_activeTransformCollider) { _activeTransformCollider.enabled = false; }
             }
@@ -160,11 +160,11 @@ namespace SeppePeelman.EditorTools.SurfaceAlignTool
         public override void OnToolGUI(EditorWindow window)
         {
             //If we're not in the scene view, exit.
-            if (!(window is SceneView)) 
+            if (!(window is SceneView))
             {
                 DestroyCollider();
                 ResetLayer();
-                return; 
+                return;
             }
 
             //If we're not the active tool, exit.
@@ -186,7 +186,8 @@ namespace SeppePeelman.EditorTools.SurfaceAlignTool
             if (!_activeTransform) { return; }
             if (!_activeTransformCollider) { return; }
 
-            if (_showSceneViewOverlay != null && _sceneOverlayWindow != null) { _showSceneViewOverlay.Invoke(null, new object[] { _sceneOverlayWindow }); };
+            if (_showSceneViewOverlay != null && _sceneOverlayWindow != null) { _showSceneViewOverlay.Invoke(null, new object[] { _sceneOverlayWindow }); }
+            ;
 
             KeepColliderScale();
 
@@ -199,7 +200,7 @@ namespace SeppePeelman.EditorTools.SurfaceAlignTool
             }
 
             Vector3 targetPosition = Handles.PositionHandle(_activeTransform.position, handleRotation);
-          
+
             Quaternion targetRotation = _activeTransform.rotation;
 
 
@@ -213,7 +214,7 @@ namespace SeppePeelman.EditorTools.SurfaceAlignTool
             Vector3 mouseRaycastNormal = Vector3.zero;
 
             // Handle mouse control (FreeMoveHandle)
-            if (GUIUtility.hotControl == 1) 
+            if (GUIUtility.hotControl == 1)
             {
                 if (_previousGuiHotcontrol != 1)
                 {
@@ -228,7 +229,7 @@ namespace SeppePeelman.EditorTools.SurfaceAlignTool
                 if (_previousGuiHotcontrol == 1)
                 {
                     ResetLayer();
-                }        
+                }
 
                 _previousGuiHotcontrol = GUIUtility.hotControl;
             }
@@ -286,7 +287,7 @@ namespace SeppePeelman.EditorTools.SurfaceAlignTool
 #endif
                     }
                 }
-                else if(GUIUtility.hotControl != 2 && GUIUtility.hotControl != 3) // Using handles
+                else if (GUIUtility.hotControl != 2 && GUIUtility.hotControl != 3) // Using handles
                 {
                     List<NormalPoint> colliderPoints = new List<NormalPoint>();
                     int closestPointIndex = 0;
@@ -573,9 +574,15 @@ namespace SeppePeelman.EditorTools.SurfaceAlignTool
 #if UNITY_2020_1_OR_NEWER
         private static void DoOverlayUI(UnityEngine.Object settingsObject, SceneView sceneView)
         {
-            SurfaceAlignToolSettings settings = (SurfaceAlignToolSettings)settingsObject;
+            SurfaceAlignToolSettings settings = settingsObject as SurfaceAlignToolSettings;
+            if (settings == null)
+                settings = _settings;
+            if (settings == null)
+                settings = _settings = Resources.Load(SETTINGS_NAME) as SurfaceAlignToolSettings;
+            if (settings == null)
+                return;
             GUILayout.Space(10);
-//            settings.UpAxis = (UpAxis)EditorGUILayout.EnumPopup("Up Axis:", settings.UpAxis);
+            settings.UpAxis = (UpAxis)EditorGUILayout.EnumPopup("Up Axis:", settings.UpAxis);
             settings.SnapRadius = EditorGUILayout.FloatField("Snap Radius:", settings.SnapRadius);
             settings.RaycastDistance = EditorGUILayout.FloatField("Ray Distance:", settings.RaycastDistance);
             settings.DepthOffset = EditorGUILayout.FloatField("Depth Offset:", settings.DepthOffset);

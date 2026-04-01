@@ -12,6 +12,7 @@ namespace SeppePeelman.EditorTools.SurfaceAlignTool
         public float RaycastDistance = 10f;
         public float DepthOffset = 0f;
         public bool AddObjectBoundsToDepthOffset = false;
+        public bool RotateRandomAfterMoving = false;
     }
 
     public enum UpAxis
