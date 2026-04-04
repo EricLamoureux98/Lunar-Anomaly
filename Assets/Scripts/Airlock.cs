@@ -11,6 +11,8 @@ namespace LunarAnomaly.Gameplay
         [SerializeField] Animator animExt;
         [SerializeField] Animator animInt;
         [SerializeField] Animator animLighting;
+        [SerializeField] Transform smokeSpawnR, smokeSpawnL;
+        [SerializeField] ParticleSystem smokeParticle;
         [SerializeField] AtmosphereZone atmosphereZone;
         [SerializeField] float pressurizationTime = 3f;
         [SerializeField] float cooldownTime = 2f;
@@ -80,6 +82,12 @@ namespace LunarAnomaly.Gameplay
             // Close entry side and pressurize
             entryAnim.SetBool("IsOpen", false);
             SoundManager.PlaySound(fromExterior ? SoundType.GainAtmosphere : SoundType.LoseAtmosphere, 1f);
+            if (fromExterior && smokeParticle != null)
+            {
+                Instantiate(smokeParticle, smokeSpawnL.position, smokeSpawnL.rotation);
+                Instantiate(smokeParticle, smokeSpawnR.position, smokeSpawnR.rotation);
+            }
+
             yield return new WaitForSeconds(pressurizationTime);
 
             // Atmosphere state flips depending on direction
