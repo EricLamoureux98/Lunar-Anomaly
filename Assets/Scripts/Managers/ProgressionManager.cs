@@ -1,4 +1,5 @@
 using System;
+using LunarAnomaly.UI;
 using UnityEngine;
 
 	
@@ -12,12 +13,12 @@ namespace LunarAnomaly.Gameplay
 
         void OnEnable()
         {
-            TerminalController.OnPlayerProgressed += HandleConfirmed;
+            TerminalIntroPanel.OnPlayerProgressed += HandleConfirmed;
         }
 
         void OnDisable()
         {
-            TerminalController.OnPlayerProgressed -= HandleConfirmed;
+            TerminalIntroPanel.OnPlayerProgressed -= HandleConfirmed;
         }
 
         void Start()

@@ -24,8 +24,7 @@ MonoBehaviour:
       And remember...
       Report anything unusual.'
   - message: 1
-    text: Hello, and welcome to the terminal. Here, you will find objectives that
-      probably won't get you killed!
+    text: Hello, and welcome to the terminal
   - message: 2
     text: Deposit successful
   - message: 3
