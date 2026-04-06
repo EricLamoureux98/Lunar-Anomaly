@@ -15,9 +15,9 @@ MonoBehaviour:
   logEntries:
   - message: 0
     logTitle: 'Log 01: Routine Check'
-    logText: 'Author: Commander Elias Ward
+    logText: 'Author: Commander Elias Ward.
 
-      Timestamp: Sol 3
+      Timestamp: Sol 3.
 
 
       Everything
@@ -43,12 +43,12 @@ MonoBehaviour:
 
       Perfectly
       normal, I think.'
-    isDiscovered: 0
+    isDiscovered: 1
   - message: 1
     logTitle: 'Log 02: Minor Anomaly'
-    logText: 'Author: Commander Elias Ward
+    logText: 'Author: Commander Elias Ward.
 
-      Timestamp: Sol 11
+      Timestamp: Sol 11.
 
 
       Something
@@ -80,12 +80,12 @@ MonoBehaviour:
       because I''m worried.
 
       Just being thorough.'
-    isDiscovered: 0
+    isDiscovered: 1
   - message: 2
     logTitle: 'Log 03: Visual Disturbance'
-    logText: 'Author: Commander Elias Ward
+    logText: 'Author: Commander Elias Ward.
 
-      Timestamp: Sol 19
+      Timestamp: Sol 19.
 
 
       I saw
@@ -115,12 +115,12 @@ MonoBehaviour:
 
       But
       I can''t shake the feeling that it was looking directly at me.'
-    isDiscovered: 0
+    isDiscovered: 1
   - message: 3
     logTitle: 'Log 04: Cognitive Degradation'
-    logText: 'Author: Commander Elias Ward
+    logText: 'Author: Commander Elias Ward.
 
-      Timestamp: Sol 26
+      Timestamp: Sol 26.
 
 
       I keep
@@ -154,12 +154,12 @@ MonoBehaviour:
       is moving when I''m not looking.
 
       I know it is.'
-    isDiscovered: 0
+    isDiscovered: 1
   - message: 4
     logTitle: 'Log 05: Final Entry'
-    logText: 'Author: Commander Elias Ward
+    logText: 'Author: Commander Elias Ward.
 
-      Timestamp: Unknown
+      Timestamp: Unknown.
 
 
       They''re
@@ -213,4 +213,4 @@ MonoBehaviour:
       is not alone.
 
       And soon... neither will you.'
-    isDiscovered: 0
+    isDiscovered: 1

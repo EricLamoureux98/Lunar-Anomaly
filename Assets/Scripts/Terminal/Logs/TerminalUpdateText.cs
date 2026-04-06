@@ -11,23 +11,26 @@ namespace LunarAnomaly.UI
 	{
 		[Header("References")]
 		[SerializeField] TerminalTextDatabase terminalTextDatabase;
+        [SerializeField] LogTextDatabase logTextDatabase;
 		Typewriter typewriter;
 
 		TMP_Text currentTextBox;
 
 		// These are faster than a List
-		HashSet<TerminalMessage> revealedMessages = new HashSet<TerminalMessage>();
-        HashSet<LogMessage> foundLogMessages = new HashSet<LogMessage>();
+		HashSet<TerminalMessage> revealedTerminalMessages = new HashSet<TerminalMessage>();
+        HashSet<LogMessage> revealedLogMessages = new HashSet<LogMessage>();
 
         void OnEnable()
         {
-            TerminalController.OnTerminalMessage += ShowText;
+            TerminalController.OnTerminalMessage += ReadText;
+            TerminalLogPanel.OnLogMessage += ReadText;
             InputHandler.OnTextSpeedup += TextSpeedup;
         }
 
         void OnDisable()
         {
-            TerminalController.OnTerminalMessage -= ShowText;
+            TerminalController.OnTerminalMessage -= ReadText;
+            TerminalLogPanel.OnLogMessage -= ReadText;
             InputHandler.OnTextSpeedup -= TextSpeedup;
         }
 
@@ -43,11 +46,24 @@ namespace LunarAnomaly.UI
             currentTextBox = textBox;
         }
 
-        public void ShowText(TerminalMessage message)
+        void ReadText(TerminalMessage terminalMessage)
+        {
+            string text = terminalTextDatabase.GetText(terminalMessage);
+
+            ShowText(text, terminalMessage, revealedTerminalMessages);
+        }
+
+        void ReadText(LogMessage logMessage)
+        {
+            string text = logTextDatabase.GetLogText(logMessage);
+            
+            ShowText(text, logMessage, revealedLogMessages);
+        }
+
+        // This is a generic method
+        void ShowText<T>(string text, T message, HashSet<T> revealedMessages)
         {
             if (typewriter == null) return;
-
-            string text = terminalTextDatabase.GetText(message);
             
             if (revealedMessages.Contains(message))
             {

@@ -154,7 +154,8 @@ namespace LunarAnomaly.UI
 
                 textBox.maxVisibleCharacters++;
 
-                if (!CurrentlySkipping && (character == '?' || character == '.' || character == ',' || character == ':' || character == ';' || character == '!' || character == '-'))
+                //if (!CurrentlySkipping && (character == '?' || character == '.' || character == ',' || character == ':' || character == ';' || character == '!' || character == '-'))
+                if (!CurrentlySkipping && (character == '?' || character == '.' || character == ',' || character == ':' || character == ';' || character == '!'))
                 {
                     yield return interpunctuationDelayWait;
                 }

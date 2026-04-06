@@ -19,18 +19,4 @@ public class LogTextDatabase : ScriptableObject
         Debug.LogWarning($"Log message {message} not found in database!");
         return "Log message not found!";
     }
-
-    public string GetLogTitle(string logTitle)
-    {
-        foreach (var entry in logEntries)
-        {
-            if (entry.logTitle == logTitle)
-            {
-                return entry.logTitle;
-            }
-        }
-
-        Debug.LogWarning($"Log message {logTitle} not found in database!");
-        return "Log title not found!";
-    }
 }
