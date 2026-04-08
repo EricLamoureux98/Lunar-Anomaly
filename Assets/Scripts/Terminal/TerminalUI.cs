@@ -1,6 +1,7 @@
 using System;
 using LunarAnomaly.Gameplay;
 using LunarAnomaly.Player;
+using TMPro;
 using UnityEngine;
 
 namespace LunarAnomaly.UI
@@ -11,9 +12,15 @@ namespace LunarAnomaly.UI
         [SerializeField] TerminalController terminalController;
         [SerializeField] ProgressionManager progressionManager;
 
-		[Header("Terminal UI")]
+        [Header("Terminal Text")]
+        [SerializeField] TMP_Text dateAndTime;
+
+		[Header("Terminal Panels")]
         [SerializeField] GameObject terminalBGPanel;
 		[SerializeField] GameObject terminalOpenText;
+        [SerializeField] GameObject terminalInterfaceGroup;
+
+        int lastSecond = -1;
 
         // To BasePanel 
         public static event Action<PanelType> OnPanelSelected;
@@ -33,19 +40,35 @@ namespace LunarAnomaly.UI
             ProgressionManager.OnStageChanged -= StageUpdate;
         }
 
+        void Update()
+        {
+            if(terminalController.terminalActive)
+            {
+                DateAndTime();
+            }
+        }
+
+        void DateAndTime()
+        {              
+            if (DateTime.Now.Second != lastSecond)
+            {
+                lastSecond = DateTime.Now.Second;
+                dateAndTime.text = DateTime.Now.ToString("HH:mm:ss");
+            }
+        }
+
         // This seems redundant
         void StageUpdate(ProgressionStage stage)
         {
             if (stage == ProgressionStage.Intro)
-            {
-                //TerminalIntro();       
-                OnPanelSelected?.Invoke(PanelType.Intro);         
+            {     
+                //OnPanelSelected?.Invoke(PanelType.Intro);         
             }
 
             else if (stage == ProgressionStage.SampleObjective)
             {
-                //TerminalInterface();
-                OnPanelSelected?.Invoke(PanelType.Interface);   
+                //OnPanelSelected?.Invoke(PanelType.Interface);   
+                terminalInterfaceGroup.SetActive(true);
             }
         } 
 
@@ -67,9 +90,14 @@ namespace LunarAnomaly.UI
             if (value == true)
             {
                 terminalBGPanel.SetActive(true);
+                
                 if (progressionManager.CurrentStage == ProgressionStage.Intro)
                 {
                     OnPanelSelected?.Invoke(PanelType.Intro);
+                }
+                else if (progressionManager.CurrentStage != ProgressionStage.Intro)
+                {
+                    terminalInterfaceGroup.SetActive(true);
                 }
                 else if (progressionManager.CurrentStage == ProgressionStage.SampleObjective)
                 {  
@@ -78,6 +106,7 @@ namespace LunarAnomaly.UI
             }
             else
             {
+                terminalInterfaceGroup.SetActive(false);
                 terminalBGPanel.SetActive(false);
                 OnTerminalClosed?.Invoke();
             }

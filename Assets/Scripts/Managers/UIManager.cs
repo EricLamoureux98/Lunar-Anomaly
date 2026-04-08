@@ -67,10 +67,10 @@ namespace LunarAnomaly.UI
                 canvasGroup.alpha = 1f;
         }
 
-        void UpdateMiningSampleUI(int samples)
+        void UpdateMiningSampleUI(int samples, int remaining)
         {
-            //samplesCollectedText.text = string.Format("Samples collected: {0}/{1}", samples, remaining);
-            samplesCollectedText.text = string.Format("Samples collected: {0}", samples);
+            samplesCollectedText.text = string.Format("{0} / {1} collected", samples, remaining);
+            //samplesCollectedText.text = string.Format("Samples collected: {0}", samples);
         }
 
         void SilhouetteFlash(float fadeLength)

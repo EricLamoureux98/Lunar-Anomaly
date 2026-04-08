@@ -11,8 +11,8 @@ namespace LunarAnomaly.UI
 		[SerializeField] MiningManager miningManager;
 		[SerializeField] TMP_Text samplesCollectedText;
 
-		[Header("Rock Samples")]
-        [SerializeField] int samplesRequired;
+		// [Header("Rock Samples")]
+        // [SerializeField] int samplesRequired;
         
         int samplesDelivered;
         bool sampleObjectiveComplete;		
@@ -54,11 +54,11 @@ namespace LunarAnomaly.UI
         {
             Debug.Log("Trying to deposit samples");
             samplesDelivered += amount;
-            UpdateSamplesDeposited(samplesDelivered, samplesRequired);
+            UpdateSamplesDeposited(samplesDelivered, miningManager.samplesRequired);
 
             //Debug.Log($"Samples: {samplesDelivered} / {samplesRequired}");
 
-            if (samplesDelivered >= samplesRequired)
+            if (samplesDelivered >= miningManager.samplesRequired)
             {
 				// ADD EVENT HERE
                 //currentTerminalEntry = TerminalMessage.ObjectiveComplete;
