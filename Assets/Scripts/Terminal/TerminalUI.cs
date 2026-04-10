@@ -67,18 +67,18 @@ namespace LunarAnomaly.UI
 
             else if (stage == ProgressionStage.SampleObjective)
             {
-                //OnPanelSelected?.Invoke(PanelType.Interface);   
-                terminalInterfaceGroup.SetActive(true);
+                OnPanelSelected?.Invoke(PanelType.Interface); 
+                //terminalInterfaceGroup.SetActive(true);
             }
         } 
 
-        public void HandleEnterLogScreenButton()
-        {
-            if (terminalController.terminalActive)
-            {
-                OnPanelSelected?.Invoke(PanelType.Logs);
-            }
-        }   
+        // public void HandleEnterLogScreenButton()
+        // {
+        //     if (terminalController.terminalActive)
+        //     {
+        //         OnPanelSelected?.Invoke(PanelType.Logs);
+        //     }
+        // }   
 
 		void TerminalInteract(bool value)
         {
@@ -95,18 +95,14 @@ namespace LunarAnomaly.UI
                 {
                     OnPanelSelected?.Invoke(PanelType.Intro);
                 }
-                else if (progressionManager.CurrentStage != ProgressionStage.Intro)
+                else// if (progressionManager.CurrentStage != ProgressionStage.Intro)
                 {
-                    terminalInterfaceGroup.SetActive(true);
-                }
-                else if (progressionManager.CurrentStage == ProgressionStage.SampleObjective)
-                {  
-                    OnPanelSelected?.Invoke(PanelType.Interface);                  
+                    OnPanelSelected?.Invoke(PanelType.Interface);
                 }
             }
             else
             {
-                terminalInterfaceGroup.SetActive(false);
+                //terminalInterfaceGroup.SetActive(false);
                 terminalBGPanel.SetActive(false);
                 OnTerminalClosed?.Invoke();
             }
@@ -117,6 +113,6 @@ namespace LunarAnomaly.UI
     {
         Intro,
         Interface,
-        Logs
+        //Logs
     }
 }

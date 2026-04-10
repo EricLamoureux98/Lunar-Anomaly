@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LogTextDatabase
   logEntries:
   - message: 0
-    logTitle: 'Log 01: Routine Check'
+    logTitle: 'Log 001: Routine Check'
+    logDate: Sol 003
     logText: 'Author: Commander Elias Ward.
 
       Timestamp: Sol 3.
@@ -45,7 +46,8 @@ MonoBehaviour:
       normal, I think.'
     isDiscovered: 1
   - message: 1
-    logTitle: 'Log 02: Minor Anomaly'
+    logTitle: 'Log 002: Minor Anomaly'
+    logDate: Sol 011
     logText: 'Author: Commander Elias Ward.
 
       Timestamp: Sol 11.
@@ -82,7 +84,8 @@ MonoBehaviour:
       Just being thorough.'
     isDiscovered: 1
   - message: 2
-    logTitle: 'Log 03: Visual Disturbance'
+    logTitle: 'Log 003: Visual Disturbance'
+    logDate: Sol 019
     logText: 'Author: Commander Elias Ward.
 
       Timestamp: Sol 19.
@@ -117,7 +120,8 @@ MonoBehaviour:
       I can''t shake the feeling that it was looking directly at me.'
     isDiscovered: 1
   - message: 3
-    logTitle: 'Log 04: Cognitive Degradation'
+    logTitle: 'Log 004: Cognitive Degradation'
+    logDate: Sol 026
     logText: 'Author: Commander Elias Ward.
 
       Timestamp: Sol 26.
@@ -156,7 +160,8 @@ MonoBehaviour:
       I know it is.'
     isDiscovered: 1
   - message: 4
-    logTitle: 'Log 05: Final Entry'
+    logTitle: 'Log 005: Final Entry'
+    logDate: Unknown
     logText: 'Author: Commander Elias Ward.
 
       Timestamp: Unknown.

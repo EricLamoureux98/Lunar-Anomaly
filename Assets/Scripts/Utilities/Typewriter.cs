@@ -127,7 +127,8 @@ namespace LunarAnomaly.UI
             textBox = currentTextBox;
 
             textBox.text = text;
-            textBox.maxVisibleCharacters = textBox.textInfo.characterCount;
+            //textBox.maxVisibleCharacters = textBox.textInfo.characterCount;
+            textBox.maxVisibleCharacters = int.MaxValue;
         }   
 
         IEnumerator TypewriterText()

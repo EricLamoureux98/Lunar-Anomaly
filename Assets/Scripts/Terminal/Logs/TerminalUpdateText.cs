@@ -23,14 +23,14 @@ namespace LunarAnomaly.UI
         void OnEnable()
         {
             TerminalController.OnTerminalMessage += ReadText;
-            TerminalLogPanel.OnLogMessage += ReadText;
+            TerminalInterfacePanel.OnLogMessage += ReadText;
             InputHandler.OnTextSpeedup += TextSpeedup;
         }
 
         void OnDisable()
         {
             TerminalController.OnTerminalMessage -= ReadText;
-            TerminalLogPanel.OnLogMessage -= ReadText;
+            TerminalInterfacePanel.OnLogMessage -= ReadText;
             InputHandler.OnTextSpeedup -= TextSpeedup;
         }
 

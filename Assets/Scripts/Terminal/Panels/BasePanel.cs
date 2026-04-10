@@ -31,6 +31,7 @@ namespace LunarAnomaly.UI
 		protected virtual void Awake()
 		{
 			canvasGroup = GetComponent<CanvasGroup>();
+			if (canvasGroup == null) Debug.Log("Pannel " + gameObject.name + "does not have canvas group");
 		}
 
 		void HandlePanelSelected(PanelType selectedPanel)

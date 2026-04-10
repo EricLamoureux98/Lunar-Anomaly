@@ -1,8 +1,10 @@
+using System;
 using LunarAnomaly.Gameplay;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-	
+
 namespace LunarAnomaly.UI
 {
 	public class TerminalInterfacePanel : BasePanel
@@ -11,16 +13,37 @@ namespace LunarAnomaly.UI
 		[SerializeField] MiningManager miningManager;
 		[SerializeField] TMP_Text samplesCollectedText;
 
+        [Header("Terminal Logs")]
+        [SerializeField] LogTextDatabase logTextDatabase;
+        [SerializeField] TMP_Text logTitle;
+        [SerializeField] TMP_Text logDate;
+        //[SerializeField] TMP_Text logText;
+        [SerializeField] Button logButtonPrefab;
+        [SerializeField] Transform logButtonContainer;
+
 		// [Header("Rock Samples")]
         // [SerializeField] int samplesRequired;
         
         int samplesDelivered;
         bool sampleObjectiveComplete;		
 
+        public static event Action<LogMessage> OnLogMessage;
+
         protected override void OnPanelShown()
         {
             terminalUpdateText.UpdateCurrentTextBox(currentTextBox);
 			terminalController.RequestCurrentMessage();
+            CreateLogButtons();
+        }
+
+        public void HandleNotificationButton()
+        {
+            if (terminalController.terminalActive)
+            {
+                logTitle.text = "Notifications";
+                logDate.text = "Live";
+                terminalController.RequestCurrentMessage();
+            }
         }
 
 		public void HandleDepositButton()
@@ -76,6 +99,41 @@ namespace LunarAnomaly.UI
                 //currentTerminalEntry = TerminalMessage.DepositSuccess;
 
                 //OnTerminalMessage?.Invoke(currentTerminalEntry);
+            }
+        }
+
+        void CreateLogButtons()
+        {
+            // Makes sure spawned buttons update with isDiscoverd
+            foreach (Transform child in logButtonContainer)
+                Destroy(child.gameObject);
+
+            int logIndex = 1;
+            foreach (var log in logTextDatabase.logEntries)
+            {
+                Button button = Instantiate(logButtonPrefab, logButtonContainer);
+                TextMeshProUGUI text = button.GetComponentInChildren<TextMeshProUGUI>();
+                //text.text = log.logTitle;
+                text.text = $"- Log {logIndex:D3}";
+                logIndex++;
+
+                //button.interactable = log.isDiscovered;
+                button.gameObject.SetActive(log.isDiscovered);
+
+                string capturedTitle = log.logTitle;
+                string capturedDate = log.logDate;
+                LogMessage capturedMessage = log.message;
+                button.onClick.AddListener(() => OnLogButtonClicked(capturedMessage, capturedTitle, capturedDate));
+            }
+
+            void OnLogButtonClicked(LogMessage message, string title, string date)
+            {
+                // safe to remove later
+                //logText.text = logTextDatabase.GetLogText(message);
+
+                logTitle.text = title;
+                logDate.text = date;
+                OnLogMessage?.Invoke(message);
             }
         }
 	}

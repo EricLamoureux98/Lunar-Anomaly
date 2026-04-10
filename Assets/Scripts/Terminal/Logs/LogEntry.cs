@@ -6,6 +6,7 @@ public class LogEntry
 	public LogMessage message;
 
 	public string logTitle;
+	public string logDate;
 
 	[TextArea(5,10)]
 	public string logText;

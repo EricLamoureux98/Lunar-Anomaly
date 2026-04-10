@@ -6,11 +6,12 @@ using UnityEngine.UI;
 
 namespace LunarAnomaly.UI
 {
+    // ********* THIS HAS BEEN DEPRECATED **********
 	public class TerminalLogPanel : BasePanel
 	{
 		[Header("Terminal Logs")]
         [SerializeField] LogTextDatabase logTextDatabase;
-        [SerializeField] TMP_Text logText;
+        //[SerializeField] TMP_Text logText;
         [SerializeField] Button logButtonPrefab;
         [SerializeField] Transform logButtonContainer;
 
