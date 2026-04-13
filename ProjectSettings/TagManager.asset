@@ -8,6 +8,7 @@ TagManager:
   - Actors
   - TrackingObject
   - Silhouette
+  - Outpost
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - WhatIsGround
   - RockLayer
   - Player
-  - 
+  - Outpost
   - 
   - 
   - 
