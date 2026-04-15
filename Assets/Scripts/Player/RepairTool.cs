@@ -1,10 +1,11 @@
+using LunarAnomaly.Gameplay;
 using LunarAnomaly.Input;
 using UnityEngine;
 
 	
 namespace LunarAnomaly.Player
 {
-	// Create a base class for this
+	// Create a base class for tools
 	public class RepairTool : MonoBehaviour
 	{
 		[SerializeField] SphereCollider sphereCollider;
@@ -14,7 +15,7 @@ namespace LunarAnomaly.Player
 		[Header("Mining")]
         bool isRepairing;
 
-		Outpost currentOutpost;
+		RepairNode currentNode;
 
 		void Awake()
         {
@@ -30,26 +31,26 @@ namespace LunarAnomaly.Player
 
 		void OnTriggerEnter(Collider other)
 		{
-			if (other.CompareTag("Outpost") && other.TryGetComponent(out Outpost structure))
+			if (other.CompareTag("OutpostNode") && other.TryGetComponent(out RepairNode node))
 			{
-				Debug.Log("Player near outpost");
-				currentOutpost = structure;
+				Debug.Log("Player near repair node");
+				currentNode = node;
 			}
 		}
 
 		void OnTriggerExit(Collider other)
 		{
-			if (other.TryGetComponent(out Outpost outpost) && outpost == currentOutpost)
+			if (other.TryGetComponent(out RepairNode node) && node == currentNode)
 			{
-				currentOutpost = null;
+				currentNode = null;
 			}
 		} 
 
 		void RepairController()
 		{
-			if (isRepairing && currentOutpost != null)
+			if (isRepairing && currentNode != null)
 			{
-				currentOutpost.RepairStructure();
+				currentNode.RepairCurrentNode();
 			}
 		}
 

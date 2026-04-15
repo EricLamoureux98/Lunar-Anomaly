@@ -13,7 +13,7 @@ namespace LunarAnomaly.Gameplay
         [SerializeField] Animator animLighting;
         [SerializeField] Transform smokeSpawnR, smokeSpawnL;
         [SerializeField] ParticleSystem smokeParticle;
-        [SerializeField] AtmosphereZone atmosphereZone;
+        [SerializeField] AtmosphereZone atmosphereZone; // Might not need to be serialized
         [SerializeField] float pressurizationTime = 3f;
         [SerializeField] float cooldownTime = 2f;
         float lastCycleTime = float.NegativeInfinity;
