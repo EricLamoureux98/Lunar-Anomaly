@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using LunarAnomaly.UI;
+using Unity.Cinemachine;
 using UnityEngine;
 
 	
@@ -10,9 +11,13 @@ namespace LunarAnomaly.Gameplay
 	{
 		AtmosphereZone atmosphereZone;
 
+		[SerializeField] Animator powerBoxDoorAnim;
+		[SerializeField] CinemachineImpulseSource powerImpulseSource;
+
 		bool outpostActive;
 		bool isPowered;
 		bool outpostRepaired;
+		bool powerBoxOpen;
 
 		[Header("Airlock")]
 		[SerializeField] float pressurizationTime = 3f;
@@ -41,13 +46,16 @@ namespace LunarAnomaly.Gameplay
         }
 
 		// ***** FINISH THIS ******
-		// Enum probably needs a non for the repair nodes
 		void HandleInteract(OutpostPrompt prompt)
 		{
 			switch (prompt)
 			{
 				case OutpostPrompt.PowerPanel:
 					TryOpenPowerbox();
+					break;
+
+				case OutpostPrompt.TurnOnPower:
+					TryEnablePower();
 					break;
 			}
 		}
@@ -59,7 +67,21 @@ namespace LunarAnomaly.Gameplay
 
 		void TryOpenPowerbox()
 		{
-			
+			if (powerBoxOpen) return;
+
+			powerBoxOpen = true;
+			powerBoxDoorAnim.SetBool("IsOpen", true);
+			SoundManager.PlaySound(SoundType.OutpostSqueak, 1f, false);			
+			OnOutpostUIUpdate?.Invoke(OutpostPrompt.PowerPanel, false);
+		}
+
+		public void HandlePowerboxOpen()
+		{
+			if (!powerBoxOpen) return;
+
+			SoundManager.PlaySound(SoundType.OutpostBang, 1f, false);
+			CameraShakeManager.Instance.CameraShake(powerImpulseSource, 0.03f);
+			OnOutpostUIUpdate?.Invoke(OutpostPrompt.TurnOnPower, true);
 		}
 
 		// Exterior powerbox
@@ -68,6 +90,7 @@ namespace LunarAnomaly.Gameplay
 			if (outpostRepaired && !isPowered)
 			{
 				isPowered = true;
+				OnOutpostUIUpdate?.Invoke(OutpostPrompt.TurnOnPower, false);
 				
 				// Allow player to enter
 				// Cycle airlock

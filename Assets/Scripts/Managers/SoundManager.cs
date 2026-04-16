@@ -77,7 +77,9 @@ namespace LunarAnomaly
 		LoseAtmosphere,
 		Alarm,
 		RockBreak,
-		Pickup
+		Pickup,
+		OutpostBang,
+		OutpostSqueak
 	}
 
 	[Serializable]

@@ -14,7 +14,7 @@ namespace LunarAnomaly.UI
 		[SerializeField] TMP_Text openPowerPanel;
 		[SerializeField] TMP_Text turnOnPower;
 		
-		[SerializeField] TMP_Text repairNode;
+		//[SerializeField] TMP_Text repairNode;
 		[SerializeField] TMP_Text openDoor;
 		[SerializeField] TMP_Text activateOutpost;
 		[SerializeField] TMP_Text viewLog;
@@ -64,7 +64,7 @@ namespace LunarAnomaly.UI
 			activateOutpost.enabled = false;
 			openPowerPanel.enabled = false;
 			turnOnPower.enabled = false;
-			repairNode.enabled = false;
+			//repairNode.enabled = false;
 			openDoor.enabled = false;
 			viewLog.enabled = false;
 		}
@@ -76,6 +76,7 @@ namespace LunarAnomaly.UI
 		TurnOnPower,
 		OpenDoor,
 		ActivateOutpost,
-		ViewLog
+		ViewLog,
+		Basic
 	}
 }

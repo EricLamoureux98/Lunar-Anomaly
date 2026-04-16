@@ -17,6 +17,7 @@ namespace LunarAnomaly.Player
 
         [Header("Mining")]
         [SerializeField] float pickaxeDamage = 1f;
+        [SerializeField] float shakeAmount = 0.03f;
         bool isMining;
 
         const string MINING_BOOL = "IsMining";
@@ -44,7 +45,7 @@ namespace LunarAnomaly.Player
                 if (hit.TryGetComponent(out Rock rock))
                 {
                     SoundManager.PlaySound(SoundType.Mining);
-                    CameraShakeManager.Instance.CameraShake(impulseSource);
+                    CameraShakeManager.Instance.CameraShake(impulseSource, shakeAmount);
                     rock.DamageRock(pickaxeDamage);
                     rockHit = true;
                 }

@@ -7,7 +7,7 @@ namespace LunarAnomaly.Gameplay
     {
         public static CameraShakeManager Instance { get; private set; }
 
-        [SerializeField] float globalShakeForce = 0.05f;
+        //[SerializeField] float globalShakeForce = 0.05f;
 
         void Awake()
         {
@@ -21,9 +21,10 @@ namespace LunarAnomaly.Gameplay
             }
         }
 
-        public void CameraShake(CinemachineImpulseSource impulseSource)
+        public void CameraShake(CinemachineImpulseSource impulseSource, float shakeForce, float min = 0.01f, float max = 0.5f)
         {
-            impulseSource.GenerateImpulseWithForce(globalShakeForce);
+            shakeForce = Mathf.Clamp(shakeForce, min, max);
+            impulseSource.GenerateImpulseWithForce(shakeForce);
         }
     }
 }
