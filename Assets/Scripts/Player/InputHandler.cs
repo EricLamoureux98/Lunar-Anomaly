@@ -55,7 +55,8 @@ namespace LunarAnomaly.Input
 
         public void SystemInteract(InputAction.CallbackContext context)
         {
-            OnInteractPressed?.Invoke();
+            if (context.performed)
+                OnInteractPressed?.Invoke();
         }
 
         //----------------------------UI---------------------------------//

@@ -13,10 +13,11 @@ namespace LunarAnomaly.Gameplay
 
 		[SerializeField] Animator powerBoxDoorAnim;
 		[SerializeField] CinemachineImpulseSource powerImpulseSource;
+		[SerializeField] Renderer doorLight;
 
 		bool outpostActive;
 		bool isPowered;
-		bool outpostRepaired;
+		public bool outpostRepaired; // For testing
 		bool powerBoxOpen;
 
 		[Header("Airlock")]
@@ -27,6 +28,9 @@ namespace LunarAnomaly.Gameplay
 		// To OutpostUI
 		public static event Action<OutpostPrompt, bool> OnOutpostUIUpdate;
 		public static event Action OnOutpostHideAllUI;
+
+		// To OutpostTriggerZone
+		public static event Action<OutpostPrompt, bool> OnTriggerZoneActive;
 
         void OnEnable()
         {
@@ -57,6 +61,10 @@ namespace LunarAnomaly.Gameplay
 				case OutpostPrompt.TurnOnPower:
 					TryEnablePower();
 					break;
+				
+				case OutpostPrompt.OpenDoor:
+					TryEnterOutpost();
+					break;
 			}
 		}
 
@@ -75,6 +83,7 @@ namespace LunarAnomaly.Gameplay
 			OnOutpostUIUpdate?.Invoke(OutpostPrompt.PowerPanel, false);
 		}
 
+		// Called from door animation
 		public void HandlePowerboxOpen()
 		{
 			if (!powerBoxOpen) return;
@@ -82,15 +91,23 @@ namespace LunarAnomaly.Gameplay
 			SoundManager.PlaySound(SoundType.OutpostBang, 1f, false);
 			CameraShakeManager.Instance.CameraShake(powerImpulseSource, 0.03f);
 			OnOutpostUIUpdate?.Invoke(OutpostPrompt.TurnOnPower, true);
+			OnTriggerZoneActive?.Invoke(OutpostPrompt.TurnOnPower, true);
 		}
 
-		// Exterior powerbox
         void TryEnablePower()
 		{
 			if (outpostRepaired && !isPowered)
 			{
 				isPowered = true;
 				OnOutpostUIUpdate?.Invoke(OutpostPrompt.TurnOnPower, false);
+				OnTriggerZoneActive?.Invoke(OutpostPrompt.TurnOnPower, false);
+				// PLAY SOUND
+
+				doorLight.material.SetColor("_BaseColor", Color.green);
+				doorLight.material.SetColor("_EmissionColor", Color.green);
+
+				OnOutpostUIUpdate?.Invoke(OutpostPrompt.OpenDoor, true);
+				OnTriggerZoneActive?.Invoke(OutpostPrompt.OpenDoor, true);
 				
 				// Allow player to enter
 				// Cycle airlock

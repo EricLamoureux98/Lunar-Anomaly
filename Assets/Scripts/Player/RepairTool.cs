@@ -33,7 +33,6 @@ namespace LunarAnomaly.Player
 		{
 			if (other.CompareTag("OutpostNode") && other.TryGetComponent(out RepairNode node))
 			{
-				Debug.Log("Player near repair node");
 				currentNode = node;
 			}
 		}

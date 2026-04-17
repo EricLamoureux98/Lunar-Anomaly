@@ -1,4 +1,5 @@
 using System;
+using LunarAnomaly.Gameplay;
 using LunarAnomaly.Input;
 using UnityEngine;
 	
@@ -10,6 +11,7 @@ namespace LunarAnomaly.UI
 		[SerializeField] CanvasGroup canvasGroup;
 
 		bool playerInside;
+        [SerializeField] bool triggerActive;
 
 		// To OutpostController
 		public static event Action<OutpostPrompt> OnInteract;
@@ -17,11 +19,13 @@ namespace LunarAnomaly.UI
         void OnEnable()
         {
             InputHandler.OnInteractPressed += HandleInteract;
+            OutpostController.OnTriggerZoneActive += HandleActive;
         }
 
         void OnDisable()
         {
             InputHandler.OnInteractPressed -= HandleInteract;
+            OutpostController.OnTriggerZoneActive -= HandleActive;
         }
 
         void OnTriggerEnter(Collider other)
@@ -46,11 +50,18 @@ namespace LunarAnomaly.UI
 			}
         }
 
+        void HandleActive(OutpostPrompt updatedPrompt, bool active)
+        {
+            if (updatedPrompt == prompt)
+                triggerActive = active;
+        }
+
         void HandleInteract()
         {
-            if (playerInside)
+            if (playerInside && triggerActive)
 			{
 				OnInteract?.Invoke(prompt);
+                Debug.Log($"{prompt} interacted with");
 			}
         }
     }
