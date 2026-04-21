@@ -79,7 +79,9 @@ namespace LunarAnomaly
 		RockBreak,
 		Pickup,
 		OutpostBang,
-		OutpostSqueak
+		OutpostSqueak,
+		SwitchFlip,
+		MachineStart
 	}
 
 	[Serializable]

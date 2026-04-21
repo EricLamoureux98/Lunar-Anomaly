@@ -9,21 +9,19 @@ namespace LunarAnomaly.Gameplay
 {
 	public class OutpostController : MonoBehaviour
 	{
-		AtmosphereZone atmosphereZone;
+		
 
 		[SerializeField] Animator powerBoxDoorAnim;
+		[SerializeField] Animator powerSwitchesAnim;
+		[SerializeField] Animator OutpostDoorAnim;
 		[SerializeField] CinemachineImpulseSource powerImpulseSource;
 		[SerializeField] Renderer doorLight;
+		[SerializeField] Renderer buttonLight;
 
 		bool outpostActive;
 		bool isPowered;
 		public bool outpostRepaired; // For testing
 		bool powerBoxOpen;
-
-		[Header("Airlock")]
-		[SerializeField] float pressurizationTime = 3f;
-		bool playerInside = false;
-		bool isCycling = false;
 
 		// To OutpostUI
 		public static event Action<OutpostPrompt, bool> OnOutpostUIUpdate;
@@ -44,11 +42,6 @@ namespace LunarAnomaly.Gameplay
 			OutpostTriggerZone.OnInteract -= HandleInteract;
         }
 
-        void Awake()
-        {
-			atmosphereZone = GetComponentInChildren<AtmosphereZone>();
-        }
-
 		// ***** FINISH THIS ******
 		void HandleInteract(OutpostPrompt prompt)
 		{
@@ -62,7 +55,7 @@ namespace LunarAnomaly.Gameplay
 					TryEnablePower();
 					break;
 				
-				case OutpostPrompt.OpenDoor:
+				case OutpostPrompt.EnterOutpost:
 					TryEnterOutpost();
 					break;
 			}
@@ -77,6 +70,8 @@ namespace LunarAnomaly.Gameplay
 		{
 			if (powerBoxOpen) return;
 
+			powerSwitchesAnim.SetBool("IsPowered", false);
+			OutpostDoorAnim.SetBool("IsOpen", false);
 			powerBoxOpen = true;
 			powerBoxDoorAnim.SetBool("IsOpen", true);
 			SoundManager.PlaySound(SoundType.OutpostSqueak, 1f, false);			
@@ -98,6 +93,7 @@ namespace LunarAnomaly.Gameplay
 		{
 			if (outpostRepaired && !isPowered)
 			{
+				powerSwitchesAnim.SetBool("IsPowered", true);
 				isPowered = true;
 				OnOutpostUIUpdate?.Invoke(OutpostPrompt.TurnOnPower, false);
 				OnTriggerZoneActive?.Invoke(OutpostPrompt.TurnOnPower, false);
@@ -106,13 +102,24 @@ namespace LunarAnomaly.Gameplay
 				doorLight.material.SetColor("_BaseColor", Color.green);
 				doorLight.material.SetColor("_EmissionColor", Color.green);
 
-				OnOutpostUIUpdate?.Invoke(OutpostPrompt.OpenDoor, true);
-				OnTriggerZoneActive?.Invoke(OutpostPrompt.OpenDoor, true);
-				
-				// Allow player to enter
-				// Cycle airlock
+				buttonLight.material.SetColor("_BaseColor", Color.red);
+				buttonLight.material.SetColor("_EmissionColor", Color.red * 2.5f);
+
+				OnOutpostUIUpdate?.Invoke(OutpostPrompt.EnterOutpost, true);
+				OnTriggerZoneActive?.Invoke(OutpostPrompt.EnterOutpost, true);
 			}
 			// Maybe notify player if not fully repaired
+		}
+
+		// Called from switch animation
+		public void HandlePowerSwitchSound()
+		{
+			SoundManager.PlaySound(SoundType.SwitchFlip, 2f, false);
+		}
+
+		public void HandleOutpostStartSound()
+		{
+			SoundManager.PlaySound(SoundType.MachineStart, 3f, false);
 		}
 
 		// Interior button
@@ -128,41 +135,26 @@ namespace LunarAnomaly.Gameplay
 
 		public void TryEnterOutpost()
 		{
-			if (isPowered && outpostActive)
+			if (isPowered)
 			{
+				Debug.Log("Door opening");
+				OutpostDoorAnim.SetBool("IsOpen", true);
+				// Soundmanager
 				// Open door
+				// Cycle airlock
 			}
 		}
 
-        void OnTriggerEnter(Collider other)
-        {
-            if (!other.CompareTag("Player")) return;
-
-			playerInside = true;
-			Debug.Log("Player entered outpost");
-        }
-
-        void OnTriggerExit(Collider other)
-        {
-            if (!other.CompareTag("Player")) return;
-
-			playerInside = false;
-			Debug.Log("Player exited outpost");
-        }
-
-        void WaitForPlayerEnter()
+		public void TryExitOutpost()
 		{
-			if (playerInside)
+			if (isPowered)
 			{
-				if (isCycling) return;
-
-				StartCoroutine(CycleAtmosphere());
+				Debug.Log("Door opening");
+				OutpostDoorAnim.SetBool("IsOpen", true);
+				// Soundmanager
+				// Open door
+				// Cycle airlock
 			}
-		}
-
-		IEnumerator CycleAtmosphere()
-		{
-			yield return new WaitForSeconds(1);
 		}
     }
 }

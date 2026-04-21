@@ -45,7 +45,7 @@ namespace LunarAnomaly.UI
 					turnOnPower.enabled = isActive;
 					break;
 
-				case OutpostPrompt.OpenDoor:
+				case OutpostPrompt.EnterOutpost:
 					openDoor.enabled = isActive;
 					break;
 
@@ -74,9 +74,10 @@ namespace LunarAnomaly.UI
 	{
 		PowerPanel,
 		TurnOnPower,
-		OpenDoor,
+		EnterOutpost,
 		ActivateOutpost,
 		ViewLog,
-		Basic
+		Basic,
+		ExitOutpost
 	}
 }
