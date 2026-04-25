@@ -60,8 +60,8 @@ namespace LunarAnomaly.Player
         {
             Vector2 look = lookInput;
 
-            float mouseX = look.x * sensistivity * Time.deltaTime;
-            float mouseY = look.y * sensistivity * Time.deltaTime;
+            float mouseX = look.x * sensistivity; //* Time.deltaTime;
+            float mouseY = look.y * sensistivity; //* Time.deltaTime;
 
             orientation.Rotate(Vector3.up * mouseX);
 

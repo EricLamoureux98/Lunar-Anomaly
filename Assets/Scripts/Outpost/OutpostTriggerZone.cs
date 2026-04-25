@@ -61,7 +61,7 @@ namespace LunarAnomaly.UI
             if (playerInside && triggerActive)
 			{
 				OnInteract?.Invoke(prompt);
-                Debug.Log($"{prompt} interacted with");
+                //Debug.Log($"{prompt} interacted with");
 			}
         }
     }

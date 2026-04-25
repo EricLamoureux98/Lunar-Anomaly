@@ -9,21 +9,25 @@ namespace LunarAnomaly.Gameplay
 		AtmosphereZone atmosphereZone;
 
 		[Header("Airlock")]
+		[SerializeField] Animator OutpostDoorAnim;
 		[SerializeField] float pressurizationTime = 3f;
 		bool playerInside = false;
 		bool isCycling = false;
 
+		bool doorOpen;
+
 		void Awake()
         {
-			atmosphereZone = GetComponentInChildren<AtmosphereZone>();
+			atmosphereZone = GetComponent<AtmosphereZone>();
         }
 
 		void OnTriggerEnter(Collider other)
         {
             if (!other.CompareTag("Player")) return;
-
+			
+			OutpostController.OnTriggerZoneActive?.Invoke(UI.OutpostPrompt.EnterOutpost, false);
 			playerInside = true;
-			Debug.Log("Player entered outpost");
+			StartCoroutine(CycleAtmosphere());
         }
 
         void OnTriggerExit(Collider other)
@@ -31,22 +35,33 @@ namespace LunarAnomaly.Gameplay
             if (!other.CompareTag("Player")) return;
 
 			playerInside = false;
-			Debug.Log("Player exited outpost");
         }
 
-        void WaitForPlayerEnter()
+		public void HandleDoorOpen(bool isOpen)
 		{
-			if (playerInside)
+			//doorOpen = isOpen;
+			if (isOpen && !isCycling)
 			{
-				if (isCycling) return;
-
-				StartCoroutine(CycleAtmosphere());
+				OutpostDoorAnim.SetBool("IsOpen", true);
+				return;
 			}
+			else if (!isOpen)
+			{
+				OutpostDoorAnim.SetBool("IsOpen", false);
+				return;
+			}
+			
+			
+			
 		}
 
 		IEnumerator CycleAtmosphere()
 		{
+			isCycling = true;
+
 			yield return new WaitForSeconds(1);
+
+			HandleDoorOpen(false);
 		}
 	}
 }
