@@ -18482,7 +18482,7 @@ MonoBehaviour:
   doorLight: {fileID: 2042811747}
   buttonLight: {fileID: 1402862838}
   debugIsPowered: 0
-  outpostRepaired: 1
+  outpostRepaired: 0
 --- !u!114 &1748299997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22476,6 +22476,10 @@ PrefabInstance:
     - target: {fileID: 988392927802740686, guid: 35ac4db3dd21229419ae7e912615aa66, type: 3}
       propertyPath: oxygenRefilling
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2206683905478849010, guid: 35ac4db3dd21229419ae7e912615aa66, type: 3}
+      propertyPath: sensistivity
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 3307147392102827125, guid: 35ac4db3dd21229419ae7e912615aa66, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'

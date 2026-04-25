@@ -7,7 +7,7 @@ namespace LunarAnomaly.Player
     {
         [SerializeField] Transform orientation;
         [SerializeField] Transform vision;
-        [SerializeField] float sensistivity = 100f;
+        [SerializeField] float sensistivity = 0.1f;
         [SerializeField] float maxLookAngle = 80f;
         InputHandler inputHandler;
 
@@ -58,10 +58,13 @@ namespace LunarAnomaly.Player
 
         void HandleLook()
         {
-            Vector2 look = lookInput;
+            //Vector2 look = lookInput;
 
-            float mouseX = look.x * sensistivity; //* Time.deltaTime;
-            float mouseY = look.y * sensistivity; //* Time.deltaTime;
+            //float mouseX = look.x * sensistivity; //* Time.deltaTime;
+            float mouseX = lookInput.x * sensistivity;
+            //float mouseY = look.y * sensistivity; //* Time.deltaTime;
+            float mouseY = lookInput.y * sensistivity;
+            
 
             orientation.Rotate(Vector3.up * mouseX);
 
