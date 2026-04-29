@@ -18634,6 +18634,7 @@ MonoBehaviour:
   doorLight: {fileID: 2042811747}
   buttonLight: {fileID: 1402862838}
   debugIsPowered: 1
+  outpostRepaired: 1
 --- !u!114 &1748299997
 MonoBehaviour:
   m_ObjectHideFlags: 0
