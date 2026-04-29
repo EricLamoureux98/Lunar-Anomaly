@@ -26,7 +26,7 @@ namespace LunarAnomaly.Gameplay
         [SerializeField] bool testEnterFromInterior = false;
 
         // To UIManager
-        public static event Action<bool> OnEnterAtmosphere;
+        public static Action<bool> OnEnterAtmosphere;
 
         void Awake()
         {
@@ -42,7 +42,7 @@ namespace LunarAnomaly.Gameplay
         public void EnterFromExterior() => TryCycle(fromExterior: true);
         public void EnterFromInterior() => TryCycle(fromExterior: false);
 
-        public void TryCycle(bool fromExterior)
+        void TryCycle(bool fromExterior)
         {
             if (isCycling) return;
             if (Time.time - lastCycleTime < cooldownTime) return;
@@ -81,7 +81,7 @@ namespace LunarAnomaly.Gameplay
 
             // Close entry side and pressurize
             entryAnim.SetBool("IsOpen", false);
-            SoundManager.PlaySound(fromExterior ? SoundType.GainAtmosphere : SoundType.LoseAtmosphere, 1f);
+            SoundManager.PlaySound(fromExterior ? SoundType.GainAtmosphere : SoundType.LoseAtmosphere, 1f, false);
             if (fromExterior && smokeParticle != null)
             {
                 Instantiate(smokeParticle, smokeSpawnL.position, smokeSpawnL.rotation);

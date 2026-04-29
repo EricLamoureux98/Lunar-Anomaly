@@ -3,7 +3,6 @@ using System.Collections;
 using LunarAnomaly.UI;
 using Unity.Cinemachine;
 using UnityEngine;
-
 	
 namespace LunarAnomaly.Gameplay
 {
@@ -23,7 +22,7 @@ namespace LunarAnomaly.Gameplay
 		bool powerBoxOpen;
 
 		// To OutpostUI
-		public static event Action<OutpostPrompt, bool> OnOutpostUIUpdate;
+		public static Action<OutpostPrompt, bool> OnOutpostUIUpdate;
 		public static event Action OnOutpostHideAllUI;
 
 		// To OutpostTriggerZone
@@ -69,6 +68,10 @@ namespace LunarAnomaly.Gameplay
 				
 				case OutpostPrompt.EnterOutpost:
 					TryEnterOutpost();
+					break;
+				
+				case  OutpostPrompt.ExitOutpost:
+					TryExitOutpost();
 					break;
 			}
 		}
@@ -145,17 +148,13 @@ namespace LunarAnomaly.Gameplay
 			}
 		}
 
-		public void TryEnterOutpost()
+		void TryEnterOutpost()
 		{
 			if (isPowered)
 			{
 				//Debug.Log("Door opening");
 				outpostAirlock.HandleDoorOpen(true);
-				// ************ CREATE AN EVENT TO OPEN DOOR WITHIN AIRLOCK SCRIPT
-
-				// Soundmanager
-				// Open door
-				// Cycle airlock
+				SoundManager.PlaySound(SoundType.Airlock, 0.5f, false);
 			}
 		}
 
@@ -163,12 +162,7 @@ namespace LunarAnomaly.Gameplay
 		{
 			if (isPowered)
 			{
-				Debug.Log("Door opening");
-				// OutpostDoorAnim.SetBool("IsOpen", false);
-				outpostAirlock.HandleDoorOpen(false);
-				// Soundmanager
-				// Open door
-				// Cycle airlock
+				outpostAirlock.TryExitOutpost();
 			}
 		}
     }

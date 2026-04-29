@@ -1,11 +1,12 @@
 using System.Collections;
+using LunarAnomaly.UI;
 using UnityEngine;
-
 	
 namespace LunarAnomaly.Gameplay
 {
 	public class OutpostAirlock : MonoBehaviour
 	{
+		[SerializeField] LightFlicker lightFlicker;
 		AtmosphereZone atmosphereZone;
 
 		[Header("Airlock")]
@@ -13,8 +14,8 @@ namespace LunarAnomaly.Gameplay
 		[SerializeField] float pressurizationTime = 3f;
 		bool playerInside = false;
 		bool isCycling = false;
-
-		bool doorOpen;
+		
+		Coroutine cyclingRoutine;
 
 		void Awake()
         {
@@ -27,41 +28,70 @@ namespace LunarAnomaly.Gameplay
 			
 			OutpostController.OnTriggerZoneActive?.Invoke(UI.OutpostPrompt.EnterOutpost, false);
 			playerInside = true;
-			StartCoroutine(CycleAtmosphere());
+			cyclingRoutine = StartCoroutine(CycleAtmosphere(true));
         }
 
-        void OnTriggerExit(Collider other)
-        {
-            if (!other.CompareTag("Player")) return;
+   //      void OnTriggerExit(Collider other)
+   //      {
+   //          if (!other.CompareTag("Player")) return;
+   //
+			// playerInside = false;
+			//
+			// if (cyclingRoutine != null)
+			// {
+			// 	StopCoroutine(cyclingRoutine);
+			// 	cyclingRoutine = null;
+			// }
+   //      }
 
-			playerInside = false;
-        }
-
-		public void HandleDoorOpen(bool isOpen)
+		public void HandleDoorOpen(bool tryOpen)
 		{
-			//doorOpen = isOpen;
-			if (isOpen && !isCycling)
+			if (tryOpen && !isCycling)
 			{
 				OutpostDoorAnim.SetBool("IsOpen", true);
 				return;
 			}
-			else if (!isOpen)
+			else if (!tryOpen)
 			{
 				OutpostDoorAnim.SetBool("IsOpen", false);
 				return;
 			}
-			
-			
-			
 		}
 
-		IEnumerator CycleAtmosphere()
+		public void TryExitOutpost() => TryCycle(fromExterior: false);
+
+		void TryCycle(bool fromExterior)
+		{
+			if (isCycling) return;
+			
+			StartCoroutine(CycleAtmosphere(fromExterior));
+		}
+
+		IEnumerator CycleAtmosphere(bool fromExterior)
 		{
 			isCycling = true;
-
+			
 			yield return new WaitForSeconds(1);
+			
+			if (!playerInside) yield break;
 
 			HandleDoorOpen(false);
+			SoundManager.PlaySound(SoundType.Alarm, 1.25f, false);
+			SoundManager.PlaySound(fromExterior ? SoundType.GainAtmosphere : SoundType.LoseAtmosphere, 1f, false);
+			//SoundManager.PlaySound(SoundType.GainAtmosphere, 1f, false);
+			lightFlicker.StartFlicker(3f);
+			
+			yield return new WaitForSeconds(pressurizationTime);
+			
+			atmosphereZone.SetPressuized(fromExterior);
+			Airlock.OnEnterAtmosphere?.Invoke(fromExterior);
+			
+			if (!fromExterior) HandleDoorOpen(false);
+			
+			isCycling = false;
+			
+			OutpostController.OnOutpostUIUpdate?.Invoke(OutpostPrompt.ExitOutpost, fromExterior);
+			OutpostController.OnTriggerZoneActive?.Invoke(OutpostPrompt.ExitOutpost, fromExterior);
 		}
 	}
 }
