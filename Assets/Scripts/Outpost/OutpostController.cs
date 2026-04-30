@@ -15,10 +15,12 @@ namespace LunarAnomaly.Gameplay
 		[SerializeField] Renderer buttonLight;
 		OutpostAirlock outpostAirlock;
 
+		
+
 		[SerializeField] bool debugIsPowered;
 		bool outpostActive;
 		bool isPowered;
-		bool outpostRepaired; // For testing
+		public bool outpostRepaired; // For testing
 		bool powerBoxOpen;
 
 		// To OutpostUI

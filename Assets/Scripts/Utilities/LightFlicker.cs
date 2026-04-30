@@ -8,6 +8,8 @@ namespace LunarAnomaly
         [SerializeField] float minIntensity = 0.5f;
         [SerializeField] float maxIntensity = 5f;
         [SerializeField] float flickerSpeed = 0.1f;
+
+        float startingIntensity;
         
         float flickerTimer;
         bool isFlickering;
@@ -29,11 +31,13 @@ namespace LunarAnomaly
                 
                 isFlickering = false;
                 flickerTimer = 0f;
+                GetComponent<Light>().intensity = startingIntensity;
             }
         }
 
         public void StartFlicker(float flickerTime)
         {
+            startingIntensity = GetComponent<Light>().intensity;
             isFlickering = true;
             flickerTimer = flickerTime;
             InvokeRepeating(nameof(Flicker), 0f, flickerSpeed);

@@ -31,18 +31,18 @@ namespace LunarAnomaly.Gameplay
 			cyclingRoutine = StartCoroutine(CycleAtmosphere(true));
         }
 
-   //      void OnTriggerExit(Collider other)
-   //      {
-   //          if (!other.CompareTag("Player")) return;
-   //
-			// playerInside = false;
-			//
+        void OnTriggerExit(Collider other)
+        {
+            if (!other.CompareTag("Player")) return;
+   
+			playerInside = false;
+			
 			// if (cyclingRoutine != null)
 			// {
 			// 	StopCoroutine(cyclingRoutine);
 			// 	cyclingRoutine = null;
 			// }
-   //      }
+        }
 
 		public void HandleDoorOpen(bool tryOpen)
 		{
@@ -84,14 +84,26 @@ namespace LunarAnomaly.Gameplay
 			yield return new WaitForSeconds(pressurizationTime);
 			
 			atmosphereZone.SetPressuized(fromExterior);
-			Airlock.OnEnterAtmosphere?.Invoke(fromExterior);
-			
-			if (!fromExterior) HandleDoorOpen(false);
+			Airlock.OnEnterAtmosphere?.Invoke(fromExterior);			
 			
 			isCycling = false;
 			
+			if (!fromExterior) 
+			{
+				Debug.Log("Hello");
+				HandleDoorOpen(true);
+			}
+
 			OutpostController.OnOutpostUIUpdate?.Invoke(OutpostPrompt.ExitOutpost, fromExterior);
 			OutpostController.OnTriggerZoneActive?.Invoke(OutpostPrompt.ExitOutpost, fromExterior);
+			
+			yield return new WaitUntil(() => !playerInside);
+			yield return new WaitForSeconds(1f);
+
+			HandleDoorOpen(false);
+			SoundManager.PlaySound(SoundType.Airlock, 0.5f);
+			OutpostController.OnTriggerZoneActive?.Invoke(UI.OutpostPrompt.EnterOutpost, true);
+			
 		}
 	}
 }

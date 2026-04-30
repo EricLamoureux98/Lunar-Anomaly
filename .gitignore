@@ -70,6 +70,9 @@ sysinfo.txt
 # Mono auto generated files
 mono_crash.*
 
+# Unity lighting data (auto-generated)
+LightingData.asset
+
 # Builds
 *.apk
 *.aab
