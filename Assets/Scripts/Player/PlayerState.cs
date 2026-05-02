@@ -13,6 +13,7 @@ namespace LunarAnomaly.Player
         PlayerMovement playerMovement;
         PlayerInput playerInput;
         Oxygen oxygen;
+        Rigidbody rb;
 
         [SerializeField] Transform respawnPoint;
         [SerializeField] float oxygenGracePeriod = 3f;
@@ -34,6 +35,7 @@ namespace LunarAnomaly.Player
 
         void Awake()
         {
+            rb = GetComponent<Rigidbody>();
             playerInput = GetComponent<PlayerInput>();
             playerMovement = GetComponent<PlayerMovement>();
             oxygen = GetComponent<Oxygen>();
@@ -46,6 +48,7 @@ namespace LunarAnomaly.Player
             InputHandler.OnInteractPressed += TerminalInteract;
             InputHandler.OnCloseUI += TryExitTerminal;
             SanityManager.OnInsanity += HandleInsanity;
+            OutpostController.OnLadderUsed += HandleTeleport;
         }
 
         void OnDisable()
@@ -55,6 +58,7 @@ namespace LunarAnomaly.Player
             InputHandler.OnInteractPressed -= TerminalInteract;
             InputHandler.OnCloseUI -= TryExitTerminal;
             SanityManager.OnInsanity -= HandleInsanity;
+            OutpostController.OnLadderUsed -= HandleTeleport;
         }
 
         void Update()
@@ -115,8 +119,6 @@ namespace LunarAnomaly.Player
         void HandleRespawn()
         {
             if (respawnPoint == null) return;
-
-            Rigidbody rb = GetComponent<Rigidbody>();
             
             // Reset velocity to prevent unexpected movement
             rb.linearVelocity = Vector3.zero;
@@ -129,6 +131,18 @@ namespace LunarAnomaly.Player
             OnResetPressure?.Invoke();
             oxygen.ResetOxygen();
             ChangeState(PlayerCurrentState.Alive);
+        }
+
+        // Can be called for any teleport need
+        void HandleTeleport(Transform teleportPos)
+        {
+            if (currentState != PlayerCurrentState.Alive) return;
+
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+
+            rb.position = teleportPos.position;
+            rb.rotation = teleportPos.rotation;
         }
 
         void TerminalProximity(bool proximity)

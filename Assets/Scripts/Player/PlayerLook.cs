@@ -71,6 +71,8 @@ namespace LunarAnomaly.Player
             xRotation -= mouseY;
             xRotation = Mathf.Clamp(xRotation, -maxLookAngle, maxLookAngle);
             vision.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+
+            //Debug.Log(Camera.main.transform.eulerAngles);
         }
 
         void ReadInput()

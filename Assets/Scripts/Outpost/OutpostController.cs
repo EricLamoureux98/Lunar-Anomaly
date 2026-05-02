@@ -13,6 +13,7 @@ namespace LunarAnomaly.Gameplay
 		[SerializeField] CinemachineImpulseSource powerImpulseSource;
 		[SerializeField] Renderer doorLight;
 		[SerializeField] Renderer buttonLight;
+		[SerializeField] Transform ladderTopPosition;
 		OutpostAirlock outpostAirlock;
 
 		
@@ -29,6 +30,9 @@ namespace LunarAnomaly.Gameplay
 
 		// To OutpostTriggerZone
 		public static Action<OutpostPrompt, bool> OnTriggerZoneActive;
+
+		// To PlayerState
+		public static event Action<Transform> OnLadderUsed;
 
         void Awake()
         {
@@ -74,6 +78,10 @@ namespace LunarAnomaly.Gameplay
 				
 				case  OutpostPrompt.ExitOutpost:
 					TryExitOutpost();
+					break;
+				
+				case OutpostPrompt.UseLadder:
+					OnLadderUsed?.Invoke(ladderTopPosition);
 					break;
 			}
 		}

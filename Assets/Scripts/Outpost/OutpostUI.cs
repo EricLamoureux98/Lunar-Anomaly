@@ -84,6 +84,7 @@ namespace LunarAnomaly.UI
 		ActivateOutpost,
 		ViewLog,
 		Basic,
-		ExitOutpost
+		ExitOutpost,
+		UseLadder
 	}
 }
