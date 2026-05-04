@@ -25,6 +25,7 @@ namespace LunarAnomaly.UI
             Silhouette.OnSilhouetteFlash += SilhouetteFlash;
             PlayerState.OnHideGameplayUI += HideGameplayUI;
             GameManager.OnGameStateChanged += HandleGameStateChange;
+            PlayerState.OnLadderTeleport += HandleLadderFlash;
         }
 
         void OnDisable()
@@ -34,6 +35,7 @@ namespace LunarAnomaly.UI
             Silhouette.OnSilhouetteFlash -= SilhouetteFlash;
             PlayerState.OnHideGameplayUI -= HideGameplayUI;
             GameManager.OnGameStateChanged -= HandleGameStateChange;
+            PlayerState.OnLadderTeleport -= HandleLadderFlash;
         }
 
         void HandleGameStateChange(GameState newState)
@@ -80,6 +82,18 @@ namespace LunarAnomaly.UI
         }
 
         IEnumerator BlackScreenFlash(float duration)
+        {
+            screenFader.StartFade(0f, 1f, 0.1f, false);
+            yield return new WaitForSeconds(duration); // Adjust this for timing
+            screenFader.StartFade(1f, 0f, 1.5f, false);
+        }
+
+        void HandleLadderFlash(float duration)
+        {
+            StartCoroutine(LadderFlash(duration));
+        }
+
+        IEnumerator LadderFlash(float duration)
         {
             screenFader.StartFade(0f, 1f, 0.1f, false);
             yield return new WaitForSeconds(duration); // Adjust this for timing

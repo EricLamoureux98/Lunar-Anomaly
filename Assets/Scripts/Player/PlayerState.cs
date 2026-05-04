@@ -3,6 +3,7 @@ using UnityEngine;
 using LunarAnomaly.Gameplay;
 using UnityEngine.InputSystem;
 using LunarAnomaly.Input;
+using System.Collections;
 
 namespace LunarAnomaly.Player
 {
@@ -26,6 +27,7 @@ namespace LunarAnomaly.Player
         // To UIManager
         public static event Action<float> OnPlayerDying;
         public static event Action<bool> OnHideGameplayUI;
+        public static event Action<float> OnLadderTeleport;
 
         // To TerminalUI and PlayerLook
         public static event Action<bool> OnTerminalUIActive;
@@ -137,6 +139,15 @@ namespace LunarAnomaly.Player
         void HandleTeleport(Transform teleportPos)
         {
             if (currentState != PlayerCurrentState.Alive) return;
+
+            StartCoroutine(LaderTeleportRoutine(teleportPos));
+        }
+
+        IEnumerator LaderTeleportRoutine(Transform teleportPos)
+        {
+            OnLadderTeleport?.Invoke(0.5f);
+
+            yield return new WaitForSecondsRealtime(0.25f);
 
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;

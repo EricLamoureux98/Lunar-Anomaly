@@ -10,6 +10,7 @@ namespace LunarAnomaly.Gameplay
 	{	
 		[SerializeField] Animator powerBoxDoorAnim;
 		[SerializeField] Animator powerSwitchesAnim;
+		[SerializeField] Animator satelliteDishAnim;
 		[SerializeField] CinemachineImpulseSource powerImpulseSource;
 		[SerializeField] Renderer doorLight;
 		[SerializeField] Renderer buttonLight;
@@ -142,9 +143,10 @@ namespace LunarAnomaly.Gameplay
 			SoundManager.PlaySound(SoundType.SwitchFlip, 2f, false);
 		}
 
-		public void HandleOutpostStartSound()
+		public void HandleOutpostStart()
 		{
-			SoundManager.PlaySound(SoundType.MachineStart, 3f, false);
+			SoundManager.PlaySound(SoundType.MachineStart, 2f, false);
+			satelliteDishAnim.SetBool("IsPowered", true);
 		}
 
 		// Interior button
