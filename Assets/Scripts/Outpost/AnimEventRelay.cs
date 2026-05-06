@@ -11,5 +11,6 @@ namespace LunarAnomaly
 		void OnPowerPanelOpen() => outpostController.HandlePowerboxOpen();
 		void OnPowerSwitchFlipped() => outpostController.HandlePowerSwitchSound();
 		void OnOutpostPowerOn() => outpostController.HandleOutpostStart();
+		void OnDishLeverEnabled() => outpostController.HandleDishEnable();
 	}
 }

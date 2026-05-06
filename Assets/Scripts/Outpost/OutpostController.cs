@@ -8,20 +8,22 @@ namespace LunarAnomaly.Gameplay
 {
 	public class OutpostController : MonoBehaviour
 	{	
+		[Header("Animators")]
 		[SerializeField] Animator powerBoxDoorAnim;
 		[SerializeField] Animator powerSwitchesAnim;
 		[SerializeField] Animator satelliteDishAnim;
+		[SerializeField] Animator dishLeverAnim;
+
 		[SerializeField] CinemachineImpulseSource powerImpulseSource;
 		[SerializeField] Renderer doorLight;
 		[SerializeField] Renderer buttonLight;
 		[SerializeField] Transform ladderTopPosition;
-		OutpostAirlock outpostAirlock;
-
-		
+		OutpostAirlock outpostAirlock;		
 
 		[SerializeField] bool debugIsPowered;
 		bool outpostActive;
 		bool isPowered;
+		bool dishEnabled;
 		public bool outpostRepaired; // For testing
 		bool powerBoxOpen;
 
@@ -84,6 +86,10 @@ namespace LunarAnomaly.Gameplay
 				case OutpostPrompt.UseLadder:
 					OnLadderUsed?.Invoke(ladderTopPosition);
 					break;
+
+				case OutpostPrompt.DishLever:
+					TryDishLever();
+					break;
 			}
 		}
 
@@ -115,10 +121,26 @@ namespace LunarAnomaly.Gameplay
 			OnOutpostUIUpdate?.Invoke(OutpostPrompt.TurnOnPower, true);
 			OnTriggerZoneActive?.Invoke(OutpostPrompt.TurnOnPower, true);
 		}
+		
+		void TryDishLever()
+		{
+			if (dishEnabled) return;
+
+			OnOutpostUIUpdate?.Invoke(OutpostPrompt.DishLever, false);
+			dishLeverAnim.SetBool("LeverEnabled", true);
+		}
+
+		// Called from lever animation
+		public void HandleDishEnable()
+		{
+			if (dishEnabled) return;
+
+			dishEnabled = true;
+		}
 
         void TryEnablePower()
 		{
-			if (outpostRepaired && !isPowered)
+			if (outpostRepaired && dishEnabled && !isPowered)
 			{
 				powerSwitchesAnim.SetBool("IsPowered", true);
 				isPowered = true;

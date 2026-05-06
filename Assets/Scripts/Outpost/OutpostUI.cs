@@ -19,6 +19,7 @@ namespace LunarAnomaly.UI
 		[SerializeField] TMP_Text openDoorInterior;
 		[SerializeField] TMP_Text activateOutpost;
 		[SerializeField] TMP_Text viewLog;
+		[SerializeField] TMP_Text pullLever;
 
         // Typewriter stuff for audio log portion
 
@@ -61,6 +62,10 @@ namespace LunarAnomaly.UI
 				case OutpostPrompt.ViewLog:
 					viewLog.enabled = isActive;
 					break;
+
+				case OutpostPrompt.DishLever:
+				pullLever.enabled = isActive;
+				break;
 			}
 		}
 
@@ -73,6 +78,7 @@ namespace LunarAnomaly.UI
 			openDoorInterior.enabled = false;
 			openDoorExterior.enabled = false;
 			viewLog.enabled = false;
+			pullLever.enabled = false;
 		}
 	}
 
@@ -85,6 +91,7 @@ namespace LunarAnomaly.UI
 		ViewLog,
 		Basic,
 		ExitOutpost,
-		UseLadder
+		UseLadder,
+		DishLever
 	}
 }
