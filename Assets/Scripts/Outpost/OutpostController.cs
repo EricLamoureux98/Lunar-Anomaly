@@ -13,6 +13,7 @@ namespace LunarAnomaly.Gameplay
 		[SerializeField] Animator powerSwitchesAnim;
 		[SerializeField] Animator satelliteDishAnim;
 		[SerializeField] Animator dishLeverAnim;
+		[SerializeField] Animator bigButtonAnim;
 
 		[SerializeField] CinemachineImpulseSource powerImpulseSource;
 		[SerializeField] Renderer doorLight;
@@ -23,7 +24,7 @@ namespace LunarAnomaly.Gameplay
 		[SerializeField] bool debugIsPowered;
 		bool outpostActive;
 		bool isPowered;
-		bool dishEnabled;
+		public bool dishEnabled;
 		public bool outpostRepaired; // For testing
 		bool powerBoxOpen;
 
@@ -89,6 +90,10 @@ namespace LunarAnomaly.Gameplay
 
 				case OutpostPrompt.DishLever:
 					TryDishLever();
+					break;
+
+				case OutpostPrompt.ActivateOutpost:
+					TryActivateOutpost();
 					break;
 			}
 		}
@@ -171,12 +176,13 @@ namespace LunarAnomaly.Gameplay
 			satelliteDishAnim.SetBool("IsPowered", true);
 		}
 
-		// Interior button
 		void TryActivateOutpost()
 		{
 			if (isPowered && !outpostActive)
 			{
 				outpostActive = true;
+				bigButtonAnim.SetBool("IsPressed", true);
+				OnOutpostUIUpdate?.Invoke(OutpostPrompt.ActivateOutpost, false);
 				// Handle insanity start
 				// Quest complete
 			}
