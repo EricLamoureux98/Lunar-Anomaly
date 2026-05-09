@@ -10,6 +10,8 @@ namespace LunarAnomaly.Player
 	{
 		[SerializeField] SphereCollider sphereCollider;
 		[SerializeField] LayerMask outpostLayer;
+		[SerializeField] Animator anim;
+		[SerializeField] GameObject wrenchObj;
 		InputHandler inputHandler;
 
 		[Header("Mining")]
@@ -27,6 +29,7 @@ namespace LunarAnomaly.Player
         {
             ReadInput();
 			RepairController();
+			HandleRepairInput();
         }
 
 		void OnTriggerEnter(Collider other)
@@ -34,6 +37,9 @@ namespace LunarAnomaly.Player
 			if (other.CompareTag("OutpostNode") && other.TryGetComponent(out RepairNode node))
 			{
 				currentNode = node;
+
+				if (currentNode.canBeRepaired)
+					wrenchObj.SetActive(true);
 			}
 		}
 
@@ -42,15 +48,26 @@ namespace LunarAnomaly.Player
 			if (other.TryGetComponent(out RepairNode node) && node == currentNode)
 			{
 				currentNode = null;
+				wrenchObj.SetActive(false);
 			}
 		} 
 
 		void RepairController()
 		{
-			if (isRepairing && currentNode != null)
+			if (isRepairing && currentNode != null && currentNode.canBeRepaired)
 			{
 				currentNode.RepairCurrentNode();
 			}
+		}
+
+		void HandleRepairInput()
+		{
+			if (currentNode == null) return;
+
+			bool shouldRepair = isRepairing && currentNode.canBeRepaired;
+
+			//wrenchObj.SetActive(shouldRepair);
+			anim.SetBool("IsRepairing", shouldRepair);
 		}
 
 		void ReadInput()

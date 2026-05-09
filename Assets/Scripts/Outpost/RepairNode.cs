@@ -9,16 +9,22 @@ namespace LunarAnomaly.Gameplay
 	{
 		[SerializeField] GameObject brokenPrefab, repairedPrefab;
 		[SerializeField] Image repairBar;
+		//[SerializeField] Collider repairCollider;
 
 		[SerializeField] float repairTime = 4f;
 		float currentRepairAmount;
-		bool canBeRepaired = true;
+		public bool canBeRepaired { get; private set; }
 
 		// To OutpostRepair
 		// Not static so each node owns its own event
 		public event Action<RepairNode> OnNodeRepaired;
 
-		public void RepairCurrentNode()
+        void Start()
+        {
+            canBeRepaired = true;
+        }
+
+        public void RepairCurrentNode()
 		{
 			if (!canBeRepaired) return;
 

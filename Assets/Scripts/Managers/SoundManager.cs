@@ -81,7 +81,8 @@ namespace LunarAnomaly
 		OutpostBang,
 		OutpostSqueak,
 		SwitchFlip,
-		MachineStart
+		MachineStart,
+		LeverPull
 	}
 
 	[Serializable]

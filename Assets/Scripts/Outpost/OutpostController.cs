@@ -140,6 +140,7 @@ namespace LunarAnomaly.Gameplay
 		{
 			if (dishEnabled) return;
 
+			SoundManager.PlaySound(SoundType.LeverPull, 1.5f, false);
 			dishEnabled = true;
 		}
 
@@ -160,6 +161,10 @@ namespace LunarAnomaly.Gameplay
 
 				OnOutpostUIUpdate?.Invoke(OutpostPrompt.EnterOutpost, true);
 				OnTriggerZoneActive?.Invoke(OutpostPrompt.EnterOutpost, true);
+			}
+			else
+			{
+				powerSwitchesAnim.SetTrigger("IsNotReady");
 			}
 			// Maybe notify player if not fully repaired
 		}

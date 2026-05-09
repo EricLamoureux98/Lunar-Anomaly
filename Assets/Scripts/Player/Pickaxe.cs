@@ -1,5 +1,6 @@
 using LunarAnomaly.Gameplay;
 using LunarAnomaly.Input;
+using NUnit.Framework;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ namespace LunarAnomaly.Player
         [SerializeField] CinemachineImpulseSource impulseSource;
         [SerializeField] ParticleSystem rockParticles;
         [SerializeField] SphereCollider sphereCollider;
+        [SerializeField] GameObject pickaxeObj;
         [SerializeField] LayerMask rockLayer;
         [SerializeField] Animator anim;
         InputHandler inputHandler;
@@ -19,6 +21,7 @@ namespace LunarAnomaly.Player
         [SerializeField] float pickaxeDamage = 1f;
         [SerializeField] float shakeAmount = 0.03f;
         bool isMining;
+        Rock currentRock;
 
         const string MINING_BOOL = "IsMining";
 
@@ -32,12 +35,35 @@ namespace LunarAnomaly.Player
         {
             ReadInput();
             HandleMiningInput();
+            HandlePickaxeVisibility();
+        }
+
+        void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Rock") && other.TryGetComponent(out Rock rock))
+            {
+                currentRock = rock;
+            }
+        }
+
+        void OnTriggerExit(Collider other)
+        {
+            if (other.TryGetComponent(out Rock rock) && rock == currentRock)
+            {
+                currentRock = null;
+            }
+        }
+
+        void HandlePickaxeVisibility()
+        {
+            pickaxeObj.SetActive(currentRock != null);
         }
 
         void CheckForRock()
         {
             bool rockHit = false;
 
+            // This is overkill now
             Collider[] hits = Physics.OverlapSphere(sphereCollider.transform.position, sphereCollider.radius, rockLayer);
 
             foreach (var hit in hits)
@@ -64,14 +90,7 @@ namespace LunarAnomaly.Player
 
         void HandleMiningInput()
         {
-            if (isMining)
-            {
-                anim.SetBool(MINING_BOOL, true);
-            }
-            else
-            {
-                anim.SetBool(MINING_BOOL, false);
-            }
+            anim.SetBool(MINING_BOOL, isMining && currentRock != null);
         }
 
         void ReadInput()

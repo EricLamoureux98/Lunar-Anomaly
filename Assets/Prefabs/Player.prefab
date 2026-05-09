@@ -5223,6 +5223,8 @@ MonoBehaviour:
   airControlSpeed: 0.5
   extraFallForce: 4.5
   jumpCooldown: 0.25
+  walkingSoundTime: 0.5
+  runningSoundTime: 0.25
 --- !u!114 &6823310202566192328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5376,11 +5378,13 @@ MonoBehaviour:
   impulseSource: {fileID: 8723724296752437916}
   rockParticles: {fileID: 1371010918045228648}
   sphereCollider: {fileID: 6128308167675771345}
+  pickaxeObj: {fileID: 0}
   rockLayer:
     serializedVersion: 2
     m_Bits: 512
   anim: {fileID: 7272831320294581757}
   pickaxeDamage: 1
+  shakeAmount: 0.03
 --- !u!114 &8723724296752437916
 MonoBehaviour:
   m_ObjectHideFlags: 0
