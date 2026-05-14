@@ -1,4 +1,6 @@
+using System;
 using LunarAnomaly.Gameplay;
+using LunarAnomaly.Player;
 using TMPro;
 using UnityEngine;
 
@@ -9,17 +11,25 @@ namespace LunarAnomaly.UI
 	{
 		[Header("References")]
 		[SerializeField] TerminalUpdateText updateText;
-		
+		[SerializeField] GameObject logBGPanel;
+		[SerializeField] CanvasGroup logGroup;
+		[SerializeField] TMP_Text currentTextBox;
+		[SerializeField] Typewriter typewriter;
+		[SerializeField] PlayerLook playerLook;
+
 		[Header("Power Panel")]
 		[SerializeField] TMP_Text openPowerPanel;
 		[SerializeField] TMP_Text turnOnPower;
 		
-		//[SerializeField] TMP_Text repairNode;
 		[SerializeField] TMP_Text openDoorExterior;
 		[SerializeField] TMP_Text openDoorInterior;
 		[SerializeField] TMP_Text activateOutpost;
 		[SerializeField] TMP_Text viewLog;
-		[SerializeField] TMP_Text pullLever;
+		[SerializeField] TMP_Text pullLever;	
+
+		[Header("Logs")]
+		[TextArea(5,10)]
+		[SerializeField] string logText;	
 
         // Typewriter stuff for audio log portion
 
@@ -74,11 +84,35 @@ namespace LunarAnomaly.UI
 			activateOutpost.enabled = false;
 			openPowerPanel.enabled = false;
 			turnOnPower.enabled = false;
-			//repairNode.enabled = false;
 			openDoorInterior.enabled = false;
 			openDoorExterior.enabled = false;
 			viewLog.enabled = false;
 			pullLever.enabled = false;
+		}
+
+		public void ShowLog()
+		{
+			logBGPanel.SetActive(true);
+			logGroup.alpha = 1f;
+			logGroup.interactable = true;
+			logGroup.blocksRaycasts = true;
+
+			//PlayerState.OnHideGameplayUI?.Invoke(false);
+			playerLook.UpdateCursorLock(true);
+		
+			updateText.UpdateCurrentTextBox(currentTextBox);
+			updateText.ShowWithTypewriter(logText);
+		}
+
+		public void CloseLog()
+		{
+			logBGPanel.SetActive(false);
+			logGroup.alpha = 0f;
+			logGroup.interactable = false;
+			logGroup.blocksRaycasts = false;
+
+			//PlayerState.OnHideGameplayUI?.Invoke(true);
+			playerLook.UpdateCursorLock(false);
 		}
 	}
 

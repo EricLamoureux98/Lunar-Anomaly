@@ -41,7 +41,7 @@ namespace LunarAnomaly.Player
             HandleLook();
         }
 
-        void UpdateCursorLock(bool unlocked)
+        public void UpdateCursorLock(bool unlocked) // TEMP PUBLIC
         {
             if (!unlocked)
             {

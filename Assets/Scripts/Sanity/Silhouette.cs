@@ -28,8 +28,8 @@ namespace LunarAnomaly.Gameplay
 		bool silhouetteEnabled;
 		bool debugNotif;
 
-		// To UIManager
-		public static event Action<float> OnSilhouetteFlash;
+		// To UIManager - Called in OutpostRevealCinematic
+		public static Action<float> OnSilhouetteFlash;
 
 		// To SanityManager
 		public static event Action OnSilhouetteWatched;

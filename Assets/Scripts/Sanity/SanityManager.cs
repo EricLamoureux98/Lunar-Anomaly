@@ -21,6 +21,8 @@ namespace LunarAnomaly.Gameplay
 		float bonusChance;
 		float spawnTimer;
 
+		bool sanitySystemActive;
+
 		public SanityState sanityState; // Public for testing
 
 		// To SilhouetteManager
@@ -33,6 +35,7 @@ namespace LunarAnomaly.Gameplay
             AtmosphereTracker.OnPressurized += HandleSanityStateChange;
 			Silhouette.OnSilhouetteWatched += InsanityExtraDrain;
 			Silhouette.OnSilhouetteVanished += InsanitySpike;
+			OutpostRevealCinematic.OnActivateSanitySystem += ActivateSanitySystem;
         }
 
         void OnDisable()
@@ -40,6 +43,7 @@ namespace LunarAnomaly.Gameplay
             AtmosphereTracker.OnPressurized -= HandleSanityStateChange;
 			Silhouette.OnSilhouetteWatched -= InsanityExtraDrain;
 			Silhouette.OnSilhouetteVanished -= InsanitySpike;
+			OutpostRevealCinematic.OnActivateSanitySystem -= ActivateSanitySystem;
         }
 
         void Start()
@@ -50,9 +54,17 @@ namespace LunarAnomaly.Gameplay
 
         void Update()
         {
-			SanityDrain();
-			HandleSilhouetteSpawning();
+			if (sanitySystemActive)
+			{
+				SanityDrain();
+				HandleSilhouetteSpawning();				
+			}
         }
+
+		void ActivateSanitySystem()
+		{
+			sanitySystemActive = true;
+		}
 
         void SanityDrain()
 		{

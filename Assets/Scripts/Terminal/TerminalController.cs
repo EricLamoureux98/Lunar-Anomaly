@@ -69,7 +69,7 @@ namespace LunarAnomaly.Gameplay
                     SetupMiningSample();
                     break;
                 
-                case ProgressionStage.RepairObjective:
+                case ProgressionStage.OutpostObjective:
                     break;
                 
                 case ProgressionStage.Outro:

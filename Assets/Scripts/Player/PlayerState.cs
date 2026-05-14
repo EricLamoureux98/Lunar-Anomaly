@@ -19,14 +19,15 @@ namespace LunarAnomaly.Player
         [SerializeField] Transform respawnPoint;
         [SerializeField] float oxygenGracePeriod = 3f;
 
-        PlayerCurrentState currentState;
-        float graceTimer;
+        [SerializeField] bool respawnPlayer;
 
+        PlayerCurrentState currentState;
         bool terminalProximity;     
+        float graceTimer;
 
         // To UIManager
         public static event Action<float> OnPlayerDying;
-        public static event Action<bool> OnHideGameplayUI;
+        public static event Action<bool> OnHideGameplayUI; 
         public static event Action<float> OnLadderTeleport;
 
         // To TerminalUI and PlayerLook
@@ -50,7 +51,8 @@ namespace LunarAnomaly.Player
             InputHandler.OnInteractPressed += TerminalInteract;
             InputHandler.OnCloseUI += TryExitTerminal;
             SanityManager.OnInsanity += HandleInsanity;
-            OutpostController.OnLadderUsed += HandleTeleport;
+            OutpostController.OnLadderUsed += HandleLadder;
+            OutpostRevealCinematic.OnOutpostCinematicTeleport += RequestTeleport;
         }
 
         void OnDisable()
@@ -60,7 +62,8 @@ namespace LunarAnomaly.Player
             InputHandler.OnInteractPressed -= TerminalInteract;
             InputHandler.OnCloseUI -= TryExitTerminal;
             SanityManager.OnInsanity -= HandleInsanity;
-            OutpostController.OnLadderUsed -= HandleTeleport;
+            OutpostController.OnLadderUsed -= HandleLadder;
+            OutpostRevealCinematic.OnOutpostCinematicTeleport -= RequestTeleport;
         }
 
         void Update()
@@ -70,6 +73,12 @@ namespace LunarAnomaly.Player
                 case PlayerCurrentState.Suffocating:
                     HandleSuffocating();
                     break;
+            }
+
+            if (respawnPlayer)
+            {
+                HandleRespawn();
+                respawnPlayer = false;
             }
         }
 
@@ -122,39 +131,70 @@ namespace LunarAnomaly.Player
         {
             if (respawnPoint == null) return;
             
+            RequestTeleport(respawnPoint, TeleportType.Respawn);
+            ChangeState(PlayerCurrentState.Alive);
+        }
+
+        void HandleLadder(Transform ladderTeleportPos)
+        {
+            if (currentState != PlayerCurrentState.Alive) return;
+
+            RequestTeleport(ladderTeleportPos, TeleportType.Ladder);
+        }
+
+        void RequestTeleport(Transform destination, TeleportType type)
+        {
+            StartCoroutine(TeleportRoutine(destination, type));
+        }
+
+        IEnumerator TeleportRoutine(Transform destination, TeleportType type)
+        {
+            float fadeTime = 0f;
+            bool resetOxygen = false;
+
+            switch(type)
+            {
+                case TeleportType.Respawn:
+                    fadeTime = 2f;
+                    resetOxygen = true;
+                    break;
+
+                case TeleportType.Ladder:
+                    fadeTime = 0.25f;
+                    break;
+
+                case TeleportType.Cinematic:
+                    fadeTime = 2f;
+                    playerMovement.SetActive(false);
+                    break;
+            }
+
+            yield return new WaitForSecondsRealtime(fadeTime);
+
             // Reset velocity to prevent unexpected movement
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
 
             // Move player
-            rb.position = respawnPoint.position;
-            rb.rotation = respawnPoint.rotation;
+            rb.position = destination.position;
+            rb.rotation = destination.rotation;
 
-            OnResetPressure?.Invoke();
-            oxygen.ResetOxygen();
-            ChangeState(PlayerCurrentState.Alive);
+            if (resetOxygen)
+            {
+                OnResetPressure?.Invoke();
+                oxygen.ResetOxygen();
+            }
+
+            if (type == TeleportType.Cinematic)
+            {
+                playerMovement.SetActive(true);
+            }
         }
 
-        // Can be called for any teleport need
-        void HandleTeleport(Transform teleportPos)
-        {
-            if (currentState != PlayerCurrentState.Alive) return;
-
-            StartCoroutine(LaderTeleportRoutine(teleportPos));
-        }
-
-        IEnumerator LaderTeleportRoutine(Transform teleportPos)
-        {
-            OnLadderTeleport?.Invoke(0.5f);
-
-            yield return new WaitForSecondsRealtime(0.25f);
-
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-
-            rb.position = teleportPos.position;
-            rb.rotation = teleportPos.rotation;
-        }
+        //IEnumerator LadderTeleportRoutine(Transform teleportPos)
+        //{
+            //OnLadderTeleport?.Invoke(0.5f); -- This should be a generic fade request
+        //}
 
         void TerminalProximity(bool proximity)
         {
@@ -252,4 +292,11 @@ namespace LunarAnomaly.Player
         Insane,
         UsingTerminal
     } 
+
+    public enum TeleportType
+    {
+        Respawn,
+        Ladder,
+        Cinematic
+    }
 }

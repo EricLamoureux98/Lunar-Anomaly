@@ -17,6 +17,8 @@ namespace LunarAnomaly.Gameplay
 		
 		Coroutine cyclingRoutine;
 
+		//[SerializeField] GameObject tempCanvas;
+
 		void Awake()
         {
 			atmosphereZone = GetComponent<AtmosphereZone>();
@@ -90,8 +92,10 @@ namespace LunarAnomaly.Gameplay
 			
 			if (!fromExterior) 
 			{
-				Debug.Log("Hello");
 				HandleDoorOpen(true);
+
+				//SoundManager.PlaySound(SoundType.AlienSeenFirstTime, 2f, false);
+				//Invoke("ShowTempCanvas", 3f);
 			}
 
 			OutpostController.OnOutpostUIUpdate?.Invoke(OutpostPrompt.ExitOutpost, fromExterior);
@@ -101,9 +105,14 @@ namespace LunarAnomaly.Gameplay
 			yield return new WaitForSeconds(1f);
 
 			HandleDoorOpen(false);
-			SoundManager.PlaySound(SoundType.Airlock, 0.5f);
+			//SoundManager.PlaySound(SoundType.Airlock, 0.5f);
 			OutpostController.OnTriggerZoneActive?.Invoke(UI.OutpostPrompt.EnterOutpost, true);
 			
 		}
+
+		// void ShowTempCanvas()
+		// {
+		// 	tempCanvas.SetActive(true);
+		// }
 	}
 }

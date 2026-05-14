@@ -81,7 +81,7 @@ namespace LunarAnomaly.UI
             typewriter.SetTextInstant(text, currentTextBox);
         }
 
-        void ShowWithTypewriter(string text)
+        public void ShowWithTypewriter(string text)
         {
             typewriter.SetText(text, currentTextBox);
         }

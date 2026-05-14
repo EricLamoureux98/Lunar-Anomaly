@@ -19,7 +19,9 @@ namespace LunarAnomaly.Gameplay
 		[SerializeField] Renderer doorLight;
 		[SerializeField] Renderer buttonLight;
 		[SerializeField] Transform ladderTopPosition;
+		[SerializeField] GameObject logCubeObj;
 		OutpostAirlock outpostAirlock;		
+		OutpostUI outpostUI;
 
 		[SerializeField] bool debugIsPowered;
 		bool outpostActive;
@@ -38,21 +40,27 @@ namespace LunarAnomaly.Gameplay
 		// To PlayerState
 		public static event Action<Transform> OnLadderUsed;
 
+		// To OutpostRevealCinematic
+		public static event Action OnCinematicSilhouetteSpawn;
+
         void Awake()
         {
             outpostAirlock = GetComponentInChildren<OutpostAirlock>();
+			outpostUI = GetComponent<OutpostUI>();
         }
 
         void OnEnable()
         {
             OutpostRepair.OnOutpostRepaired += HandleOutpostRepaired;
 			OutpostTriggerZone.OnInteract += HandleInteract;
+			OutpostRevealCinematic.OnDisableOutpost += DisableOutpost;
         }
 
         void OnDisable()
         {
             OutpostRepair.OnOutpostRepaired -= HandleOutpostRepaired;
 			OutpostTriggerZone.OnInteract -= HandleInteract;
+			OutpostRevealCinematic.OnDisableOutpost -= DisableOutpost;
         }
 
         void Update()
@@ -63,7 +71,6 @@ namespace LunarAnomaly.Gameplay
 			}
         }
 
-        // ***** FINISH THIS ******
         void HandleInteract(OutpostPrompt prompt)
 		{
 			switch (prompt)
@@ -94,6 +101,10 @@ namespace LunarAnomaly.Gameplay
 
 				case OutpostPrompt.ActivateOutpost:
 					TryActivateOutpost();
+					break;
+				
+				case OutpostPrompt.ViewLog:
+					TryViewLog();
 					break;
 			}
 		}
@@ -188,9 +199,32 @@ namespace LunarAnomaly.Gameplay
 				outpostActive = true;
 				bigButtonAnim.SetBool("IsPressed", true);
 				OnOutpostUIUpdate?.Invoke(OutpostPrompt.ActivateOutpost, false);
+
+				logCubeObj.SetActive(true);
+				OnTriggerZoneActive?.Invoke(OutpostPrompt.ViewLog, true);
+				OnOutpostUIUpdate?.Invoke(OutpostPrompt.ViewLog, true);
+				OnCinematicSilhouetteSpawn?.Invoke();
 				// Handle insanity start
 				// Quest complete
 			}
+		}
+
+		void DisableOutpost()
+		{
+			outpostActive = false;
+			isPowered = false;
+
+			OnOutpostHideAllUI?.Invoke();
+
+			doorLight.material.SetColor("_BaseColor", Color.red);
+			doorLight.material.SetColor("_EmissionColor", Color.red);
+
+		}
+
+		void TryViewLog()
+		{
+			Debug.Log("Trying to view outpost log");
+			outpostUI.ShowLog();
 		}
 
 		void TryEnterOutpost()
@@ -216,18 +250,18 @@ namespace LunarAnomaly.Gameplay
 
 // Give the player a reason to repair the outpost. "Something caused it to break down" 
 
-// Player repairs Outpost exterior
-// Power box can be used
-// Player enables power
-// Door becomes active and can be opened
-// Player enters
-// Outpost pressurizes and door closes
-// Player can activate Outpost
-// Player presses activate button
-// Power flickers and sounds of powering up
-// "Log downloaded" - voice clip starts to play
-// Player goes to exit and open door
-// Door opens and a silhouette is seen for a short moment
-// Cut to black and play insanity sounds. Silhouette is gone
+// Player repairs Outpost exterior - done
+// Power box can be used - done
+// Player enables power - done
+// Door becomes active and can be opened - done
+// Player enters - done
+// Outpost pressurizes and door closes - done
+// Player can activate Outpost - done
+// Player presses activate button - done
+// Power flickers and sounds of powering up - done
+// "Log downloaded" - voice clip starts to play - sorta done
+// Player goes to exit and open door - done
+// Door opens and a silhouette is seen for a short moment - done
+// Cut to black and play insanity sounds. Silhouette is gone - done
 // Insanity system starts 0 - 100%
 // Return to base
