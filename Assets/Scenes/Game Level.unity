@@ -3677,7 +3677,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiningManager
   debugSamplesCollected: 2
-  samplesRequired: 5
 --- !u!4 &286766577
 Transform:
   m_ObjectHideFlags: 0
@@ -12527,7 +12526,7 @@ CanvasGroup:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1013196800}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Alpha: 1
   m_Interactable: 0
   m_BlocksRaycasts: 0
@@ -18080,6 +18079,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53ed4d1fde5993ce4b15245aa72e6e96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectiveManager
+  outpostSO: {fileID: 11400000, guid: 2ff2ab67998d5731cb24430ec914d721, type: 2}
+  miningSO: {fileID: 0}
 --- !u!4 &1497496256 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3110672559506723539, guid: cbd7184a05f755441851cc575aef7825, type: 3}

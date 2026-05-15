@@ -69,38 +69,39 @@ namespace LunarAnomaly.UI
             
             if (samples < 0) return;
 
-            AddDeliveredSamples(samples);
+            //AddDeliveredSamples(samples);
             miningManager.ClearSamples(); // <--- Consider not clearing all samples later
         }
 
-        void AddDeliveredSamples(int amount)
-        {
-            Debug.Log("Trying to deposit samples");
-            samplesDelivered += amount;
-            UpdateSamplesDeposited(samplesDelivered, miningManager.samplesRequired);
+        // void AddDeliveredSamples(int amount)
+        // {
+        //     Debug.Log("Trying to deposit samples");
+        //     samplesDelivered += amount;
+            
+        //     // MOVING TO ObjectiveManager 
+        //     //UpdateSamplesDeposited(samplesDelivered, miningManager.samplesRequired);
 
-            //Debug.Log($"Samples: {samplesDelivered} / {samplesRequired}");
+        //     // MOVING TO ObjectiveManager 
+        //     if (samplesDelivered >= miningManager.samplesRequired)
+        //     {
+		// 		// ADD EVENT HERE
+        //         //currentTerminalEntry = TerminalMessage.ObjectiveComplete;
+        //         //OnTerminalMessage?.Invoke(currentTerminalEntry);
+        //         //OnPlayerProgressed?.Invoke();
+        //         sampleObjectiveComplete = true;
+        //     }
+        //     else
+        //     {
+        //         // Consider adding this. Needs updates to TerminalUI.ShowText
+        //         // Samples received: {0}/{1}
+        //         //string template = database.GetText(TerminalMessage.DepositInProgress);
+        //         //string message = string.Format(template, samplesRemaining);
 
-            if (samplesDelivered >= miningManager.samplesRequired)
-            {
-				// ADD EVENT HERE
-                //currentTerminalEntry = TerminalMessage.ObjectiveComplete;
-                //OnTerminalMessage?.Invoke(currentTerminalEntry);
-                //OnPlayerProgressed?.Invoke();
-                sampleObjectiveComplete = true;
-            }
-            else
-            {
-                // Consider adding this. Needs updates to TerminalUI.ShowText
-                // Samples received: {0}/{1}
-                //string template = database.GetText(TerminalMessage.DepositInProgress);
-                //string message = string.Format(template, samplesRemaining);
+        //         //currentTerminalEntry = TerminalMessage.DepositSuccess;
 
-                //currentTerminalEntry = TerminalMessage.DepositSuccess;
-
-                //OnTerminalMessage?.Invoke(currentTerminalEntry);
-            }
-        }
+        //         //OnTerminalMessage?.Invoke(currentTerminalEntry);
+        //     }
+        // }
 
         void CreateLogButtons()
         {

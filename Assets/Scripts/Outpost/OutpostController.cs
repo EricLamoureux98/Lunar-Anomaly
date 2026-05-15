@@ -51,14 +51,14 @@ namespace LunarAnomaly.Gameplay
 
         void OnEnable()
         {
-            OutpostRepair.OnOutpostRepaired += HandleOutpostRepaired;
+            //OutpostRepair.OnOutpostRepaired += HandleOutpostRepaired;
 			OutpostTriggerZone.OnInteract += HandleInteract;
 			OutpostRevealCinematic.OnDisableOutpost += DisableOutpost;
         }
 
         void OnDisable()
         {
-            OutpostRepair.OnOutpostRepaired -= HandleOutpostRepaired;
+            //OutpostRepair.OnOutpostRepaired -= HandleOutpostRepaired;
 			OutpostTriggerZone.OnInteract -= HandleInteract;
 			OutpostRevealCinematic.OnDisableOutpost -= DisableOutpost;
         }

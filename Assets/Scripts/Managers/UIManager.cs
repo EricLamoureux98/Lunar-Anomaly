@@ -12,16 +12,16 @@ namespace LunarAnomaly.UI
     {
         [SerializeField] ScreenFader screenFader;
 
-        [Header("Mining UI")]
-        [SerializeField] TextMeshProUGUI samplesCollectedText;
+        //[Header("Mining UI")]
+        //[SerializeField] TextMeshProUGUI samplesCollectedText;
 
         [SerializeField] TextMeshProUGUI deathText;
-        [SerializeField] CanvasGroup canvasGroup;
+        [SerializeField] CanvasGroup gameplayCanvasGroup;
 
         void OnEnable()
         {
             PlayerState.OnPlayerDying += PlayerDying;
-            MiningManager.OnSamplesCarriedChanged += UpdateMiningSampleUI;
+            //MiningManager.OnSamplesCarriedChanged += UpdateMiningSampleUI;
             Silhouette.OnSilhouetteFlash += SilhouetteFlash;
             PlayerState.OnHideGameplayUI += HideGameplayUI;
             GameManager.OnGameStateChanged += HandleGameStateChange;
@@ -31,7 +31,7 @@ namespace LunarAnomaly.UI
         void OnDisable()
         {
             PlayerState.OnPlayerDying -= PlayerDying;
-            MiningManager.OnSamplesCarriedChanged -= UpdateMiningSampleUI;
+            //MiningManager.OnSamplesCarriedChanged -= UpdateMiningSampleUI;
             Silhouette.OnSilhouetteFlash -= SilhouetteFlash;
             PlayerState.OnHideGameplayUI -= HideGameplayUI;
             GameManager.OnGameStateChanged -= HandleGameStateChange;
@@ -64,14 +64,14 @@ namespace LunarAnomaly.UI
         void HideGameplayUI(bool hidden)
         {
             if (hidden)
-                canvasGroup.alpha = 0f;
+                gameplayCanvasGroup.alpha = 0f;
             else
-                canvasGroup.alpha = 1f;
+                gameplayCanvasGroup.alpha = 1f;
         }
 
         void UpdateMiningSampleUI(int samples, int remaining)
         {
-            samplesCollectedText.text = string.Format("{0} / {1} collected", samples, remaining);
+            //samplesCollectedText.text = string.Format("{0} / {1} collected", samples, remaining);
             //samplesCollectedText.text = string.Format("Samples collected: {0}", samples);
         }
 

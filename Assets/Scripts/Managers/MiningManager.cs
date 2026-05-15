@@ -6,11 +6,12 @@ namespace LunarAnomaly.Gameplay
     public class MiningManager : MonoBehaviour
     {
         [SerializeField] int debugSamplesCollected;
-        public int samplesRequired; // Make this better
+        //public int samplesRequired; // Make this better
         public int samplesCollected { get; private set; }
 
-        // To UIManager                     
-        public static event Action<int, int> OnSamplesCarriedChanged;
+        // To UIManager - old
+        // To ObjectiveManager                   
+        public static event Action<int> OnSamplesCarriedChanged;
 
         void OnEnable()
         {
@@ -24,8 +25,8 @@ namespace LunarAnomaly.Gameplay
 
         void Start()
         {
-            DebugSamplesCollected();
-            OnSamplesCarriedChanged?.Invoke(samplesCollected, samplesRequired);
+            //DebugSamplesCollected();
+            //OnSamplesCarriedChanged?.Invoke(samplesCollected, samplesRequired);
         }
 
         void DebugSamplesCollected()
@@ -33,20 +34,20 @@ namespace LunarAnomaly.Gameplay
             if (debugSamplesCollected > 0)
             {
                 samplesCollected = debugSamplesCollected;
-                OnSamplesCarriedChanged?.Invoke(samplesCollected, samplesRequired);
+                //OnSamplesCarriedChanged?.Invoke(samplesCollected, samplesRequired);
             }
         }
 
         void SampleCollected()
         {
             samplesCollected++;
-            OnSamplesCarriedChanged?.Invoke(samplesCollected, samplesRequired);
+            OnSamplesCarriedChanged?.Invoke(samplesCollected);
         }
 
         public void ClearSamples()
         {
             samplesCollected = 0;
-            OnSamplesCarriedChanged?.Invoke(samplesCollected, samplesRequired);
+            OnSamplesCarriedChanged?.Invoke(samplesCollected);
         }
     }
 }

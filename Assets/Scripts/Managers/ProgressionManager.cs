@@ -9,6 +9,7 @@ namespace LunarAnomaly.Gameplay
 	{
 		public ProgressionStage CurrentStage { get; private set; }
 
+		// To TerminalUI and ObjectiveManager
 		public static event Action<ProgressionStage> OnStageChanged;
 
         void OnEnable()
@@ -23,7 +24,7 @@ namespace LunarAnomaly.Gameplay
 
         void Start()
         {
-            AdvanceStage(ProgressionStage.Intro);
+            AdvanceStage(ProgressionStage.OutpostObjective);
         }
 
 		void HandleConfirmed()
@@ -39,9 +40,9 @@ namespace LunarAnomaly.Gameplay
 					return ProgressionStage.SampleObjective;
 
 				case ProgressionStage.SampleObjective:
-					return ProgressionStage.RepairObjective;
+					return ProgressionStage.OutpostObjective;
 
-				case ProgressionStage.RepairObjective:
+				case ProgressionStage.OutpostObjective:
 					return ProgressionStage.Outro;
 				
 				case ProgressionStage.Outro:
@@ -66,6 +67,6 @@ public enum ProgressionStage
 {
 	Intro,
 	SampleObjective,
-	RepairObjective,
+	OutpostObjective,
 	Outro
 }
