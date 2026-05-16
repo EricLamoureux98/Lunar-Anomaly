@@ -13,7 +13,7 @@ namespace LunarAnomaly.Gameplay
 		//public static event Action OnOutpostRepaired;
 
         // To ObjectiveManager
-        public static event Action OnOutpostRepairProgress;
+        public static event Action<ProgressionStage> OnOutpostRepairProgress;
 
         void OnEnable()
         {
@@ -33,7 +33,7 @@ namespace LunarAnomaly.Gameplay
 
 		void HandleNodeRepaired(RepairNode node)
 		{
-            OnOutpostRepairProgress?.Invoke();
+            OnOutpostRepairProgress?.Invoke(ProgressionStage.OutpostObjective);
 			// repairedCount++;
 
 			// if (repairedCount >= repairNodes.Length)

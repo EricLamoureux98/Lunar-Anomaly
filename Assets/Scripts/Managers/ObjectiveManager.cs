@@ -14,17 +14,21 @@ public class ObjectiveManager : MonoBehaviour
     int currentProgress;
 
     ObjectiveUIData objectiveUIData;
-
     ObjectiveSO currentObjectiveSO;
+    ProgressionStage currentStage;
 
     // To ObjectiveUIController
     public static event Action<string> OnUpdateObjectiveTitle;
     public static event Action<ObjectiveUIData> OnUpdateObjectiveData;
 
+    // To OutpostController
+    public static event Action<ProgressionStage, int> OnObjectiveProgressed;
+
     void OnEnable()
     {
         ProgressionManager.OnStageChanged += UpdateObjective;
         OutpostRepair.OnOutpostRepairProgress += UpdateProgress;
+        OutpostController.OnOutpostAdvanced += AdvanceObjective;
         //MiningManager.OnSamplesCarriedChanged += UpdateProgress;
     }
 
@@ -32,6 +36,7 @@ public class ObjectiveManager : MonoBehaviour
     {
         ProgressionManager.OnStageChanged -= UpdateObjective;
         OutpostRepair.OnOutpostRepairProgress -= UpdateProgress;
+        OutpostController.OnOutpostAdvanced -= AdvanceObjective;
         //MiningManager.OnSamplesCarriedChanged -= UpdateProgress;
     }
 
@@ -41,6 +46,7 @@ public class ObjectiveManager : MonoBehaviour
         {
             case ProgressionStage.OutpostObjective:
                 if (outpostSO == null ) return;
+                currentStage = newStage;
                 currentObjectiveIndex = 0;
                 currentProgress = 0;
                 currentObjectiveSO = outpostSO;
@@ -55,8 +61,10 @@ public class ObjectiveManager : MonoBehaviour
         }
     }
 
-    void UpdateProgress()
+    void UpdateProgress(ProgressionStage stage)
     {
+        if (stage != currentStage) return; 
+
         currentProgress++;
 
         PrepareObjectiveData(currentObjectiveSO, currentObjectiveSO.Objectives[currentObjectiveIndex].objectiveType);
@@ -64,15 +72,25 @@ public class ObjectiveManager : MonoBehaviour
 
         if (currentProgress >= currentObjectiveSO.Objectives[currentObjectiveIndex].Progression.AmountNeeded)
         {
-            AdvanceObjective();
+            AdvanceObjective(currentStage);
         }
     }
 
-    void AdvanceObjective()
+    public void AdvanceObjective(ProgressionStage stage)
     {
-        currentObjectiveIndex++;
-        currentProgress = 0;
+        if (stage != currentStage) return; 
         
+        currentObjectiveIndex++;
+
+        if (currentObjectiveIndex >= currentObjectiveSO.Objectives.Length)
+        {
+            Debug.Log("Quest finished!");
+            return;
+        }
+        
+        currentProgress = 0;
+
+        OnObjectiveProgressed?.Invoke(currentStage, currentObjectiveIndex);
         OnUpdateObjectiveTitle?.Invoke(outpostSO.Objectives[currentObjectiveIndex].Title);
         PrepareObjectiveData(currentObjectiveSO, currentObjectiveSO.Objectives[currentObjectiveIndex].objectiveType);
         OnUpdateObjectiveData?.Invoke(objectiveUIData);

@@ -17,8 +17,6 @@ namespace LunarAnomaly.Gameplay
 		
 		Coroutine cyclingRoutine;
 
-		//[SerializeField] GameObject tempCanvas;
-
 		void Awake()
         {
 			atmosphereZone = GetComponent<AtmosphereZone>();
@@ -28,7 +26,8 @@ namespace LunarAnomaly.Gameplay
         {
             if (!other.CompareTag("Player")) return;
 			
-			OutpostController.OnTriggerZoneActive?.Invoke(UI.OutpostPrompt.EnterOutpost, false);
+			OutpostController.OnOutpostAdvanced?.Invoke(ProgressionStage.OutpostObjective);
+			OutpostController.OnTriggerZoneActive?.Invoke(OutpostPrompt.EnterOutpost, false);
 			playerInside = true;
 			cyclingRoutine = StartCoroutine(CycleAtmosphere(true));
         }
@@ -37,6 +36,7 @@ namespace LunarAnomaly.Gameplay
         {
             if (!other.CompareTag("Player")) return;
    
+			OutpostController.OnOutpostAdvanced?.Invoke(ProgressionStage.OutpostObjective);
 			playerInside = false;
 			
 			// if (cyclingRoutine != null)
@@ -80,7 +80,6 @@ namespace LunarAnomaly.Gameplay
 			HandleDoorOpen(false);
 			SoundManager.PlaySound(SoundType.Alarm, 1.25f, false);
 			SoundManager.PlaySound(fromExterior ? SoundType.GainAtmosphere : SoundType.LoseAtmosphere, 1f, false);
-			//SoundManager.PlaySound(SoundType.GainAtmosphere, 1f, false);
 			lightFlicker.StartFlicker(3f);
 			
 			yield return new WaitForSeconds(pressurizationTime);
@@ -93,26 +92,18 @@ namespace LunarAnomaly.Gameplay
 			if (!fromExterior) 
 			{
 				HandleDoorOpen(true);
-
-				//SoundManager.PlaySound(SoundType.AlienSeenFirstTime, 2f, false);
-				//Invoke("ShowTempCanvas", 3f);
 			}
 
-			OutpostController.OnOutpostUIUpdate?.Invoke(OutpostPrompt.ExitOutpost, fromExterior);
-			OutpostController.OnTriggerZoneActive?.Invoke(OutpostPrompt.ExitOutpost, fromExterior);
+			//OutpostController.OnOutpostUIUpdate?.Invoke(OutpostPrompt.ExitOutpost, fromExterior);
+			//OutpostController.OnTriggerZoneActive?.Invoke(OutpostPrompt.ExitOutpost, fromExterior);
 			
 			yield return new WaitUntil(() => !playerInside);
 			yield return new WaitForSeconds(1f);
 
 			HandleDoorOpen(false);
 			//SoundManager.PlaySound(SoundType.Airlock, 0.5f);
-			OutpostController.OnTriggerZoneActive?.Invoke(UI.OutpostPrompt.EnterOutpost, true);
+			//OutpostController.OnTriggerZoneActive?.Invoke(OutpostPrompt.EnterOutpost, true);
 			
 		}
-
-		// void ShowTempCanvas()
-		// {
-		// 	tempCanvas.SetActive(true);
-		// }
 	}
 }

@@ -23,7 +23,7 @@ MonoBehaviour:
     Progression:
       AmountNeeded: 0
       ProgressionName: 
-  - Title: Turn On Power
+  - Title: Turn On Outpost Power
     objectiveType: 2
     Progression:
       AmountNeeded: 0

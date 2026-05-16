@@ -20,15 +20,16 @@ namespace LunarAnomaly.Gameplay
 		[SerializeField] Renderer buttonLight;
 		[SerializeField] Transform ladderTopPosition;
 		[SerializeField] GameObject logCubeObj;
-		OutpostAirlock outpostAirlock;		
+		OutpostAirlock outpostAirlock;	
 		OutpostUI outpostUI;
 
 		[SerializeField] bool debugIsPowered;
 		bool outpostActive;
 		bool isPowered;
 		public bool dishEnabled;
-		public bool outpostRepaired; // For testing
+		public bool isRepaired; // For testing
 		bool powerBoxOpen;
+		bool logViewed;
 
 		// To OutpostUI
 		public static Action<OutpostPrompt, bool> OnOutpostUIUpdate;
@@ -43,6 +44,9 @@ namespace LunarAnomaly.Gameplay
 		// To OutpostRevealCinematic
 		public static event Action OnCinematicSilhouetteSpawn;
 
+		// To ObjectiveManager - Used in OutpostAirlock
+		public static Action<ProgressionStage> OnOutpostAdvanced;
+
         void Awake()
         {
             outpostAirlock = GetComponentInChildren<OutpostAirlock>();
@@ -54,6 +58,7 @@ namespace LunarAnomaly.Gameplay
             //OutpostRepair.OnOutpostRepaired += HandleOutpostRepaired;
 			OutpostTriggerZone.OnInteract += HandleInteract;
 			OutpostRevealCinematic.OnDisableOutpost += DisableOutpost;
+			ObjectiveManager.OnObjectiveProgressed += HandleObjectiveStage;
         }
 
         void OnDisable()
@@ -61,6 +66,7 @@ namespace LunarAnomaly.Gameplay
             //OutpostRepair.OnOutpostRepaired -= HandleOutpostRepaired;
 			OutpostTriggerZone.OnInteract -= HandleInteract;
 			OutpostRevealCinematic.OnDisableOutpost -= DisableOutpost;
+			ObjectiveManager.OnObjectiveProgressed -= HandleObjectiveStage;
         }
 
         void Update()
@@ -70,6 +76,39 @@ namespace LunarAnomaly.Gameplay
 				HandleInteract(OutpostPrompt.TurnOnPower);
 			}
         }
+
+		void HandleObjectiveStage(ProgressionStage stage, int index)
+		{
+			if (stage != ProgressionStage.OutpostObjective) return;
+
+			switch (index)
+			{
+				// Case 0 is not needed
+
+				case 1:
+					HandleOutpostRepaired();
+					OnOutpostUIUpdate?.Invoke(OutpostPrompt.DishLever, true);
+					OnTriggerZoneActive?.Invoke(OutpostPrompt.DishLever, true);
+					break;
+				
+				case 2:
+					HandleDishEnable();
+					OnOutpostUIUpdate?.Invoke(OutpostPrompt.TurnOnPower, true);
+					OnTriggerZoneActive?.Invoke(OutpostPrompt.TurnOnPower, true);
+					break;
+				
+				case 3: 
+					HandleOutpostStart();
+					OnOutpostUIUpdate?.Invoke(OutpostPrompt.EnterOutpost, true);
+					OnTriggerZoneActive?.Invoke(OutpostPrompt.EnterOutpost, true);
+					break;
+				
+				case 6:
+					OnOutpostUIUpdate?.Invoke(OutpostPrompt.ExitOutpost, true);
+					OnTriggerZoneActive?.Invoke(OutpostPrompt.ExitOutpost, true);
+					break;
+			}
+		}
 
         void HandleInteract(OutpostPrompt prompt)
 		{
@@ -111,7 +150,9 @@ namespace LunarAnomaly.Gameplay
 
 		void HandleOutpostRepaired()
 		{
-			outpostRepaired = true;
+			if (isRepaired) return; 
+
+			isRepaired = true;
 		}
 
 		void TryOpenPowerbox()
@@ -120,7 +161,7 @@ namespace LunarAnomaly.Gameplay
 
 			powerSwitchesAnim.SetBool("IsPowered", false);
 			//OutpostDoorAnim.SetBool("IsOpen", false);
-			outpostAirlock.HandleDoorOpen(false);
+			//outpostAirlock.HandleDoorOpen(false);
 			powerBoxOpen = true;
 			powerBoxDoorAnim.SetBool("IsOpen", true);
 			SoundManager.PlaySound(SoundType.OutpostSqueak, 1f, false);			
@@ -146,7 +187,6 @@ namespace LunarAnomaly.Gameplay
 			dishLeverAnim.SetBool("LeverEnabled", true);
 		}
 
-		// Called from lever animation
 		public void HandleDishEnable()
 		{
 			if (dishEnabled) return;
@@ -157,10 +197,10 @@ namespace LunarAnomaly.Gameplay
 
         void TryEnablePower()
 		{
-			if (outpostRepaired && dishEnabled && !isPowered)
+			if (isRepaired && dishEnabled && !isPowered)
 			{
 				powerSwitchesAnim.SetBool("IsPowered", true);
-				isPowered = true;
+
 				OnOutpostUIUpdate?.Invoke(OutpostPrompt.TurnOnPower, false);
 				OnTriggerZoneActive?.Invoke(OutpostPrompt.TurnOnPower, false);
 
@@ -169,15 +209,11 @@ namespace LunarAnomaly.Gameplay
 
 				buttonLight.material.SetColor("_BaseColor", Color.red);
 				buttonLight.material.SetColor("_EmissionColor", Color.red * 2.5f);
-
-				OnOutpostUIUpdate?.Invoke(OutpostPrompt.EnterOutpost, true);
-				OnTriggerZoneActive?.Invoke(OutpostPrompt.EnterOutpost, true);
 			}
 			else
 			{
 				powerSwitchesAnim.SetTrigger("IsNotReady");
 			}
-			// Maybe notify player if not fully repaired
 		}
 
 		// Called from switch animation
@@ -186,8 +222,9 @@ namespace LunarAnomaly.Gameplay
 			SoundManager.PlaySound(SoundType.SwitchFlip, 2f, false);
 		}
 
-		public void HandleOutpostStart()
+		void HandleOutpostStart()
 		{
+			isPowered = true;
 			SoundManager.PlaySound(SoundType.MachineStart, 2f, false);
 			satelliteDishAnim.SetBool("IsPowered", true);
 		}
@@ -196,6 +233,7 @@ namespace LunarAnomaly.Gameplay
 		{
 			if (isPowered && !outpostActive)
 			{
+				OnOutpostAdvanced?.Invoke(ProgressionStage.OutpostObjective);
 				outpostActive = true;
 				bigButtonAnim.SetBool("IsPressed", true);
 				OnOutpostUIUpdate?.Invoke(OutpostPrompt.ActivateOutpost, false);
@@ -218,20 +256,22 @@ namespace LunarAnomaly.Gameplay
 
 			doorLight.material.SetColor("_BaseColor", Color.red);
 			doorLight.material.SetColor("_EmissionColor", Color.red);
-
 		}
 
 		void TryViewLog()
 		{
-			Debug.Log("Trying to view outpost log");
 			outpostUI.ShowLog();
+
+			if (!logViewed)
+				OnOutpostAdvanced?.Invoke(ProgressionStage.OutpostObjective);
+				
+			logViewed = true;
 		}
 
 		void TryEnterOutpost()
 		{
 			if (isPowered)
 			{
-				//Debug.Log("Door opening");
 				outpostAirlock.HandleDoorOpen(true);
 				SoundManager.PlaySound(SoundType.Airlock, 0.5f, false);
 			}

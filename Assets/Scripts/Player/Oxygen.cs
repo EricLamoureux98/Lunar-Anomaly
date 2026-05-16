@@ -117,6 +117,7 @@ namespace LunarAnomaly.Player
         {
             currentOxygen = startingOxygen; 
             OnOxygenReset?.Invoke(); 
+            oxygenDepleted = false;
             oxygenActive = true;
         }
     }
