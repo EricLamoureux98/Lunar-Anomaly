@@ -1,7 +1,7 @@
 using System;
-using System.Collections;
 using UnityEngine;
-	
+using UnityEngine.SceneManagement;
+
 namespace LunarAnomaly
 {
 	public class GameManager : MonoBehaviour
@@ -31,7 +31,27 @@ namespace LunarAnomaly
 				DontDestroyOnLoad(gameObject);					
 			}
 
+			ChangeState(GameState.MainMenu);
+		}
+
+		public void RegisterPlayer(GameObject player)
+		{
+			playerObject = player;
+		}
+
+		public void PlayGame()
+		{
+			SceneManager.LoadScene(1);
 			ChangeState(GameState.Playing);
+		}
+
+		public void QuitGame()
+		{
+			Application.Quit();
+
+			#if UNITY_EDITOR
+			UnityEditor.EditorApplication.isPlaying = false;
+			#endif
 		}
 
         public void TriggerGameOver()
@@ -48,9 +68,15 @@ namespace LunarAnomaly
 				ChangeState(GameState.Paused);
 		}
 
+		public void ReturnToMainMenu()
+		{
+			SceneManager.LoadScene(0);
+			ChangeState(GameState.MainMenu);
+		}
+
 		void ChangeState(GameState newState)
 		{
-			if (playerObject == null) Debug.Log("Player not assigned in GM");
+			//if (playerObject == null) Debug.Log("Player not assigned in GM");
 
 			if (newState == gameState) return;
 
@@ -62,16 +88,19 @@ namespace LunarAnomaly
 			{
 				case GameState.Playing:
 					Time.timeScale = 1f;
-					playerObject.SetActive(true);
+					//playerObject.SetActive(true);
 					break;
 
 				case GameState.Paused:
 					Time.timeScale = 0f;
 					break;
+
+				case GameState.MainMenu:
+					break;
 				
 				default:
 					Time.timeScale = 0f;
-					playerObject.SetActive(false);
+					//playerObject.SetActive(false);
 					break;
 			}
 

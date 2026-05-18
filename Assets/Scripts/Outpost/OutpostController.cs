@@ -15,6 +15,7 @@ namespace LunarAnomaly.Gameplay
 		[SerializeField] Animator dishLeverAnim;
 		[SerializeField] Animator bigButtonAnim;
 
+		[Header("References")]
 		[SerializeField] CinemachineImpulseSource powerImpulseSource;
 		[SerializeField] Renderer doorLight;
 		[SerializeField] Renderer buttonLight;
@@ -26,16 +27,16 @@ namespace LunarAnomaly.Gameplay
 		[SerializeField] bool debugIsPowered;
 		bool outpostActive;
 		bool isPowered;
-		public bool dishEnabled;
+		public bool dishEnabled; // For testing
 		public bool isRepaired; // For testing
 		bool powerBoxOpen;
 		bool logViewed;
 
-		// To OutpostUI
+		// To OutpostUI - used in PipeValve
 		public static Action<OutpostPrompt, bool> OnOutpostUIUpdate;
 		public static event Action OnOutpostHideAllUI;
 
-		// To OutpostTriggerZone
+		// To OutpostTriggerZone - Used in PipeValve
 		public static Action<OutpostPrompt, bool> OnTriggerZoneActive;
 
 		// To PlayerState
@@ -126,7 +127,7 @@ namespace LunarAnomaly.Gameplay
 					TryEnterOutpost();
 					break;
 				
-				case  OutpostPrompt.ExitOutpost:
+				case OutpostPrompt.ExitOutpost:
 					TryExitOutpost();
 					break;
 				
@@ -242,8 +243,6 @@ namespace LunarAnomaly.Gameplay
 				OnTriggerZoneActive?.Invoke(OutpostPrompt.ViewLog, true);
 				OnOutpostUIUpdate?.Invoke(OutpostPrompt.ViewLog, true);
 				OnCinematicSilhouetteSpawn?.Invoke();
-				// Handle insanity start
-				// Quest complete
 			}
 		}
 

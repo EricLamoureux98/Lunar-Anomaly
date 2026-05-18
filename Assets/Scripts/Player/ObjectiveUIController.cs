@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using LunarAnomaly.Gameplay;
 
 namespace LunarAnomaly.UI
 {
@@ -27,7 +28,6 @@ namespace LunarAnomaly.UI
             objectiveTitle.text = title;
         }
 
-        //void UpdateObjectiveInfo(ObjectiveType type, int? progress = null, int? remaining = null, string typeTxt = "")
         void UpdateObjectiveInfo(ObjectiveUIData data)
         {
             switch (data.Type)
@@ -63,8 +63,6 @@ namespace LunarAnomaly.UI
 
             objectiveProgressBar.value = normalized;
         }
-
-
     }
 
     public enum ObjectiveType

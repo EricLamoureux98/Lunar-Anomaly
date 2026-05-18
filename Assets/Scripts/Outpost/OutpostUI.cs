@@ -1,4 +1,3 @@
-using System;
 using LunarAnomaly.Gameplay;
 using LunarAnomaly.Player;
 using TMPro;
@@ -26,12 +25,11 @@ namespace LunarAnomaly.UI
 		[SerializeField] TMP_Text activateOutpost;
 		[SerializeField] TMP_Text viewLog;
 		[SerializeField] TMP_Text pullLever;	
+		[SerializeField] TMP_Text turnValve;
 
 		[Header("Logs")]
 		[TextArea(5,10)]
 		[SerializeField] string logText;	
-
-        // Typewriter stuff for audio log portion
 
         void OnEnable()
         {
@@ -74,8 +72,12 @@ namespace LunarAnomaly.UI
 					break;
 
 				case OutpostPrompt.DishLever:
-				pullLever.enabled = isActive;
-				break;
+					pullLever.enabled = isActive;
+					break;
+
+				case OutpostPrompt.TurnValve:
+					turnValve.enabled = isActive;
+					break;
 			}
 		}
 
@@ -88,6 +90,7 @@ namespace LunarAnomaly.UI
 			openDoorExterior.enabled = false;
 			viewLog.enabled = false;
 			pullLever.enabled = false;
+			turnValve.enabled = false;
 		}
 
 		public void ShowLog()
@@ -126,6 +129,9 @@ namespace LunarAnomaly.UI
 		Basic,
 		ExitOutpost,
 		UseLadder,
-		DishLever
+		DishLever, 
+		PickupValve,
+		ConnectValve,
+		TurnValve
 	}
 }

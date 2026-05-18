@@ -19,16 +19,16 @@ namespace LunarAnomaly.Player
         [SerializeField] Transform respawnPoint;
         [SerializeField] float oxygenGracePeriod = 3f;
 
-        [SerializeField] bool respawnPlayer;
+        [SerializeField] bool testRespawnPlayer;
 
         PlayerCurrentState currentState;
         bool terminalProximity;     
         float graceTimer;
 
         // To UIManager
-        public static event Action<float> OnPlayerDying;
+        public static event Action OnPlayerDying;
         public static event Action<bool> OnHideGameplayUI; 
-        public static event Action<float> OnLadderTeleport;
+        public static event Action OnLadderTeleport;
 
         // To TerminalUI and PlayerLook
         public static event Action<bool> OnTerminalUIActive;
@@ -38,6 +38,9 @@ namespace LunarAnomaly.Player
 
         void Awake()
         {
+            GameManager.Instance.RegisterPlayer(gameObject);
+            ChangeState(PlayerCurrentState.Alive);
+            
             rb = GetComponent<Rigidbody>();
             playerInput = GetComponent<PlayerInput>();
             playerMovement = GetComponent<PlayerMovement>();
@@ -75,10 +78,10 @@ namespace LunarAnomaly.Player
                     break;
             }
 
-            if (respawnPlayer)
+            if (testRespawnPlayer)
             {
                 HandleRespawn();
-                respawnPlayer = false;
+                testRespawnPlayer = false;
             }
         }
 
@@ -139,6 +142,7 @@ namespace LunarAnomaly.Player
         {
             if (currentState != PlayerCurrentState.Alive) return;
 
+            OnLadderTeleport?.Invoke();
             RequestTeleport(ladderTeleportPos, TeleportType.Ladder);
         }
 
@@ -164,7 +168,7 @@ namespace LunarAnomaly.Player
                     break;
 
                 case TeleportType.Cinematic:
-                    fadeTime = 2f;
+                    fadeTime = 0.1f;
                     playerMovement.SetActive(false);
                     break;
             }
@@ -190,11 +194,6 @@ namespace LunarAnomaly.Player
                 playerMovement.SetActive(true);
             }
         }
-
-        //IEnumerator LadderTeleportRoutine(Transform teleportPos)
-        //{
-            //OnLadderTeleport?.Invoke(0.5f); -- This should be a generic fade request
-        //}
 
         void TerminalProximity(bool proximity)
         {
@@ -238,7 +237,7 @@ namespace LunarAnomaly.Player
             {
                 case PlayerCurrentState.Suffocating:
                     // Add visuals and sound 
-                    OnPlayerDying?.Invoke(oxygenGracePeriod);
+                    OnPlayerDying?.Invoke();
                     graceTimer = oxygenGracePeriod;
                     break;
                 

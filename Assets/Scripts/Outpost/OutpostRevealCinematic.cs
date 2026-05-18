@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using LunarAnomaly.Player;
+using LunarAnomaly.UI;
+using TMPro;
 using UnityEngine;
 
 namespace LunarAnomaly.Gameplay
@@ -8,8 +10,11 @@ namespace LunarAnomaly.Gameplay
     public class OutpostRevealCinematic : MonoBehaviour
     {
         [Header("References")]
+        //[SerializeField] TerminalUpdateText updateText;
         [SerializeField] ScreenFader screenFader;
         [SerializeField] LayerMask playerLayer;
+        // [SerializeField] TMP_Text currentTextBox;
+		// [SerializeField] Typewriter typewriter;
         SpriteRenderer silhouette;
 
         [Header("Event Settings")]
@@ -17,6 +22,12 @@ namespace LunarAnomaly.Gameplay
         [SerializeField] float waitBeforeFlash = 2.5f;
         [SerializeField] float fadeBlackTime = 0.75f;
         [SerializeField] Transform playerTeleportPos;
+
+        // [Header("Logs")]
+		// [TextArea(5,10)]
+		// [SerializeField] string logText;	
+
+        // [SerializeField] GameObject demoCanvas;
 
         bool silhouetteActive;
         bool playerWatching;
@@ -28,6 +39,8 @@ namespace LunarAnomaly.Gameplay
         public static event Action OnDisableOutpost;
         // To SanityManager
         public static event Action OnActivateSanitySystem;
+        // To DemoCanvas
+        public static event Action OnDemoComplete;
 
         void OnEnable()
         {
@@ -75,14 +88,17 @@ namespace LunarAnomaly.Gameplay
 
             yield return new WaitForSeconds(waitBeforeFlash);
 
-            Silhouette.OnSilhouetteFlash?.Invoke(fadeBlackTime);
-            OnOutpostCinematicTeleport?.Invoke(playerTeleportPos, TeleportType.Cinematic);
-            OnDisableOutpost?.Invoke();
-            silhouette.enabled = false;
-            OnActivateSanitySystem?.Invoke();
+            OnDemoComplete?.Invoke();
+            
 
-            yield return new WaitForSeconds(fadeBlackTime);
-            Destroy(gameObject);
+            // Silhouette.OnSilhouetteFlash?.Invoke();
+            // OnOutpostCinematicTeleport?.Invoke(playerTeleportPos, TeleportType.Cinematic);
+            // OnDisableOutpost?.Invoke();
+            // silhouette.enabled = false;
+            // OnActivateSanitySystem?.Invoke();
+
+            // yield return new WaitForSeconds(fadeBlackTime);
+            // Destroy(gameObject);
         }
     }
 }

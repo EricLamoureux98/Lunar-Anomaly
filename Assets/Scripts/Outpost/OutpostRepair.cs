@@ -8,12 +8,12 @@ namespace LunarAnomaly.Gameplay
 	{
 		[SerializeField] RepairNode[] repairNodes;
 
-		int repairedCount;
+		//int repairedCount;
 
 		//public static event Action OnOutpostRepaired;
 
-        // To ObjectiveManager
-        public static event Action<ProgressionStage> OnOutpostRepairProgress;
+        // To ObjectiveManager - Used in PipeValve
+        public static Action<ProgressionStage> OnOutpostRepairProgress;
 
         void OnEnable()
         {

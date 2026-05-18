@@ -29,7 +29,7 @@ namespace LunarAnomaly.Gameplay
 		bool debugNotif;
 
 		// To UIManager - Called in OutpostRevealCinematic
-		public static Action<float> OnSilhouetteFlash;
+		public static Action OnSilhouetteFlash;
 
 		// To SanityManager
 		public static event Action OnSilhouetteWatched;
@@ -79,7 +79,7 @@ namespace LunarAnomaly.Gameplay
 				}	
 				else
 				{
-					OnSilhouetteFlash?.Invoke(fadeBlackTime);
+					OnSilhouetteFlash?.Invoke();
 					OnSilhouetteVanished?.Invoke();
 					UpdateSilhouetteVisibility(false);
 					SoundManager.PlaySound(SoundType.Ambience);

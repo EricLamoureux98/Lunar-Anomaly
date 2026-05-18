@@ -12,7 +12,8 @@ namespace LunarAnomaly
 
 		public static SoundManager Instance { get; private set; }
 		
-		AudioSource audioSource;
+		[SerializeField] AudioSource musicSource;
+		[SerializeField] AudioSource sfxSource;
 
 		void Awake()
 		{
@@ -29,7 +30,7 @@ namespace LunarAnomaly
 				DontDestroyOnLoad(gameObject);					
 			}
 
-			audioSource = GetComponent<AudioSource>();
+			//audioSource = GetComponent<AudioSource>();
 		}
 
         void OnValidate()
@@ -44,7 +45,7 @@ namespace LunarAnomaly
 
         public static void PlaySound(SoundType sound, float volume = 1f, bool soundVariation = true)
 		{
-			if (Instance == null || Instance.audioSource == null)
+			if (Instance == null || Instance.sfxSource == null || Instance.musicSource == null)
 			{
 				Debug.Log("SoundManager instance not ready");
 				return;
@@ -60,9 +61,28 @@ namespace LunarAnomaly
 
 			AudioClip randomClip = clips[Random.Range(0, clips.Length)];
 
-			Instance.audioSource.pitch = soundVariation ? Random.Range(0.85f, 1.15f) : 1f;
+			Instance.sfxSource.pitch = soundVariation ? Random.Range(0.85f, 1.15f) : 1f;
 
-			Instance.audioSource.PlayOneShot(randomClip, volume);
+			Instance.sfxSource.PlayOneShot(randomClip, volume);
+		}
+
+		public static void PlayMusic(SoundType sound, float volume = 1f)
+		{
+			AudioClip[] clips = Instance.soundList[(int)sound].Sounds;
+
+			if (clips == null || clips.Length == 0)
+				return;
+
+			Instance.musicSource.clip = clips[0];
+			Instance.musicSource.volume = volume;
+			Instance.musicSource.loop = true;
+
+			Instance.musicSource.Play();
+		}
+
+		public static void StopMusic()
+		{
+			Instance.musicSource.Stop();
 		}
 	}
 
@@ -83,7 +103,8 @@ namespace LunarAnomaly
 		SwitchFlip,
 		MachineStart,
 		LeverPull,
-		AlienSeenFirstTime
+		AlienSeenFirstTime,
+		MenuClick
 	}
 
 	[Serializable]

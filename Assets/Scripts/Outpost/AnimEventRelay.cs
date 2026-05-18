@@ -8,6 +8,7 @@ namespace LunarAnomaly
 	{
 		[SerializeField] OutpostController outpostController;
 		[SerializeField] ObjectiveManager objectiveManager;
+		[SerializeField] PipeValve pipeValve;
 
 		void OnPowerPanelOpen() => outpostController.HandlePowerboxOpen();
 		void OnPowerSwitchFlipped() => outpostController.HandlePowerSwitchSound();
@@ -15,5 +16,7 @@ namespace LunarAnomaly
 		void OnOutpostPowerOn() => objectiveManager.AdvanceObjective(ProgressionStage.OutpostObjective);
 		//void OnDishLeverEnabled() => outpostController.HandleDishEnable();
 		void OnDishLeverEnabled() => objectiveManager.AdvanceObjective(ProgressionStage.OutpostObjective);
+
+		void OnValveEnabled() => pipeValve.NotifyValveRepaired();
 	}
 }
