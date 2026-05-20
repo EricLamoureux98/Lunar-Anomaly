@@ -84,7 +84,7 @@ namespace LunarAnomaly.Gameplay
         {
             silhouetteActive = false;
 
-            SoundManager.PlaySound(SoundType.AlienSeenFirstTime, 2f, false);
+            SoundManager.PlaySound(SoundType.AlienSeenFirstTime, 2.5f, false);
 
             yield return new WaitForSeconds(waitBeforeFlash);
 

@@ -21,6 +21,7 @@ namespace LunarAnomaly.Gameplay
 		[SerializeField] Renderer buttonLight;
 		[SerializeField] Transform ladderTopPosition;
 		[SerializeField] GameObject logCubeObj;
+		[SerializeField] LightFlicker lightFlicker;
 		OutpostAirlock outpostAirlock;	
 		OutpostUI outpostUI;
 
@@ -234,6 +235,9 @@ namespace LunarAnomaly.Gameplay
 		{
 			if (isPowered && !outpostActive)
 			{
+				SoundManager.PlaySound(SoundType.OutpostButton, 1f, false);
+				lightFlicker.StartFlicker(1f);
+
 				OnOutpostAdvanced?.Invoke(ProgressionStage.OutpostObjective);
 				outpostActive = true;
 				bigButtonAnim.SetBool("IsPressed", true);

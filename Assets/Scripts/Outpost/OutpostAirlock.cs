@@ -48,9 +48,18 @@ namespace LunarAnomaly.Gameplay
 
 		public void HandleDoorOpen(bool tryOpen)
 		{
+			OutpostController.OnTriggerZoneActive?.Invoke(OutpostPrompt.EnterOutpost, !tryOpen);
+			OutpostController.OnTriggerZoneActive?.Invoke(OutpostPrompt.ExitOutpost, !tryOpen);
+			OutpostController.OnOutpostUIUpdate?.Invoke(OutpostPrompt.EnterOutpost, !tryOpen);
+			OutpostController.OnOutpostUIUpdate?.Invoke(OutpostPrompt.ExitOutpost, !tryOpen);
+
 			if (tryOpen && !isCycling)
 			{
 				OutpostDoorAnim.SetBool("IsOpen", true);
+				// OutpostController.OnTriggerZoneActive?.Invoke(OutpostPrompt.EnterOutpost, false);
+				// OutpostController.OnTriggerZoneActive?.Invoke(OutpostPrompt.ExitOutpost, false);
+				// OutpostController.OnOutpostUIUpdate?.Invoke(OutpostPrompt.EnterOutpost, false);
+				// OutpostController.OnOutpostUIUpdate?.Invoke(OutpostPrompt.ExitOutpost, false);
 				return;
 			}
 			else if (!tryOpen)

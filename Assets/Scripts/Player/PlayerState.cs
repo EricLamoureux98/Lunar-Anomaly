@@ -38,7 +38,9 @@ namespace LunarAnomaly.Player
 
         void Awake()
         {
-            GameManager.Instance.RegisterPlayer(gameObject);
+            if (GameManager.Instance)
+                GameManager.Instance.RegisterPlayer(gameObject);
+                
             ChangeState(PlayerCurrentState.Alive);
             
             rb = GetComponent<Rigidbody>();

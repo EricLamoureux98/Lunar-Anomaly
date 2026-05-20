@@ -70,6 +70,11 @@ namespace LunarAnomaly.Player
 			anim.SetBool("IsRepairing", shouldRepair);
 		}
 
+		public void HandleRepairSound()
+		{
+			SoundManager.PlaySound(SoundType.Repair, 0.25f, true);
+		}
+
 		void ReadInput()
         {
             isRepairing = inputHandler.UseToolHeld;

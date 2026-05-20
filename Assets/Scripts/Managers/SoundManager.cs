@@ -104,7 +104,11 @@ namespace LunarAnomaly
 		MachineStart,
 		LeverPull,
 		AlienSeenFirstTime,
-		MenuClick
+		MenuClick,
+		OutpostButton,
+		Repair,
+		OutpostValve,
+		MetalSlam
 	}
 
 	[Serializable]
