@@ -1,10 +1,13 @@
 using LunarAnomaly.UI;
+using Unity.Cinemachine;
 using UnityEngine;
 
 namespace LunarAnomaly.Gameplay
 {
     public class PipeValve : MonoBehaviour
     {
+        [SerializeField] CinemachineImpulseSource outpostImpulseSource;
+        
         [SerializeField] GameObject brokenPipe, repairedPipe;
 
         [SerializeField] GameObject brokenValve;
@@ -55,7 +58,9 @@ namespace LunarAnomaly.Gameplay
         {
             if (!valveInHand) return; 
 
-            //SoundManager.PlaySound(SoundType.MetalSlam, 1f, false);
+            SoundManager.PlaySound(SoundType.MetalSlam, 1f, false);
+            CameraShakeManager.Instance.CameraShake(outpostImpulseSource, 0.03f);
+            
             Destroy(playerHoldingValve);
             brokenPipe.SetActive(false);
             repairedPipe.SetActive(true);
@@ -63,7 +68,7 @@ namespace LunarAnomaly.Gameplay
 
         void TurnValve()
         {
-            SoundManager.PlaySound(SoundType.OutpostValve, 1f, false);
+            SoundManager.PlaySound(SoundType.OutpostValve, 0.65f, false);
             valveAnim.SetBool("isTurning", true);
             OutpostController.OnTriggerZoneActive?.Invoke(OutpostPrompt.TurnValve, false);
             OutpostController.OnOutpostUIUpdate?.Invoke(OutpostPrompt.TurnValve, false);

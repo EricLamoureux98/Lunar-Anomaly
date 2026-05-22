@@ -108,7 +108,11 @@ namespace LunarAnomaly
 		OutpostButton,
 		Repair,
 		OutpostValve,
-		MetalSlam
+		MetalSlam,
+		Breathing,
+		Typewriter,
+		Electricity,
+		Heartbeat
 	}
 
 	[Serializable]

@@ -16,7 +16,7 @@ namespace LunarAnomaly.Gameplay
 		[SerializeField] Animator bigButtonAnim;
 
 		[Header("References")]
-		[SerializeField] CinemachineImpulseSource powerImpulseSource;
+		[SerializeField] CinemachineImpulseSource outpostImpulseSource;
 		[SerializeField] Renderer doorLight;
 		[SerializeField] Renderer buttonLight;
 		[SerializeField] Transform ladderTopPosition;
@@ -26,7 +26,7 @@ namespace LunarAnomaly.Gameplay
 		OutpostUI outpostUI;
 
 		[SerializeField] bool debugIsPowered;
-		bool outpostActive;
+		public bool outpostActive { get; private set; }
 		bool isPowered;
 		public bool dishEnabled; // For testing
 		public bool isRepaired; // For testing
@@ -176,7 +176,7 @@ namespace LunarAnomaly.Gameplay
 			if (!powerBoxOpen) return;
 
 			SoundManager.PlaySound(SoundType.OutpostBang, 1f, false);
-			CameraShakeManager.Instance.CameraShake(powerImpulseSource, 0.03f);
+			CameraShakeManager.Instance.CameraShake(outpostImpulseSource, 0.03f);
 			OnOutpostUIUpdate?.Invoke(OutpostPrompt.TurnOnPower, true);
 			OnTriggerZoneActive?.Invoke(OutpostPrompt.TurnOnPower, true);
 		}

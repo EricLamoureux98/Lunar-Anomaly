@@ -8,8 +8,8 @@ namespace LunarAnomaly.Player
         [SerializeField] float startingOxygen = 120f;
         [SerializeField] float drainRate = 1f;
         [SerializeField] float refillRate = 2f;
-        [SerializeField] bool oxygenDraining = false;
         [SerializeField] bool oxygenRefilling = false;
+        public bool oxygenDraining { get; private set; }
 
         float currentOxygen;
         bool oxygenActive;
@@ -34,6 +34,7 @@ namespace LunarAnomaly.Player
 
         void Start()
         {
+            oxygenDraining = true;
             oxygenActive = true;
             currentOxygen = startingOxygen;
         }

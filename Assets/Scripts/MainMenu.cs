@@ -7,7 +7,11 @@ public class MainMenu : MonoBehaviour
 
     void Awake()
     {
-        gm = GameManager.Instance;
+        gm = GameManager.Instance;        
+    }
+
+    void Start()
+    {
         SoundManager.PlayMusic(SoundType.Music, 0.2f);
     }
 

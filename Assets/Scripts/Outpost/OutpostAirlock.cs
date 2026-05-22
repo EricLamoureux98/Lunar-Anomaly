@@ -8,6 +8,7 @@ namespace LunarAnomaly.Gameplay
 	{
 		[SerializeField] LightFlicker lightFlicker;
 		AtmosphereZone atmosphereZone;
+		OutpostController outpostController;
 
 		[Header("Airlock")]
 		[SerializeField] Animator OutpostDoorAnim;
@@ -20,6 +21,7 @@ namespace LunarAnomaly.Gameplay
 		void Awake()
         {
 			atmosphereZone = GetComponent<AtmosphereZone>();
+			outpostController = GetComponentInParent<OutpostController>();
         }
 
 		void OnTriggerEnter(Collider other)
@@ -36,7 +38,9 @@ namespace LunarAnomaly.Gameplay
         {
             if (!other.CompareTag("Player")) return;
    
-			OutpostController.OnOutpostAdvanced?.Invoke(ProgressionStage.OutpostObjective);
+			if (outpostController.outpostActive)
+				OutpostController.OnOutpostAdvanced?.Invoke(ProgressionStage.OutpostObjective);
+				
 			playerInside = false;
 			
 			// if (cyclingRoutine != null)

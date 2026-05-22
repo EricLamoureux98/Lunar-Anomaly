@@ -12,8 +12,10 @@ namespace LunarAnomaly.Gameplay
 
 		//public static event Action OnOutpostRepaired;
 
-        // To ObjectiveManager - Used in PipeValve
+        // To ObjectiveManager - Used in PipeValve & SolarPanel
         public static Action<ProgressionStage> OnOutpostRepairProgress;
+
+		public static event Action OnSolarPanelRepaired;
 
         void OnEnable()
         {
@@ -33,7 +35,9 @@ namespace LunarAnomaly.Gameplay
 
 		void HandleNodeRepaired(RepairNode node)
 		{
-            OnOutpostRepairProgress?.Invoke(ProgressionStage.OutpostObjective);
+			// There is only the solar panel to repair at this point
+            OnSolarPanelRepaired?.Invoke();
+
 			// repairedCount++;
 
 			// if (repairedCount >= repairNodes.Length)

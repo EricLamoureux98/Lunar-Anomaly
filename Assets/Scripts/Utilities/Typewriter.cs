@@ -154,6 +154,8 @@ namespace LunarAnomaly.UI
                 char character = textInfo.characterInfo[currentVisibleCharacterIndex].character;
 
                 textBox.maxVisibleCharacters++;
+                // Fix later. Needs to know when to stop
+                //SoundManager.PlaySound(SoundType.Typewriter, 0.25f, false);
 
                 //if (!CurrentlySkipping && (character == '?' || character == '.' || character == ',' || character == ':' || character == ';' || character == '!' || character == '-'))
                 if (!CurrentlySkipping && (character == '?' || character == '.' || character == ',' || character == ':' || character == ';' || character == '!'))

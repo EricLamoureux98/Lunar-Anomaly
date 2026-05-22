@@ -25,6 +25,8 @@ namespace LunarAnomaly.Player
         bool terminalProximity;     
         float graceTimer;
 
+        Coroutine breathingRoutine;
+
         // To UIManager
         public static event Action OnPlayerDying;
         public static event Action<bool> OnHideGameplayUI; 
@@ -41,12 +43,13 @@ namespace LunarAnomaly.Player
             if (GameManager.Instance)
                 GameManager.Instance.RegisterPlayer(gameObject);
                 
-            ChangeState(PlayerCurrentState.Alive);
+            oxygen = GetComponent<Oxygen>();
+
+            
             
             rb = GetComponent<Rigidbody>();
             playerInput = GetComponent<PlayerInput>();
             playerMovement = GetComponent<PlayerMovement>();
-            oxygen = GetComponent<Oxygen>();
         }
 
         void OnEnable()
@@ -69,6 +72,11 @@ namespace LunarAnomaly.Player
             SanityManager.OnInsanity -= HandleInsanity;
             OutpostController.OnLadderUsed -= HandleLadder;
             OutpostRevealCinematic.OnOutpostCinematicTeleport -= RequestTeleport;
+        }
+
+        void Start()
+        {
+            EnterState(PlayerCurrentState.Alive);
         }
 
         void Update()
@@ -97,7 +105,24 @@ namespace LunarAnomaly.Player
 
         void HandleAlive()
         {
-            // Probably not needed. Maybe use for UI
+            //SoundManager.PlaySound(SoundType.Breathing, 0.5f, false);
+
+            breathingRoutine = StartCoroutine(BreathingRoutine());
+        }
+
+        IEnumerator BreathingRoutine()
+        {
+            while (true)
+            {
+                yield return new WaitUntil(() => oxygen.oxygenDraining);
+
+                float waitTime = UnityEngine.Random.Range(3.5f, 6f);
+                yield return new WaitForSeconds(waitTime);
+
+                if (!oxygen.oxygenDraining) continue;
+
+                SoundManager.PlaySound(SoundType.Breathing, 0.5f, false);
+            }
         }
 
         void HandleSuffocating()
@@ -237,6 +262,10 @@ namespace LunarAnomaly.Player
         {
             switch (state)
             {
+                case PlayerCurrentState.Alive:
+                    HandleAlive();                   
+                    break;
+
                 case PlayerCurrentState.Suffocating:
                     // Add visuals and sound 
                     OnPlayerDying?.Invoke();
@@ -264,6 +293,14 @@ namespace LunarAnomaly.Player
             // This is for turning off things like audio and UI
             switch (state)
             {
+                case PlayerCurrentState.Alive:
+                    if (breathingRoutine != null)
+                    {
+                        StopCoroutine(breathingRoutine);
+                        breathingRoutine = null;
+                    }
+                    break;
+
                 case PlayerCurrentState.Suffocating:
                     graceTimer = 0f;
                     // Stop suffocation SFX

@@ -17,6 +17,7 @@ namespace LunarAnomaly.Player
         void Start()
         {
             UpdateCursorLock(false);
+            //Screen.SetResolution(860, 520, true);
         }
 
         void OnEnable()
