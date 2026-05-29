@@ -22,6 +22,7 @@ namespace LunarAnomaly.Player
         [SerializeField] float airControlSpeed;
         [SerializeField] float extraFallForce;
         [SerializeField] float jumpCooldown;
+        [SerializeField] private float bumpThreshold = 2f;
         Vector3 moveDirection;
         Vector2 moveInput;
         float currentSpeed;
@@ -146,14 +147,15 @@ namespace LunarAnomaly.Player
                 soundTimer = 0f;
             }
 
+            rb.useGravity = true;
+
             rb.AddForce(moveDirection.normalized * currentSpeed * 10f, ForceMode.Force);
+            rb.AddForce(Vector3.down * 3f, ForceMode.Force);
             
-            // Extra downward force to stick to ground
-            rb.AddForce(Vector3.down * 2f, ForceMode.Force);
-            // if (groundChecker.IsGrounded && rb.linearVelocity.y > 0f)
-            // {
-            //     rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-            // }
+            if (groundChecker.IsGrounded && rb.linearVelocity.y > 0f && rb.linearVelocity.y < bumpThreshold)
+            {
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+            }
         }
 
         void HandleSlopeMovement()
@@ -164,15 +166,18 @@ namespace LunarAnomaly.Player
                 soundTimer = 0f;
             }
 
+            rb.useGravity = false;
+
             Vector3 slopeDir = groundChecker.GetSlopeMoveDirection(moveDirection);
 
-            rb.AddForce(slopeDir * currentSpeed * 10, ForceMode.Force);
+            if (rb.linearVelocity.magnitude < currentSpeed)
+                rb.AddForce(slopeDir.normalized * currentSpeed * 10, ForceMode.Force);
 
-            // Stick to slope
-            if (rb.linearVelocity.y > 0)
-            {
-                rb.AddForce(Vector3.down * 10f, ForceMode.Force);
-            }
+            rb.AddForce(-groundChecker.SlopeNormal * 20f, ForceMode.Force);
+
+            // Prevent sliding when player not moving
+            if (moveDirection == Vector3.zero)
+                rb.linearVelocity = Vector3.zero;
         }
 
         void HandleAirMovement()

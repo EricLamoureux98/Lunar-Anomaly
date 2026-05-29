@@ -3,6 +3,7 @@ using System.Collections;
 using LunarAnomaly.Player;
 using LunarAnomaly.UI;
 using TMPro;
+using Unity.Cinemachine;
 using UnityEngine;
 
 namespace LunarAnomaly.Gameplay
@@ -10,28 +11,24 @@ namespace LunarAnomaly.Gameplay
     public class OutpostRevealCinematic : MonoBehaviour
     {
         [Header("References")]
-        //[SerializeField] TerminalUpdateText updateText;
+        [SerializeField] private CinemachineCamera virtualCamera;
         [SerializeField] ScreenFader screenFader;
         [SerializeField] LayerMask playerLayer;
-        // [SerializeField] TMP_Text currentTextBox;
-		// [SerializeField] Typewriter typewriter;
         SpriteRenderer silhouette;
 
         [Header("Event Settings")]
         [SerializeField] float playerWatchingFOV = 0.6f;
         [SerializeField] float waitBeforeFlash = 2.5f;
         [SerializeField] float fadeBlackTime = 0.75f;
+        [SerializeField] float defaultCamFOV = 70f;
+        [SerializeField] float cinematicCamFOV = 20f;
+        [SerializeField] float camZoomSpeed = 10f;
         [SerializeField] Transform playerTeleportPos;
-
-        // [Header("Logs")]
-		// [TextArea(5,10)]
-		// [SerializeField] string logText;	
-
-        // [SerializeField] GameObject demoCanvas;
 
         bool silhouetteActive;
         bool playerWatching;
-        Camera cameraPos;
+        bool camZooming;
+        Camera cam;
 
         // To PlayerState
         public static event Action<Transform, TeleportType> OnOutpostCinematicTeleport;
@@ -41,6 +38,8 @@ namespace LunarAnomaly.Gameplay
         public static event Action OnActivateSanitySystem;
         // To DemoCanvas
         public static event Action OnDemoComplete;
+        // To PlayerLook
+        public static event Action<bool> OnSilhouetteSensitivity;
 
         void OnEnable()
         {
@@ -55,13 +54,18 @@ namespace LunarAnomaly.Gameplay
         void Start()
         {
             silhouette = GetComponentInChildren<SpriteRenderer>();
-            cameraPos = Camera.main;
+            cam = Camera.main;
         }
 
         void Update()
         {
             if (silhouetteActive)
                 CheckSilhouetteSeen();
+
+            if (camZooming)
+            {
+                ZoomIn();
+            }
         }
 
         void ShowSilhouette()
@@ -72,24 +76,44 @@ namespace LunarAnomaly.Gameplay
 
         void CheckSilhouetteSeen()
         {
-            playerWatching = PlayerVision.IsPointVisible(cameraPos, transform, playerWatchingFOV, playerLayer);
+            playerWatching = PlayerVision.IsPointVisible(cam, transform, playerWatchingFOV, playerLayer);
 
             if (playerWatching)
             {
-                StartCoroutine(nameof(SilhouetteEvent));
+                silhouetteActive = false;
+
+                OnSilhouetteSensitivity?.Invoke(true);
+                camZooming = true;
+                StartCoroutine(SilhouetteEvent());
             }
         }
 
-        IEnumerator SilhouetteEvent()
+        void ZoomIn()
         {
-            silhouetteActive = false;
+            float current = virtualCamera.Lens.FieldOfView;
 
+            float next = Mathf.MoveTowards(current, cinematicCamFOV, camZoomSpeed * Time.deltaTime);
+
+            virtualCamera.Lens.FieldOfView = next;
+        }
+
+        void ResetZoom()
+        {
+            camZooming = false;
+            virtualCamera.Lens.FieldOfView = defaultCamFOV;
+        }
+
+        IEnumerator SilhouetteEvent()
+        {           
             SoundManager.PlaySound(SoundType.AlienSeenFirstTime, 2.5f, false);
             SoundManager.PlaySound(SoundType.Heartbeat, 3f, false);
 
             yield return new WaitForSeconds(waitBeforeFlash);
 
             OnDemoComplete?.Invoke();
+
+            OnSilhouetteSensitivity?.Invoke(false);
+            ResetZoom();
             
 
             // Silhouette.OnSilhouetteFlash?.Invoke();

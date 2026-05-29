@@ -1,3 +1,4 @@
+using System;
 using LunarAnomaly.Gameplay;
 using LunarAnomaly.Player;
 using TMPro;
@@ -14,7 +15,7 @@ namespace LunarAnomaly.UI
 		[SerializeField] CanvasGroup logGroup;
 		[SerializeField] TMP_Text currentTextBox;
 		[SerializeField] Typewriter typewriter;
-		[SerializeField] PlayerLook playerLook;
+		// [SerializeField] PlayerLook playerLook;
 
 		[Header("Power Panel")]
 		[SerializeField] TMP_Text openPowerPanel;
@@ -32,6 +33,9 @@ namespace LunarAnomaly.UI
 		[Header("Logs")]
 		[TextArea(5,10)]
 		[SerializeField] string logText;	
+
+		// To PlayerLook
+		public static Action<bool> OnLogShown; // Temp no event for Demo
 
         void OnEnable()
         {
@@ -113,7 +117,8 @@ namespace LunarAnomaly.UI
 			logGroup.blocksRaycasts = true;
 
 			//PlayerState.OnHideGameplayUI?.Invoke(false);
-			playerLook.UpdateCursorLock(true);
+			//playerLook.UpdateCursorLock(true);
+			OnLogShown?.Invoke(true);
 		
 			updateText.UpdateCurrentTextBox(currentTextBox);
 			updateText.ShowWithTypewriter(logText);
@@ -127,7 +132,8 @@ namespace LunarAnomaly.UI
 			logGroup.blocksRaycasts = false;
 
 			//PlayerState.OnHideGameplayUI?.Invoke(true);
-			playerLook.UpdateCursorLock(false);
+			// playerLook.UpdateCursorLock(false);
+			OnLogShown?.Invoke(false);
 		}
 	}
 

@@ -11,7 +11,7 @@ public class DemoCanvas : MonoBehaviour
     [SerializeField] TerminalUpdateText updateText;
     [SerializeField] TMP_Text currentTextBox;
 	[SerializeField] Typewriter typewriter;
-    [SerializeField] PlayerLook playerLook;
+    // [SerializeField] PlayerLook playerLook;
 
     [Header("Logs")]
 	[TextArea(5,10)]
@@ -32,7 +32,8 @@ public class DemoCanvas : MonoBehaviour
     void ShowDemoCanvas()
     {
         demoCanvas.SetActive(true);
-        playerLook.UpdateCursorLock(true);
+        //playerLook.UpdateCursorLock(true);
+        OutpostUI.OnLogShown?.Invoke(true);
 
         updateText.UpdateCurrentTextBox(currentTextBox);
 		updateText.ShowWithTypewriter(logText);

@@ -116,7 +116,7 @@ namespace LunarAnomaly.Player
             {
                 yield return new WaitUntil(() => oxygen.oxygenDraining);
 
-                float waitTime = UnityEngine.Random.Range(3.5f, 6f);
+                float waitTime = UnityEngine.Random.Range(4.5f, 7f);
                 yield return new WaitForSeconds(waitTime);
 
                 if (!oxygen.oxygenDraining) continue;

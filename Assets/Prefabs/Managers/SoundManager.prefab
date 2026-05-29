@@ -55,8 +55,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: cfae5f0632b722d45a2a7ebfa84aa5e4, type: 3}
   - name: Ambience
     sounds:
-    - {fileID: 8300000, guid: 182e0c2a990952947868f91a0e8764e0, type: 3}
-    - {fileID: 8300000, guid: e867d0927ddaa6d4cbe17a16eb0e64fe, type: 3}
+    - {fileID: 8300000, guid: 54f9a38c48b09a188ab18dcd21f264cd, type: 3}
   - name: Music
     sounds:
     - {fileID: 8300000, guid: ad0d9a8736437904cbfbdbf963fe0760, type: 3}

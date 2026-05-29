@@ -13,11 +13,12 @@ namespace LunarAnomaly.Player
         [SerializeField] Transform groundCheckPos;
         [SerializeField] float groundCheckRadius;
         [SerializeField] LayerMask whatIsGround;
-        [HideInInspector] public bool IsGrounded { get; private set; }
+        public bool IsGrounded; // { get; private set; }
 
         [Header("Slope Handling")]
         [SerializeField] float maxSlopeAngle = 40f;
-        [HideInInspector] public bool IsOnSlope {get; private set;}
+        [SerializeField] float minSlopeAngle = 10;
+        public bool IsOnSlope; // {get; private set;}
         [HideInInspector] public Vector3 SlopeNormal { get; private set;}
         RaycastHit slopeHit;
 
@@ -38,18 +39,45 @@ namespace LunarAnomaly.Player
 
         void CheckGround()
         {
-            // Maybe remove layermask later
             IsGrounded = Physics.CheckSphere(groundCheckPos.position, groundCheckRadius, whatIsGround);
         }
 
+        // void CheckSlope()
+        // {
+        //     if (Physics.Raycast(groundCheckPos.position, Vector3.down, out slopeHit, groundCheckRadius + 0.2f, whatIsGround))
+        //     {
+        //         float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+
+        //         // Slope detection bug. Changed to 1f
+        //         if (angle > 1f && angle <= maxSlopeAngle)
+        //         {
+        //             IsOnSlope = true;
+        //             SlopeNormal = slopeHit.normal;
+        //         }
+        //         else
+        //         {
+        //             IsOnSlope = false;
+        //             SlopeNormal = Vector3.up;
+        //         }
+        //     }
+        // }
+
+        // Better SphereCast version
         void CheckSlope()
         {
-            if (Physics.Raycast(groundCheckPos.position, Vector3.down, out slopeHit, groundCheckRadius + 0.2f, whatIsGround))
+
+            if (!IsGrounded)
+            {
+                IsOnSlope = false;
+                SlopeNormal = Vector3.up;
+                return;
+            }
+
+            if (Physics.Raycast(groundCheckPos.position, Vector3.down, out slopeHit, 0.6f, whatIsGround))
             {
                 float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
 
-                // Slope detection bug. Changed to 1f
-                if (angle > 1f && angle <= maxSlopeAngle)
+                if (angle > minSlopeAngle && angle <= maxSlopeAngle)
                 {
                     IsOnSlope = true;
                     SlopeNormal = slopeHit.normal;

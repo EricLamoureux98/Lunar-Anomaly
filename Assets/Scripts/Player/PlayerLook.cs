@@ -1,4 +1,6 @@
+using LunarAnomaly.Gameplay;
 using LunarAnomaly.Input;
+using LunarAnomaly.UI;
 using UnityEngine;
 
 namespace LunarAnomaly.Player
@@ -7,27 +9,26 @@ namespace LunarAnomaly.Player
     {
         [SerializeField] Transform orientation;
         [SerializeField] Transform vision;
-        [SerializeField] float sensistivity = 0.1f;
+        [SerializeField] float sensitivity = 0.1f;
         [SerializeField] float maxLookAngle = 80f;
         InputHandler inputHandler;
 
         Vector2 lookInput;
         float xRotation;
-
-        void Start()
-        {
-            UpdateCursorLock(false);
-            //Screen.SetResolution(860, 520, true);
-        }
+        float currentSensitivity;
 
         void OnEnable()
         {
             PlayerState.OnTerminalUIActive += UpdateCursorLock;
+            OutpostUI.OnLogShown += UpdateCursorLock;
+            OutpostRevealCinematic.OnSilhouetteSensitivity += CinematicSensitivity;
         }
 
         void OnDisable()
         {
             PlayerState.OnTerminalUIActive -= UpdateCursorLock;
+            OutpostUI.OnLogShown -= UpdateCursorLock;
+            OutpostRevealCinematic.OnSilhouetteSensitivity -= CinematicSensitivity;
         }
 
         void Awake()
@@ -36,13 +37,20 @@ namespace LunarAnomaly.Player
             if (inputHandler == null) Debug.Log("PlayerInput not found!");
         }
 
+        void Start()
+        {
+            UpdateCursorLock(false);
+            currentSensitivity = sensitivity;
+            //Screen.SetResolution(860, 520, true);
+        }
+
         void Update()
         {
             ReadInput();   
             HandleLook();
         }
 
-        public void UpdateCursorLock(bool unlocked) // TEMP PUBLIC
+        void UpdateCursorLock(bool unlocked)
         {
             if (!unlocked)
             {
@@ -59,21 +67,22 @@ namespace LunarAnomaly.Player
 
         void HandleLook()
         {
-            //Vector2 look = lookInput;
-
-            //float mouseX = look.x * sensistivity; //* Time.deltaTime;
-            float mouseX = lookInput.x * sensistivity;
-            //float mouseY = look.y * sensistivity; //* Time.deltaTime;
-            float mouseY = lookInput.y * sensistivity;
-            
+            float mouseX = lookInput.x * currentSensitivity;
+            float mouseY = lookInput.y * currentSensitivity;            
 
             orientation.Rotate(Vector3.up * mouseX);
 
             xRotation -= mouseY;
             xRotation = Mathf.Clamp(xRotation, -maxLookAngle, maxLookAngle);
             vision.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        }
 
-            //Debug.Log(Camera.main.transform.eulerAngles);
+        void CinematicSensitivity(bool enabled)
+        {
+            if (enabled)
+                currentSensitivity = sensitivity / 10f;
+            else
+                currentSensitivity = sensitivity;
         }
 
         void ReadInput()
