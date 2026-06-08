@@ -10,7 +10,7 @@ namespace LunarAnomaly.Player
     public class PlayerState : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] Airlock airlock;
+        [SerializeField] HabitatAirlock airlock;
         PlayerMovement playerMovement;
         PlayerInput playerInput;
         Oxygen oxygen;

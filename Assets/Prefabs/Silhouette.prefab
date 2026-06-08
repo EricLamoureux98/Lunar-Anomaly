@@ -52,6 +52,7 @@ MonoBehaviour:
   playerWatchingFOV: 0.95
   playerCanSeeFOV: 0.6
   maxWatchTime: 3
+  minWatchBeforeVanish: 1.5
   fadeBlackTime: 0.75
 --- !u!1 &4481422400697140272
 GameObject:
@@ -220,7 +221,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 16e4e82e36278164f8c938a98218adf1, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.3882353}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.29411766}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

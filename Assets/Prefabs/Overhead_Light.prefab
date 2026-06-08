@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.70710677, y: -0, z: -0, w: 0.70710677}
   m_LocalPosition: {x: 0, y: -0.095, z: -0}
-  m_LocalScale: {x: 1, y: 0.32393777, z: 5.854626}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3292145073660559877}
@@ -44,7 +44,7 @@ Light:
   serializedVersion: 12
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 20
+  m_Intensity: 10
   m_Range: 20
   m_SpotAngle: 136.16551
   m_InnerSpotAngle: 34.146908
@@ -186,6 +186,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 4f60fd4968df78978b8d486ebb375e59, type: 3}
       propertyPath: m_Name
       value: Overhead_Light
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4f60fd4968df78978b8d486ebb375e59, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -25,14 +25,14 @@ namespace LunarAnomaly.UI
         {
             Oxygen.OnOxygenChanged += UpdateOxygenUI;
             Oxygen.OnOxygenReset += ResetOxygenWarnings;
-			Airlock.OnEnterAtmosphere += AtmosphereChangeWarning;
+			HabitatAirlock.OnEnterAtmosphere += AtmosphereChangeWarning;
         }
 
         void OnDisable()
         {
             Oxygen.OnOxygenChanged -= UpdateOxygenUI;
             Oxygen.OnOxygenReset -= ResetOxygenWarnings;
-			Airlock.OnEnterAtmosphere -= AtmosphereChangeWarning;
+			HabitatAirlock.OnEnterAtmosphere -= AtmosphereChangeWarning;
 	}
 
 	void UpdateOxygenUI(float fillAmount)

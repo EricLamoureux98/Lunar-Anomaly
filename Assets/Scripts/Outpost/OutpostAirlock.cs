@@ -98,7 +98,7 @@ namespace LunarAnomaly.Gameplay
 			yield return new WaitForSeconds(pressurizationTime);
 			
 			atmosphereZone.SetPressuized(fromExterior);
-			Airlock.OnEnterAtmosphere?.Invoke(fromExterior);			
+			HabitatAirlock.OnEnterAtmosphere?.Invoke(fromExterior);			
 			
 			isCycling = false;
 			
