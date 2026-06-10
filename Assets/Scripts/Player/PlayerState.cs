@@ -77,6 +77,7 @@ namespace LunarAnomaly.Player
         void Start()
         {
             EnterState(PlayerCurrentState.Alive);
+            HandleRespawn();
         }
 
         void Update()
@@ -186,7 +187,7 @@ namespace LunarAnomaly.Player
             switch(type)
             {
                 case TeleportType.Respawn:
-                    fadeTime = 2f;
+                    fadeTime = 0f;
                     resetOxygen = true;
                     break;
 

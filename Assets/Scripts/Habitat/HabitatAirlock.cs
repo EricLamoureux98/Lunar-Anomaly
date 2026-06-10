@@ -30,6 +30,8 @@ namespace LunarAnomaly.Gameplay
 
         // To UIManager
         public static Action<bool> OnEnterAtmosphere;
+        // To TerminalNotification
+        public static event Action OnAirlockCycled;
 
         void Awake()
         {
@@ -121,6 +123,7 @@ namespace LunarAnomaly.Gameplay
             yield return new WaitForSeconds(1f);
             exitAnim.SetBool("IsOpen", false);
             SoundManager.PlaySound(SoundType.Airlock, 0.5f);
+            OnAirlockCycled?.Invoke();
 
             lastCycleTime = Time.time;
             isCycling = false;

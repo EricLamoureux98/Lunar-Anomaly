@@ -29,3 +29,5 @@ MonoBehaviour:
     text: Deposit successful
   - message: 3
     text: Objective complete.
+  - message: 4
+    text: Airlock

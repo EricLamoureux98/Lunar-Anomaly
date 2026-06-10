@@ -6,5 +6,6 @@ public enum TerminalMessage
     Intro = 0,
     Greeting = 1,
     DepositSuccess = 2,
-    ObjectiveComplete = 3
+    ObjectiveComplete = 3,
+    AirlockNotif = 4
 }

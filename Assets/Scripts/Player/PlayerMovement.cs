@@ -170,10 +170,11 @@ namespace LunarAnomaly.Player
 
             Vector3 slopeDir = groundChecker.GetSlopeMoveDirection(moveDirection);
 
-            if (rb.linearVelocity.magnitude < currentSpeed)
+            // Prevent downhill acceleration
+            //if (rb.linearVelocity.magnitude < currentSpeed)
                 rb.AddForce(slopeDir.normalized * currentSpeed * 10, ForceMode.Force);
 
-            rb.AddForce(-groundChecker.SlopeNormal * 20f, ForceMode.Force);
+            rb.AddForce(-groundChecker.SlopeNormal * 10f, ForceMode.Force);
 
             // Prevent sliding when player not moving
             if (moveDirection == Vector3.zero)

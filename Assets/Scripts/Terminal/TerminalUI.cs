@@ -22,6 +22,8 @@ namespace LunarAnomaly.UI
 
         int lastSecond = -1;
 
+        public string CurrentTime { get; private set; }
+
         // To BasePanel 
         public static event Action<PanelType> OnPanelSelected;
         public static event Action OnTerminalClosed;
@@ -42,9 +44,11 @@ namespace LunarAnomaly.UI
 
         void Update()
         {
+            DateAndTime();
+            
             if(terminalController.terminalActive)
             {
-                DateAndTime();
+                // DateAndTime();
             }
         }
 
@@ -52,8 +56,10 @@ namespace LunarAnomaly.UI
         {              
             if (DateTime.Now.Second != lastSecond)
             {
-                lastSecond = DateTime.Now.Second;
-                dateAndTime.text = DateTime.Now.ToString("HH:mm:ss");
+                lastSecond = DateTime.Now.Second;                
+                CurrentTime = DateTime.Now.ToString("HH:mm:ss");
+                
+                dateAndTime.text = CurrentTime;
             }
         }
 
