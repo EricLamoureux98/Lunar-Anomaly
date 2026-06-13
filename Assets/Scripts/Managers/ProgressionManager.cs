@@ -11,20 +11,25 @@ namespace LunarAnomaly.Gameplay
 
 		// To TerminalUI and ObjectiveManager
 		public static event Action<ProgressionStage> OnStageChanged;
+		// To TerminalInterfacePanel
+		public static event Action<bool> OnInterfaceLock;
 
         void OnEnable()
         {
-            TerminalIntroPanel.OnPlayerProgressed += HandleConfirmed;
+            TerminalInterfacePanel.OnPlayerProgressed += HandleConfirmed;
         }
 
         void OnDisable()
         {
-            TerminalIntroPanel.OnPlayerProgressed -= HandleConfirmed;
+            TerminalInterfacePanel.OnPlayerProgressed -= HandleConfirmed;
         }
 
         void Start()
         {
-            AdvanceStage(ProgressionStage.OutpostObjective);
+            AdvanceStage(ProgressionStage.Intro);
+
+			if (CurrentStage == ProgressionStage.Intro) 
+				OnInterfaceLock?.Invoke(true);
         }
 
 		void HandleConfirmed()
@@ -37,12 +42,12 @@ namespace LunarAnomaly.Gameplay
 			switch (stage)
 			{
 				case ProgressionStage.Intro:
+					return ProgressionStage.OutpostObjective; // New stage
+
+				case ProgressionStage.OutpostObjective:
 					return ProgressionStage.SampleObjective;
 
 				case ProgressionStage.SampleObjective:
-					return ProgressionStage.OutpostObjective;
-
-				case ProgressionStage.OutpostObjective:
 					return ProgressionStage.Outro;
 				
 				case ProgressionStage.Outro:
@@ -59,6 +64,9 @@ namespace LunarAnomaly.Gameplay
 
 			CurrentStage = newStage;
 			OnStageChanged?.Invoke(CurrentStage);
+
+			if (newStage != ProgressionStage.NoObjective)
+				OnInterfaceLock?.Invoke(false);
 		}
     }
 }
@@ -68,5 +76,6 @@ public enum ProgressionStage
 	Intro,
 	SampleObjective,
 	OutpostObjective,
-	Outro
+	Outro,
+	NoObjective
 }

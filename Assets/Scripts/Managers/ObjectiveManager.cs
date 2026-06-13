@@ -10,6 +10,7 @@ namespace LunarAnomaly.Gameplay
         // Replace these later with a Dictionary
         [SerializeField] ObjectiveSO outpostSO;
         [SerializeField] ObjectiveSO miningSO;
+        [SerializeField] ObjectiveSO noObjectiveSO;
 
         int currentObjectiveIndex;
         int currentProgress;
@@ -41,10 +42,25 @@ namespace LunarAnomaly.Gameplay
             //MiningManager.OnSamplesCarriedChanged -= UpdateProgress;
         }
 
+        void Start()
+        {
+            UpdateObjective(ProgressionStage.Intro);
+        }
+
         void UpdateObjective(ProgressionStage newStage)
         {
             switch (newStage)
             {
+                case ProgressionStage.Intro:
+                if (noObjectiveSO == null ) return;
+                    currentStage = newStage;
+                    currentObjectiveIndex = 0;
+                    currentObjectiveSO = noObjectiveSO;
+                    OnUpdateObjectiveTitle?.Invoke(noObjectiveSO.Objectives[0].Title);
+                    PrepareObjectiveData(noObjectiveSO, noObjectiveSO.Objectives[0].objectiveType);
+                    OnUpdateObjectiveData?.Invoke(objectiveUIData);
+                    break;
+
                 case ProgressionStage.OutpostObjective:
                     if (outpostSO == null ) return;
                     currentStage = newStage;
@@ -58,7 +74,7 @@ namespace LunarAnomaly.Gameplay
 
                 case ProgressionStage.SampleObjective:
                     currentObjectiveSO = miningSO;
-                    break;
+                    break;                
             }
         }
 

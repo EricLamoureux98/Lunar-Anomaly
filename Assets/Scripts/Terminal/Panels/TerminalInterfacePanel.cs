@@ -26,13 +26,35 @@ namespace LunarAnomaly.UI
         [SerializeField] Button logButtonPrefab;
         [SerializeField] Transform logButtonContainer;
 
-		// [Header("Rock Samples")]
-        // [SerializeField] int samplesRequired;
+        [Header("Buttons")]
+        [SerializeField] GameObject proceedButton;
+        [SerializeField] GameObject depositButton;
+        [SerializeField] Button notifButton;
+
+        bool interfaceLocked;
         
         int samplesDelivered;
         bool sampleObjectiveComplete;		
 
+        // To TerminalUpdateText
         public static event Action<LogMessage> OnLogMessage;
+        // To ProgressionManager
+        public static event Action OnPlayerProgressed;
+        // To TerminalNotification
+        public static event Action OnStartingAirlockNotification;
+        public static event Action<bool> OnViewNotification;
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            ProgressionManager.OnInterfaceLock += HandleInterfaceLock;
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            ProgressionManager.OnInterfaceLock -= HandleInterfaceLock;
+        }
 
         protected override void OnPanelShown()
         {
@@ -52,7 +74,40 @@ namespace LunarAnomaly.UI
                 headerTitle.text = "> System Notifications";
                 headerDate.text = "Live";
                 terminalController.RequestCurrentMessage();
+                OnViewNotification?.Invoke(true);
             }
+        }
+
+        void HandleInterfaceLock(bool locked)
+        {
+            interfaceLocked = locked;
+
+            UpdateNotifButton();
+        }
+
+        void UpdateNotifButton()
+        {
+            TextMeshProUGUI text = notifButton.GetComponentInChildren<TextMeshProUGUI>();
+
+            if (!interfaceLocked)
+            {
+                notifButton.interactable = true;
+                text.color = Color.white;
+                CreateLogButtons();
+            }
+            else
+            {
+                notifButton.interactable = false;
+                text.color = Color.darkGray;
+            }
+        }
+
+        public void HandleIntroProceedButton()
+        {
+            OnPlayerProgressed?.Invoke();
+            OnStartingAirlockNotification?.Invoke();
+            proceedButton.SetActive(false);
+            HandleNotificationButton();
         }
 
 		public void HandleDepositButton()
@@ -130,6 +185,11 @@ namespace LunarAnomaly.UI
 
                 //button.interactable = log.isDiscovered;
                 button.gameObject.SetActive(log.isDiscovered);
+                if (interfaceLocked) 
+                {
+                    button.interactable = false;
+                    text.color = Color.darkGray;
+                }
 
                 string capturedTitle = log.logTitle;
                 string capturedDate = log.logDate;
@@ -146,6 +206,8 @@ namespace LunarAnomaly.UI
                 headerTitle.text = $"> {title}";
                 headerDate.text = date;
                 OnLogMessage?.Invoke(message);
+
+                OnViewNotification?.Invoke(false);
             }
         }
 	}

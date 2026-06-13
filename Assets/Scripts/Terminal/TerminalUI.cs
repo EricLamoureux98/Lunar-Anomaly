@@ -99,7 +99,7 @@ namespace LunarAnomaly.UI
                 
                 if (progressionManager.CurrentStage == ProgressionStage.Intro)
                 {
-                    OnPanelSelected?.Invoke(PanelType.Intro);
+                    OnPanelSelected?.Invoke(PanelType.Interface); // Hack
                 }
                 else// if (progressionManager.CurrentStage != ProgressionStage.Intro)
                 {

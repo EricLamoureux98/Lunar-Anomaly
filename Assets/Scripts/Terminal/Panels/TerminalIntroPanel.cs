@@ -3,10 +3,11 @@ using UnityEngine;
 
 namespace LunarAnomaly.UI
 {
+    // This is deprecated. Maybe replaced with on screen text
 	public class TerminalIntroPanel : BasePanel
 	{		
         // To ProgressionManager
-        public static event Action OnPlayerProgressed;
+        // public static event Action OnPlayerProgressed;
 
         protected override void OnPanelShown()
         {
@@ -18,8 +19,8 @@ namespace LunarAnomaly.UI
         {
             if (terminalController.terminalActive)
             {
-                //UpdateStage(ProgressionStage.SampleObjective);
-                OnPlayerProgressed?.Invoke();
+
+                // OnPlayerProgressed?.Invoke();
             }
         }	
 	}
