@@ -18,14 +18,13 @@ namespace LunarAnomaly.UI
         // Typewriter functionality
         int currentVisibleCharacterIndex;
         Coroutine typewriterCoroutine;
-        //bool readyForNewText = true;
         
         WaitForSeconds delay;
         WaitForSeconds interpunctuationDelayWait;
 
         [Header("Typewriter Settings")]
-        [SerializeField] float charactersPerSecond = 20f;
-        [SerializeField] float interpunctuationDelay = 0.5f;
+        [SerializeField] float charactersPerSecond = 26f;
+        [SerializeField] float interpunctuationDelay = 0.4f;
 
         // Skipping functionality
         public bool CurrentlySkipping { get; private set; }
@@ -39,8 +38,8 @@ namespace LunarAnomaly.UI
         WaitForSeconds textboxFulEventDelay;
         [SerializeField] [Range(0.1f, 0.5f)] float sendDoneDelay = 0.25f;
 
-        public static event Action CompleteTextRevealed;
-        public static event Action<char> CharacterRevealed;
+        // To NotificationController
+        public static event Action OnCompleteTextRevealed;
 
         void Awake()
         {
@@ -62,35 +61,6 @@ namespace LunarAnomaly.UI
             delay = new WaitForSeconds(1 / charactersPerSecond);
             skipDelay = new WaitForSeconds(1 / (charactersPerSecond * skipSpeedupMultiplier));
         }
-
-        //void OnEnable()
-        //{
-            // What is this?
-            //TMPro_EventManager.TEXT_CHANGED_EVENT.Add(PrepareForNewText);
-        //}
-
-        //void OnDisable()
-        //{
-            //TMPro_EventManager.TEXT_CHANGED_EVENT.Remove(PrepareForNewText);
-        //}
-
-        // public void PrepareForNewText(UnityEngine.Object obj)
-        // {
-        //     if (!readyForNewText) return;
-
-        //     readyForNewText = false;
-
-        //     if (typewriterCoroutine != null)
-        //     {
-        //         StopCoroutine(typewriterCoroutine);
-        //     }
-
-
-        //     textBox.maxVisibleCharacters = 0;
-        //     currentVisibleCharacterIndex = 0;
-
-        //     typewriterCoroutine = StartCoroutine(TypewriterText());
-        // }
 
         void Start()
         {
@@ -146,8 +116,7 @@ namespace LunarAnomaly.UI
                 {
                     textBox.maxVisibleCharacters++;
                     yield return textboxFulEventDelay;
-                    CompleteTextRevealed?.Invoke();
-                    //readyForNewText = true;
+                    OnCompleteTextRevealed?.Invoke();
                     yield break;
                 }
 
@@ -155,7 +124,7 @@ namespace LunarAnomaly.UI
 
                 textBox.maxVisibleCharacters++;
                 // Fix later. Needs to know when to stop
-                //SoundManager.PlaySound(SoundType.Typewriter, 0.25f, false);
+                SoundManager.PlaySound(SoundType.Typewriter, 0.1f, false);
 
                 //if (!CurrentlySkipping && (character == '?' || character == '.' || character == ',' || character == ':' || character == ';' || character == '!' || character == '-'))
                 if (!CurrentlySkipping && (character == '?' || character == '.' || character == ',' || character == ':' || character == ';' || character == '!'))
@@ -171,8 +140,16 @@ namespace LunarAnomaly.UI
                         yield return delay;
                 }
 
-                CharacterRevealed?.Invoke(character);
                 currentVisibleCharacterIndex++;
+            }
+        }
+
+        public void Stop()
+        {
+            if (typewriterCoroutine != null)
+            {
+                StopCoroutine(typewriterCoroutine);
+                currentVisibleCharacterIndex = 0;
             }
         }
 
@@ -190,8 +167,7 @@ namespace LunarAnomaly.UI
 
             StopCoroutine(typewriterCoroutine);
             textBox.maxVisibleCharacters = textBox.textInfo.characterCount;
-            //readyForNewText = true;
-            CompleteTextRevealed?.Invoke();
+            OnCompleteTextRevealed?.Invoke();
         }
 
         IEnumerator SkipSpeedupReset()

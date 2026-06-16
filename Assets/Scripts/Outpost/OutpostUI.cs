@@ -10,7 +10,7 @@ namespace LunarAnomaly.UI
 	public class OutpostUI : MonoBehaviour
 	{
 		[Header("References")]
-		[SerializeField] TerminalUpdateText updateText;
+		[SerializeField] UpdateText updateText;
 		[SerializeField] GameObject logBGPanel;
 		[SerializeField] CanvasGroup logGroup;
 		[SerializeField] TMP_Text currentTextBox;

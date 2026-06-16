@@ -8,7 +8,7 @@ using UnityEngine;
 public class DemoCanvas : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] TerminalUpdateText updateText;
+    [SerializeField] UpdateText updateText;
     [SerializeField] TMP_Text currentTextBox;
 	[SerializeField] Typewriter typewriter;
     // [SerializeField] PlayerLook playerLook;

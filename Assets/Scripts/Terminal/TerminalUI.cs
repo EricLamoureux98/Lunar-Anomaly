@@ -22,17 +22,23 @@ namespace LunarAnomaly.UI
 
         int lastSecond = -1;
 
+        bool introNotification;
+
         public string CurrentTime { get; private set; }
 
         // To BasePanel 
         public static event Action<PanelType> OnPanelSelected;
+        // And UpdateText
         public static event Action OnTerminalClosed;
+        // To NotificationController
+        public static event Action<NotificationMessage> OnRequestNotification;
 
 		void OnEnable()
         {
             TerminalController.OnTerminalProximity += TerminalInteract;
             PlayerState.OnTerminalUIActive += TerminalPanel;
             ProgressionManager.OnStageChanged += StageUpdate;
+            TerminalInterfacePanel.OnIntroProceed += HandleIntroNotification;
         }
 
         void OnDisable()
@@ -40,10 +46,12 @@ namespace LunarAnomaly.UI
             TerminalController.OnTerminalProximity -= TerminalInteract;
             PlayerState.OnTerminalUIActive -= TerminalPanel;
             ProgressionManager.OnStageChanged -= StageUpdate;
+            TerminalInterfacePanel.OnIntroProceed -= HandleIntroNotification;
         }
 
         void Update()
         {
+            // So that airlock logs show correct time
             DateAndTime();
             
             if(terminalController.terminalActive)
@@ -111,7 +119,18 @@ namespace LunarAnomaly.UI
                 //terminalInterfaceGroup.SetActive(false);
                 terminalBGPanel.SetActive(false);
                 OnTerminalClosed?.Invoke();
+                
+                if (introNotification)
+                {
+                    OnRequestNotification?.Invoke(NotificationMessage.Start1);
+                    introNotification = false;
+                }
             }
+        }
+
+        void HandleIntroNotification()
+        {
+            introNotification = true;
         }
 	}
 

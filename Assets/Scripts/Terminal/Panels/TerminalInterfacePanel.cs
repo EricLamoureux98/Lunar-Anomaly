@@ -43,6 +43,8 @@ namespace LunarAnomaly.UI
         // To TerminalNotification
         public static event Action OnStartingAirlockNotification;
         public static event Action<bool> OnViewNotification;
+        // To TerminalUI
+        public static event Action OnIntroProceed;
 
         protected override void OnEnable()
         {
@@ -98,7 +100,7 @@ namespace LunarAnomaly.UI
             else
             {
                 notifButton.interactable = false;
-                text.color = Color.darkGray;
+                text.color = Color.darkSlateGray;
             }
         }
 
@@ -106,6 +108,7 @@ namespace LunarAnomaly.UI
         {
             OnPlayerProgressed?.Invoke();
             OnStartingAirlockNotification?.Invoke();
+            OnIntroProceed?.Invoke();
             proceedButton.SetActive(false);
             HandleNotificationButton();
         }
@@ -188,7 +191,7 @@ namespace LunarAnomaly.UI
                 if (interfaceLocked) 
                 {
                     button.interactable = false;
-                    text.color = Color.darkGray;
+                    text.color = Color.darkSlateGray;
                 }
 
                 string capturedTitle = log.logTitle;

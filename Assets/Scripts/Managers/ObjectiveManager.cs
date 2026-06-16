@@ -22,7 +22,6 @@ namespace LunarAnomaly.Gameplay
         // To ObjectiveUIController
         public static event Action<string> OnUpdateObjectiveTitle;
         public static event Action<ObjectiveUIData> OnUpdateObjectiveData;
-
         // To OutpostController
         public static event Action<ProgressionStage, int> OnObjectiveProgressed;
 
@@ -58,7 +57,7 @@ namespace LunarAnomaly.Gameplay
                     currentObjectiveSO = noObjectiveSO;
                     OnUpdateObjectiveTitle?.Invoke(noObjectiveSO.Objectives[0].Title);
                     PrepareObjectiveData(noObjectiveSO, noObjectiveSO.Objectives[0].objectiveType);
-                    OnUpdateObjectiveData?.Invoke(objectiveUIData);
+                    OnUpdateObjectiveData?.Invoke(objectiveUIData);  
                     break;
 
                 case ProgressionStage.OutpostObjective:

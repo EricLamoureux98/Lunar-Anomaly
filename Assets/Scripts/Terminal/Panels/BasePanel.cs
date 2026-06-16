@@ -10,7 +10,7 @@ namespace LunarAnomaly.UI
 		[SerializeField] PanelType panelType;
 
 		[Header("References")]
-		[SerializeField] protected TerminalUpdateText terminalUpdateText;
+		[SerializeField] protected UpdateText terminalUpdateText;
 		[SerializeField] protected TerminalController terminalController;
 		[SerializeField] protected TMP_Text currentTextBox;
 		
