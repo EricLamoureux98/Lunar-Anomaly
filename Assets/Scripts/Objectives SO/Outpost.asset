@@ -13,6 +13,16 @@ MonoBehaviour:
   m_Name: Outpost
   m_EditorClassIdentifier: Assembly-CSharp::ObjectiveSO
   Objectives:
+  - Title: Collect Wrench
+    objectiveType: 2
+    Progression:
+      AmountNeeded: 0
+      ProgressionName: 
+  - Title: Exit Habitat
+    objectiveType: 2
+    Progression:
+      AmountNeeded: 0
+      ProgressionName: 
   - Title: Investigate Signal
     objectiveType: 2
     Progression:

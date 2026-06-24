@@ -17,7 +17,19 @@ namespace LunarAnomaly.Player
 		[Header("Mining")]
         bool isRepairing;
 
+		bool isActive;
+
 		RepairNode currentNode;
+
+		void OnEnable()
+        {
+            ObjectiveManager.OnToolActive += SetActive;
+        }
+
+        void OnDisable()
+        {
+            ObjectiveManager.OnToolActive -= SetActive;
+        }
 
 		void Awake()
         {
@@ -27,9 +39,17 @@ namespace LunarAnomaly.Player
 
         void Update()
         {
+			if (!isActive) return; 
+
             ReadInput();
 			RepairController();
 			HandleRepairInput();
+        }
+
+		void SetActive(ToolType type, bool active)
+        {
+            if (type == ToolType.repairTool)
+                isActive = active;
         }
 
 		void OnTriggerEnter(Collider other)

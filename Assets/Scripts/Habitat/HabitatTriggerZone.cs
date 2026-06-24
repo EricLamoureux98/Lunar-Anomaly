@@ -18,13 +18,13 @@ namespace LunarAnomaly.UI
         void OnEnable()
         {
             InputHandler.OnInteractPressed += HandleInteract;
-            //OutpostController.OnTriggerZoneActive += HandleActive;
+            HabitatController.OnTriggerZoneActive += HandleActive;
         }
 
         void OnDisable()
         {
             InputHandler.OnInteractPressed -= HandleInteract;
-            //OutpostController.OnTriggerZoneActive -= HandleActive;
+            HabitatController.OnTriggerZoneActive -= HandleActive;
         }
 
         void OnTriggerEnter(Collider other)
@@ -33,8 +33,6 @@ namespace LunarAnomaly.UI
 			{
 				playerInside = true;
 				if (canvasGroup != null) canvasGroup.alpha = 1f;
-
-				//OutpostController.OnOutpostUIUpdate?.Invoke(prompt, true);
 			}
         }
 
@@ -44,8 +42,6 @@ namespace LunarAnomaly.UI
 			{
 				playerInside = false;
 				if (canvasGroup != null) canvasGroup.alpha = 0f;
-
-				//OutpostController.OnOutpostUIUpdate?.Invoke(prompt, false);
 			}
         }
 
@@ -64,10 +60,4 @@ namespace LunarAnomaly.UI
 			}
         }
     }
-}
-
-public enum HabitatPrompt
-{
-    EnterBase,
-    ExitBase
 }

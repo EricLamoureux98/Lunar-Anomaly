@@ -34,8 +34,6 @@ namespace LunarAnomaly.UI
 			{
 				playerInside = true;
 				if (canvasGroup != null) canvasGroup.alpha = 1f;
-
-				//OutpostController.OnOutpostUIUpdate?.Invoke(prompt, true);
 			}
         }
 
@@ -45,8 +43,6 @@ namespace LunarAnomaly.UI
 			{
 				playerInside = false;
 				if (canvasGroup != null) canvasGroup.alpha = 0f;
-
-				//OutpostController.OnOutpostUIUpdate?.Invoke(prompt, false);
 			}
         }
 

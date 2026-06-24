@@ -77,7 +77,7 @@ namespace LunarAnomaly.Gameplay
         // Called from animation
         public void NotifyValveRepaired()
         {
-            OutpostRepair.OnOutpostRepairProgress?.Invoke(ProgressionStage.OutpostObjective);
+            OutpostRepair.OnOutpostProgress?.Invoke(ProgressionStage.OutpostObjective);
         }
     }
 }

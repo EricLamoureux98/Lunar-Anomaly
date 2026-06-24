@@ -23,7 +23,19 @@ namespace LunarAnomaly.Player
         bool isMining;
         Rock currentRock;
 
+        bool isActive;
+
         const string MINING_BOOL = "IsMining";
+
+        void OnEnable()
+        {
+            ObjectiveManager.OnToolActive += SetActive;
+        }
+
+        void OnDisable()
+        {
+            ObjectiveManager.OnToolActive -= SetActive;
+        }
 
         void Awake()
         {
@@ -33,9 +45,17 @@ namespace LunarAnomaly.Player
 
         void Update()
         {
+            if (!isActive) return; 
+
             ReadInput();
             HandleMiningInput();
             HandlePickaxeVisibility();
+        }
+
+        void SetActive(ToolType type, bool active)
+        {
+            if (type == ToolType.pickaxe)
+                isActive = active;
         }
 
         void OnTriggerEnter(Collider other)

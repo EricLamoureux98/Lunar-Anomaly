@@ -24,20 +24,24 @@ namespace LunarAnomaly.Gameplay
         public static event Action<ObjectiveUIData> OnUpdateObjectiveData;
         // To OutpostController
         public static event Action<ProgressionStage, int> OnObjectiveProgressed;
+        // To Pickaxe and RepairTool - Used in HabitatToolPickup
+		public static Action<ToolType, bool> OnToolActive;
 
         void OnEnable()
         {
             ProgressionManager.OnStageChanged += UpdateObjective;
-            OutpostRepair.OnOutpostRepairProgress += UpdateProgress;
+            OutpostRepair.OnOutpostProgress += UpdateProgress;
             OutpostController.OnOutpostAdvanced += AdvanceObjective;
+            HabitatController.OnHabitatProgress += AdvanceObjective;
             //MiningManager.OnSamplesCarriedChanged += UpdateProgress;
         }
 
         void OnDisable()
         {
             ProgressionManager.OnStageChanged -= UpdateObjective;
-            OutpostRepair.OnOutpostRepairProgress -= UpdateProgress;
+            OutpostRepair.OnOutpostProgress -= UpdateProgress;
             OutpostController.OnOutpostAdvanced -= AdvanceObjective;
+            HabitatController.OnHabitatProgress -= AdvanceObjective;
             //MiningManager.OnSamplesCarriedChanged -= UpdateProgress;
         }
 
@@ -58,6 +62,8 @@ namespace LunarAnomaly.Gameplay
                     OnUpdateObjectiveTitle?.Invoke(noObjectiveSO.Objectives[0].Title);
                     PrepareObjectiveData(noObjectiveSO, noObjectiveSO.Objectives[0].objectiveType);
                     OnUpdateObjectiveData?.Invoke(objectiveUIData);  
+                    OnToolActive?.Invoke(ToolType.pickaxe, false);
+                    OnToolActive?.Invoke(ToolType.repairTool, false);
                     break;
 
                 case ProgressionStage.OutpostObjective:

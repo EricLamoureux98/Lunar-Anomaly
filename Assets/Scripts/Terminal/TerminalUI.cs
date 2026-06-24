@@ -25,6 +25,9 @@ namespace LunarAnomaly.UI
         bool introNotification;
 
         public string CurrentTime { get; private set; }
+        
+        [SerializeField] bool terminalActive;
+        public bool TerminalActive => terminalActive;
 
         // To BasePanel 
         public static event Action<PanelType> OnPanelSelected;
@@ -32,6 +35,7 @@ namespace LunarAnomaly.UI
         public static event Action OnTerminalClosed;
         // To NotificationController
         public static event Action<NotificationMessage> OnRequestNotification;
+        public static event Action<NotificationMessage, float> OnRequestNotificationDelayed;
 
 		void OnEnable()
         {
@@ -103,6 +107,7 @@ namespace LunarAnomaly.UI
         {
             if (value == true)
             {
+                terminalActive = true;
                 terminalBGPanel.SetActive(true);
                 
                 if (progressionManager.CurrentStage == ProgressionStage.Intro)
@@ -116,6 +121,7 @@ namespace LunarAnomaly.UI
             }
             else
             {
+                terminalActive = false;
                 //terminalInterfaceGroup.SetActive(false);
                 terminalBGPanel.SetActive(false);
                 OnTerminalClosed?.Invoke();
@@ -123,6 +129,7 @@ namespace LunarAnomaly.UI
                 if (introNotification)
                 {
                     OnRequestNotification?.Invoke(NotificationMessage.Start1);
+                    OnRequestNotificationDelayed?.Invoke(NotificationMessage.Start2, 10f);
                     introNotification = false;
                 }
             }

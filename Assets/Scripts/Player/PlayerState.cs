@@ -20,6 +20,7 @@ namespace LunarAnomaly.Player
         [SerializeField] float oxygenGracePeriod = 3f;
 
         [SerializeField] bool testRespawnPlayer;
+        [SerializeField] bool respawnAtPoint;
 
         PlayerCurrentState currentState;
         bool terminalProximity;     
@@ -77,7 +78,7 @@ namespace LunarAnomaly.Player
         void Start()
         {
             EnterState(PlayerCurrentState.Alive);
-            HandleRespawn();
+            if (respawnAtPoint) HandleRespawn();
         }
 
         void Update()

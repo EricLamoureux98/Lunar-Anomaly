@@ -22,6 +22,7 @@ namespace LunarAnomaly.Gameplay
 		[SerializeField] Transform ladderTopPosition;
 		[SerializeField] GameObject logCubeObj;
 		[SerializeField] LightFlicker lightFlicker;
+		OutpostDiscoveryZone outpostDiscoveryZone;
 		OutpostAirlock outpostAirlock;	
 		OutpostUI outpostUI;
 
@@ -36,21 +37,18 @@ namespace LunarAnomaly.Gameplay
 		// To OutpostUI - used in PipeValve
 		public static Action<OutpostPrompt, bool> OnOutpostUIUpdate;
 		public static event Action OnOutpostHideAllUI;
-
 		// To OutpostTriggerZone - Used in PipeValve
 		public static Action<OutpostPrompt, bool> OnTriggerZoneActive;
-
 		// To PlayerState
 		public static event Action<Transform> OnLadderUsed;
-
 		// To OutpostRevealCinematic
 		public static event Action OnCinematicSilhouetteSpawn;
-
 		// To ObjectiveManager - Used in OutpostAirlock
 		public static Action<ProgressionStage> OnOutpostAdvanced;
 
         void Awake()
         {
+			outpostDiscoveryZone = GetComponentInChildren<OutpostDiscoveryZone>();
             outpostAirlock = GetComponentInChildren<OutpostAirlock>();
 			outpostUI = GetComponent<OutpostUI>();
         }
@@ -87,25 +85,25 @@ namespace LunarAnomaly.Gameplay
 			{
 				// Case 0 is not needed
 
-				case 1:
+				case 5:
 					HandleOutpostRepaired();
 					OnOutpostUIUpdate?.Invoke(OutpostPrompt.DishLever, true);
 					OnTriggerZoneActive?.Invoke(OutpostPrompt.DishLever, true);
 					break;
 				
-				case 2:
+				case 6:
 					HandleDishEnable();
 					OnOutpostUIUpdate?.Invoke(OutpostPrompt.TurnOnPower, true);
 					OnTriggerZoneActive?.Invoke(OutpostPrompt.TurnOnPower, true);
 					break;
 				
-				case 3: 
+				case 7: 
 					HandleOutpostStart();
 					OnOutpostUIUpdate?.Invoke(OutpostPrompt.EnterOutpost, true);
 					OnTriggerZoneActive?.Invoke(OutpostPrompt.EnterOutpost, true);
 					break;
 				
-				case 6:
+				case 11:
 					OnOutpostUIUpdate?.Invoke(OutpostPrompt.ExitOutpost, true);
 					OnTriggerZoneActive?.Invoke(OutpostPrompt.ExitOutpost, true);
 					break;
@@ -147,7 +145,19 @@ namespace LunarAnomaly.Gameplay
 				case OutpostPrompt.ViewLog:
 					TryViewLog();
 					break;
+				
+				case OutpostPrompt.InvestigateHelmet:
+					HandleHelmetDiscovery();
+					break;
 			}
+		}
+
+		void HandleHelmetDiscovery()
+		{
+			OnOutpostAdvanced?.Invoke(ProgressionStage.OutpostObjective);
+			OnOutpostUIUpdate?.Invoke(OutpostPrompt.InvestigateHelmet, false);
+			OnTriggerZoneActive?.Invoke(OutpostPrompt.InvestigateHelmet, false);
+			outpostDiscoveryZone.ChangeActive(true);
 		}
 
 		void HandleOutpostRepaired()

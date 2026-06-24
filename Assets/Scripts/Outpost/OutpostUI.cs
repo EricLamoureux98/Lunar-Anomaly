@@ -29,6 +29,7 @@ namespace LunarAnomaly.UI
 		[SerializeField] TMP_Text turnValve;
 		[SerializeField] TMP_Text pickupCable;
 		[SerializeField] TMP_Text connectCable;
+		[SerializeField] TMP_Text investigateHelmet;
 
 		[Header("Logs")]
 		[TextArea(5,10)]
@@ -92,6 +93,10 @@ namespace LunarAnomaly.UI
 				case OutpostPrompt.ConnectCable:
 					connectCable.enabled = isActive;
 					break;
+
+				case OutpostPrompt.InvestigateHelmet:
+					investigateHelmet.enabled = isActive;
+					break;
 			}
 		}
 
@@ -107,6 +112,7 @@ namespace LunarAnomaly.UI
 			turnValve.enabled = false;
 			pickupCable.enabled = false;
 			connectCable.enabled = false;
+			investigateHelmet.enabled = false;
 		}
 
 		public void ShowLog()
@@ -152,6 +158,7 @@ namespace LunarAnomaly.UI
 		ConnectValve,
 		TurnValve,
 		PickupCable,
-		ConnectCable
+		ConnectCable,
+		InvestigateHelmet
 	}
 }

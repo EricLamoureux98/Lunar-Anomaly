@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using LunarAnomaly.Gameplay;
 using TMPro;
 using UnityEngine;
 
@@ -12,8 +11,11 @@ namespace LunarAnomaly.UI
         [SerializeField] TMP_Text currentTextBox;
         [SerializeField] Typewriter typewriter;
         [SerializeField] CanvasGroup canvasGroup;
+        [SerializeField] TerminalUI terminalUI;
 
         [SerializeField] float hideDelay;
+
+        Coroutine delayedNotificationRoutine;
 
         // To UpdateText
         public static event Action<NotificationMessage> OnNotificationMessage;
@@ -21,12 +23,14 @@ namespace LunarAnomaly.UI
         void OnEnable()
         {
             TerminalUI.OnRequestNotification += RequestNotification;
+            TerminalUI.OnRequestNotificationDelayed += RequestNotificationDelayed;
             Typewriter.OnCompleteTextRevealed += RequestHideNotification;
         }
 
         void OnDisable()
         {
             TerminalUI.OnRequestNotification -= RequestNotification;
+            TerminalUI.OnRequestNotificationDelayed -= RequestNotificationDelayed;
             Typewriter.OnCompleteTextRevealed -= RequestHideNotification;
         }
 
@@ -37,9 +41,29 @@ namespace LunarAnomaly.UI
             OnNotificationMessage?.Invoke(message);
         }
 
+        void RequestNotificationDelayed(NotificationMessage message, float delay)
+        {
+            if (delayedNotificationRoutine != null) return;
+            delayedNotificationRoutine = StartCoroutine(DelayedNotification(message, delay));
+        }
+
+        IEnumerator DelayedNotification(NotificationMessage message, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            yield return new WaitUntil(() => !terminalUI.TerminalActive);
+
+            CancelInvoke(nameof(HideNotification));
+
+            updateText.UpdateCurrentTextBox(currentTextBox);
+            canvasGroup.alpha = 1f;
+            OnNotificationMessage?.Invoke(message);
+            
+            delayedNotificationRoutine = null;
+        }
+
         void RequestHideNotification()
         {
-            Invoke("HideNotification", hideDelay);
+            Invoke(nameof(HideNotification), hideDelay);
         }
 
         void HideNotification()

@@ -12,8 +12,8 @@ namespace LunarAnomaly.Gameplay
 
 		//public static event Action OnOutpostRepaired;
 
-        // To ObjectiveManager - Used in PipeValve & SolarPanel
-        public static Action<ProgressionStage> OnOutpostRepairProgress;
+        // To ObjectiveManager - Used in PipeValve & SolarPanel & OutpostDiscoveryZone
+        public static Action<ProgressionStage> OnOutpostProgress;
 
 		public static event Action OnSolarPanelRepaired;
 

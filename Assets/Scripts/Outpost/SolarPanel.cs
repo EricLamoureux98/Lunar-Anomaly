@@ -51,7 +51,7 @@ namespace LunarAnomaly.Gameplay
             cable.SetLastPosition();
             cable.SetActive(false);
 
-            OutpostRepair.OnOutpostRepairProgress?.Invoke(ProgressionStage.OutpostObjective);
+            OutpostRepair.OnOutpostProgress?.Invoke(ProgressionStage.OutpostObjective);
         }
     }
 }

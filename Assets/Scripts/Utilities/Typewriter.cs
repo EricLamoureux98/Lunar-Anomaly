@@ -35,7 +35,7 @@ namespace LunarAnomaly.UI
         [SerializeField] [Min(1)] int skipSpeedupMultiplier = 5; // <--- This is cool
 
         // Event Functionality
-        WaitForSeconds textboxFulEventDelay;
+        WaitForSeconds textboxFullEventDelay;
         [SerializeField] [Range(0.1f, 0.5f)] float sendDoneDelay = 0.25f;
 
         // To NotificationController
@@ -48,7 +48,7 @@ namespace LunarAnomaly.UI
             // Cached for performance        
             UpdateDelays();
             interpunctuationDelayWait = new WaitForSeconds(interpunctuationDelay);
-            textboxFulEventDelay = new WaitForSeconds(sendDoneDelay);
+            textboxFullEventDelay = new WaitForSeconds(sendDoneDelay);
         }
 
         void OnValidate()
@@ -115,7 +115,7 @@ namespace LunarAnomaly.UI
                 if (currentVisibleCharacterIndex == lastCharacterIndex)
                 {
                     textBox.maxVisibleCharacters++;
-                    yield return textboxFulEventDelay;
+                    yield return textboxFullEventDelay;
                     OnCompleteTextRevealed?.Invoke();
                     yield break;
                 }
