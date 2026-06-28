@@ -17,6 +17,7 @@ namespace LunarAnomaly.Gameplay
             {
                 Debug.Log("Player discovered outpost");
                 OutpostRepair.OnOutpostProgress?.Invoke(ProgressionStage.OutpostObjective);
+                HabitatController.OnUpdateWaypointActive?.Invoke(false);
                 triggerActive = false;
             }
         }

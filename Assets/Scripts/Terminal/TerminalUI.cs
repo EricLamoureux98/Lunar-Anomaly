@@ -33,9 +33,9 @@ namespace LunarAnomaly.UI
         public static event Action<PanelType> OnPanelSelected;
         // And UpdateText
         public static event Action OnTerminalClosed;
-        // To NotificationController
-        public static event Action<NotificationMessage> OnRequestNotification;
-        public static event Action<NotificationMessage, float> OnRequestNotificationDelayed;
+        // To NotificationController - used in OutpostController
+        public static Action<NotificationMessage> OnRequestNotification;
+        public static Action<NotificationMessage, float> OnRequestNotificationDelayed;
 
 		void OnEnable()
         {

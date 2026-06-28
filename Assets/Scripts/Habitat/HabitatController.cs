@@ -9,6 +9,8 @@ public class HabitatController : MonoBehaviour
     [SerializeField] GameObject pickaxeObj;
     [SerializeField] GameObject wrenchObj;
 
+    [SerializeField] Transform helmetTransform;
+
     // To HabitatAirlock
     public static event Action OnEnterHabitat;
     public static event Action OnExitHabitat;
@@ -18,6 +20,9 @@ public class HabitatController : MonoBehaviour
 	public static Action<HabitatPrompt, bool> OnTriggerZoneActive;
     // To HabitatUI
 	public static Action<HabitatPrompt, bool> OnHabitatUIUpdate;
+    // To WaypointManager - Used in OutpostController
+    public static Action<Transform> OnUpdateWaypointTarget;
+    public static Action<bool> OnUpdateWaypointActive;
 
     bool firstTimeExit = true;
 
@@ -53,6 +58,8 @@ public class HabitatController : MonoBehaviour
                 OnHabitatProgress?.Invoke(ProgressionStage.OutpostObjective);
                 OnTriggerZoneActive?.Invoke(HabitatPrompt.ExitHabitat, true);
                 OnHabitatUIUpdate?.Invoke(HabitatPrompt.ExitHabitat, true);
+                OnUpdateWaypointTarget?.Invoke(helmetTransform);
+                OnUpdateWaypointActive?.Invoke(true);
                 wrenchObj.SetActive(false);
                 break;
 

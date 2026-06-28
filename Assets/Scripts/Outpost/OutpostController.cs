@@ -157,7 +157,11 @@ namespace LunarAnomaly.Gameplay
 			OnOutpostAdvanced?.Invoke(ProgressionStage.OutpostObjective);
 			OnOutpostUIUpdate?.Invoke(OutpostPrompt.InvestigateHelmet, false);
 			OnTriggerZoneActive?.Invoke(OutpostPrompt.InvestigateHelmet, false);
+			TerminalUI.OnRequestNotification?.Invoke(NotificationMessage.HelmetDiscovered1);
+            TerminalUI.OnRequestNotificationDelayed?.Invoke(NotificationMessage.HelmetDiscovered2, 6f);
 			outpostDiscoveryZone.ChangeActive(true);
+			HabitatController.OnUpdateWaypointTarget?.Invoke(this.transform);
+            HabitatController.OnUpdateWaypointActive?.Invoke(true);
 		}
 
 		void HandleOutpostRepaired()
