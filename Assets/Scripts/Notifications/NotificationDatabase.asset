@@ -30,7 +30,7 @@ MonoBehaviour:
       Continue
       mission objectives.'
   - message: 4
-    notificationText: 'OBJECTIVE UPDATED
+    notificationText: 'OBJECTIVE UPDATED.
 
       Restore power and communications
       at Outpost 03.'

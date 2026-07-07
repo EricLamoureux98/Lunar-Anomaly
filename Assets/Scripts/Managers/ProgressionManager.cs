@@ -17,11 +17,13 @@ namespace LunarAnomaly.Gameplay
         void OnEnable()
         {
             TerminalInterfacePanel.OnPlayerProgressed += HandleConfirmed;
+			OutpostRevealCinematic.OnOutpostMissionComplete += HandleConfirmed;
         }
 
         void OnDisable()
         {
             TerminalInterfacePanel.OnPlayerProgressed -= HandleConfirmed;
+			OutpostRevealCinematic.OnOutpostMissionComplete -= HandleConfirmed;
         }
 
         void Start()

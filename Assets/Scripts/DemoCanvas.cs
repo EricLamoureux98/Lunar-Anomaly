@@ -21,8 +21,8 @@ public class DemoCanvas : MonoBehaviour
 
     GameManager gm;
 
-    void OnEnable() => OutpostRevealCinematic.OnDemoComplete += ShowDemoCanvas;
-    void OnDisable() => OutpostRevealCinematic.OnDemoComplete -= ShowDemoCanvas;
+    // void OnEnable() => OutpostRevealCinematic.OnDemoComplete += ShowDemoCanvas;
+    // void OnDisable() => OutpostRevealCinematic.OnDemoComplete -= ShowDemoCanvas;
 
     void Awake()
     {

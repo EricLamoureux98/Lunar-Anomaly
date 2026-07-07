@@ -18,7 +18,7 @@ namespace LunarAnomaly.UI
 		[Header("Terminal Panels")]
         [SerializeField] GameObject terminalBGPanel;
 		[SerializeField] GameObject terminalOpenText;
-        [SerializeField] GameObject terminalInterfaceGroup;
+        //[SerializeField] GameObject terminalInterfaceGroup;
 
         int lastSecond = -1;
 
@@ -85,7 +85,7 @@ namespace LunarAnomaly.UI
 
             else if (stage == ProgressionStage.SampleObjective)
             {
-                OnPanelSelected?.Invoke(PanelType.Interface); 
+                //OnPanelSelected?.Invoke(PanelType.Interface); 
                 //terminalInterfaceGroup.SetActive(true);
             }
         } 

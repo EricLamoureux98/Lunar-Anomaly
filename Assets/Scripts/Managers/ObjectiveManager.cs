@@ -78,7 +78,14 @@ namespace LunarAnomaly.Gameplay
                     break;
 
                 case ProgressionStage.SampleObjective:
+                    if (miningSO == null ) return;
+                    currentStage = newStage;
+                    currentObjectiveIndex = 0;
+                    currentProgress = 0;
                     currentObjectiveSO = miningSO;
+                    OnUpdateObjectiveTitle?.Invoke(miningSO.Objectives[0].Title);
+                    PrepareObjectiveData(miningSO, miningSO.Objectives[0].objectiveType);
+                    OnUpdateObjectiveData?.Invoke(objectiveUIData);
                     break;                
             }
         }

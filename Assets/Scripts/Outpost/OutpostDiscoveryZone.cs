@@ -1,3 +1,4 @@
+using LunarAnomaly.UI;
 using UnityEngine;
 
 namespace LunarAnomaly.Gameplay
@@ -15,7 +16,8 @@ namespace LunarAnomaly.Gameplay
         {       
             if (other.CompareTag("Player") && triggerActive)
             {
-                Debug.Log("Player discovered outpost");
+                // Debug.Log("Player discovered outpost");
+                TerminalUI.OnRequestNotification?.Invoke(NotificationMessage.OutpostObjective);
                 OutpostRepair.OnOutpostProgress?.Invoke(ProgressionStage.OutpostObjective);
                 HabitatController.OnUpdateWaypointActive?.Invoke(false);
                 triggerActive = false;

@@ -37,9 +37,11 @@ namespace LunarAnomaly.Gameplay
         // To SanityManager
         public static event Action OnActivateSanitySystem;
         // To DemoCanvas
-        public static event Action OnDemoComplete;
+        //public static event Action OnDemoComplete;
         // To PlayerLook
         public static event Action<bool> OnSilhouetteSensitivity;
+        // To ProgressionManager
+        public static event Action OnOutpostMissionComplete;
 
         void OnEnable()
         {
@@ -110,20 +112,24 @@ namespace LunarAnomaly.Gameplay
 
             yield return new WaitForSeconds(waitBeforeFlash);
 
-            OnDemoComplete?.Invoke();
+            //OnDemoComplete?.Invoke();
 
             OnSilhouetteSensitivity?.Invoke(false);
             ResetZoom();
             
 
-            // Silhouette.OnSilhouetteFlash?.Invoke();
-            // OnOutpostCinematicTeleport?.Invoke(playerTeleportPos, TeleportType.Cinematic);
-            // OnDisableOutpost?.Invoke();
-            // silhouette.enabled = false;
-            // OnActivateSanitySystem?.Invoke();
+            Silhouette.OnSilhouetteFlash?.Invoke();
+            OnOutpostCinematicTeleport?.Invoke(playerTeleportPos, TeleportType.Cinematic);
+            OnDisableOutpost?.Invoke();
+            silhouette.enabled = false;
+            OnActivateSanitySystem?.Invoke();
 
-            // yield return new WaitForSeconds(fadeBlackTime);
-            // Destroy(gameObject);
+            yield return new WaitForSeconds(fadeBlackTime);
+            
+            // --- OUTPOST COMPLETE ---
+            //OutpostController.OnOutpostAdvanced?.Invoke(ProgressionStage.OutpostObjective);
+            OnOutpostMissionComplete?.Invoke();
+            Destroy(gameObject);
         }
     }
 }

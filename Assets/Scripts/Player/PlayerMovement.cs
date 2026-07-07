@@ -183,6 +183,8 @@ namespace LunarAnomaly.Player
 
         void HandleAirMovement()
         {
+            rb.useGravity = true;
+            
             Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
             // Prevents constant acceleration

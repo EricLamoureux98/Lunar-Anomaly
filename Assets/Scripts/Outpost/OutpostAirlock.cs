@@ -38,8 +38,9 @@ namespace LunarAnomaly.Gameplay
         {
             if (!other.CompareTag("Player")) return;
    
-			if (outpostController.outpostActive)
-				OutpostController.OnOutpostAdvanced?.Invoke(ProgressionStage.OutpostObjective);
+			// --- OUTPOST COMPLETE ---
+			//if (outpostController.outpostActive)
+				//OutpostController.OnOutpostAdvanced?.Invoke(ProgressionStage.OutpostObjective);
 				
 			playerInside = false;
 			
