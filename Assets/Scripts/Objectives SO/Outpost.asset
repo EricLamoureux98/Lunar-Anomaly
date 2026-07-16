@@ -68,3 +68,8 @@ MonoBehaviour:
     Progression:
       AmountNeeded: 0
       ProgressionName: 
+  - Title: Wait For Transmission
+    objectiveType: 2
+    Progression:
+      AmountNeeded: 0
+      ProgressionName: 

@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Rock Texture
+  m_Name: Sample Texture
   m_Shader: {fileID: -6465566751694194690, guid: c1e5f8a72ef307d4da4589a8b3426503, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -38,7 +38,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseTexture:
-        m_Texture: {fileID: 2800000, guid: e82ef247a481b613a9bb71a6127ca8d8, type: 3}
+        m_Texture: {fileID: 2800000, guid: ac685ddaa3c0ce216ba22804fba427e3, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
@@ -64,7 +64,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Smoothness: 0.03
-    - _TextureScale: 0.05
+    - _TextureScale: 1.86
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1

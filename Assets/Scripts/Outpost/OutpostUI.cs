@@ -139,6 +139,7 @@ namespace LunarAnomaly.UI
 
 			//PlayerState.OnHideGameplayUI?.Invoke(true);
 			// playerLook.UpdateCursorLock(false);
+			TerminalUI.OnTerminalClosed?.Invoke();
 			OnLogShown?.Invoke(false);
 		}
 	}

@@ -219,6 +219,8 @@ namespace LunarAnomaly.Player
         {
             if (isSprinting)
             {
+                if (!groundChecker.IsGrounded) return;
+                
                 currentSpeed = sprintSpeed;
                 currentSoundTime = runningSoundTime;
             }

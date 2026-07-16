@@ -33,7 +33,7 @@ namespace LunarAnomaly.Gameplay
             OutpostRepair.OnOutpostProgress += UpdateProgress;
             OutpostController.OnOutpostAdvanced += AdvanceObjective;
             HabitatController.OnHabitatProgress += AdvanceObjective;
-            //MiningManager.OnSamplesCarriedChanged += UpdateProgress;
+            MiningManager.OnSamplesCarriedChanged += UpdateProgress;
         }
 
         void OnDisable()
@@ -42,7 +42,7 @@ namespace LunarAnomaly.Gameplay
             OutpostRepair.OnOutpostProgress -= UpdateProgress;
             OutpostController.OnOutpostAdvanced -= AdvanceObjective;
             HabitatController.OnHabitatProgress -= AdvanceObjective;
-            //MiningManager.OnSamplesCarriedChanged -= UpdateProgress;
+            MiningManager.OnSamplesCarriedChanged -= UpdateProgress;
         }
 
         void Start()

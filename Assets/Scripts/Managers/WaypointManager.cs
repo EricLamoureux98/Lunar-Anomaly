@@ -1,6 +1,7 @@
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
+using LunarAnomaly.Gameplay;
 
 public class WaypointManager : MonoBehaviour
 {
@@ -17,12 +18,16 @@ public class WaypointManager : MonoBehaviour
     {
         HabitatController.OnUpdateWaypointTarget += UpdateWaypointTarget;
         HabitatController.OnUpdateWaypointActive += WaypointActive;
+        OutpostRevealCinematic.OnUpdateWaypointTarget += UpdateWaypointTarget;
+        OutpostRevealCinematic.OnUpdateWaypointActive += WaypointActive;
     }
 
     void OnDisable()
     {
         HabitatController.OnUpdateWaypointTarget -= UpdateWaypointTarget;
         HabitatController.OnUpdateWaypointActive -= WaypointActive;
+        OutpostRevealCinematic.OnUpdateWaypointTarget -= UpdateWaypointTarget;
+        OutpostRevealCinematic.OnUpdateWaypointActive -= WaypointActive;
     }
 
     void Update()

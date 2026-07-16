@@ -14,6 +14,8 @@ namespace LunarAnomaly.Gameplay
         [SerializeField] private CinemachineCamera virtualCamera;
         [SerializeField] ScreenFader screenFader;
         [SerializeField] LayerMask playerLayer;
+        [SerializeField] Transform HabitatWaypoint;
+        [SerializeField] DiscoveryZone habitatDiscoveryZone;
         SpriteRenderer silhouette;
 
         [Header("Event Settings")]
@@ -42,6 +44,9 @@ namespace LunarAnomaly.Gameplay
         public static event Action<bool> OnSilhouetteSensitivity;
         // To ProgressionManager
         public static event Action OnOutpostMissionComplete;
+        // To WaypointManager
+        public static event Action<Transform> OnUpdateWaypointTarget;
+        public static event Action<bool> OnUpdateWaypointActive;
 
         void OnEnable()
         {
@@ -119,6 +124,8 @@ namespace LunarAnomaly.Gameplay
             
 
             Silhouette.OnSilhouetteFlash?.Invoke();
+            
+            OutpostController.OnOutpostAdvanced?.Invoke(ProgressionStage.OutpostObjective);
             OnOutpostCinematicTeleport?.Invoke(playerTeleportPos, TeleportType.Cinematic);
             OnDisableOutpost?.Invoke();
             silhouette.enabled = false;
@@ -127,8 +134,18 @@ namespace LunarAnomaly.Gameplay
             yield return new WaitForSeconds(fadeBlackTime);
             
             // --- OUTPOST COMPLETE ---
-            //OutpostController.OnOutpostAdvanced?.Invoke(ProgressionStage.OutpostObjective);
+            TerminalUI.OnRequestNotification?.Invoke(NotificationMessage.OutpostPowerOn);
+            TerminalUI.OnRequestNotificationDelayed?.Invoke(NotificationMessage.OutpostTransmission, 8f);
+
+            TerminalUI.OnRequestNotificationDelayed?.Invoke(NotificationMessage.ReturnToHabitat, 14f);
+
+            yield return new WaitForSeconds(19f);
+
             OnOutpostMissionComplete?.Invoke();
+            OnUpdateWaypointTarget?.Invoke(HabitatWaypoint);
+            OnUpdateWaypointActive?.Invoke(true);
+            habitatDiscoveryZone.ChangeActive(true);
+
             Destroy(gameObject);
         }
     }

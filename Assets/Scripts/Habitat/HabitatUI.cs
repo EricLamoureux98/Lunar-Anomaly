@@ -6,6 +6,8 @@ public class HabitatUI : MonoBehaviour
     
     [SerializeField] TMP_Text enterHabitat;
     [SerializeField] TMP_Text exitHabitat;
+    [SerializeField] TMP_Text pickupPickaxe;
+    [SerializeField] TMP_Text pickupWrench;
 
     void OnEnable()
     {
@@ -27,6 +29,14 @@ public class HabitatUI : MonoBehaviour
             
             case HabitatPrompt.ExitHabitat:
                 exitHabitat.enabled = active;
+                break;
+            
+            case HabitatPrompt.PickupWrench:
+                pickupWrench.enabled = active;
+                break;
+            
+            case HabitatPrompt.PickupPickaxe:
+                pickupPickaxe.enabled = active;
                 break;
         }
     }

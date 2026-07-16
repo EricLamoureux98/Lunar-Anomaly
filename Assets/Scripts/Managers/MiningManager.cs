@@ -11,7 +11,7 @@ namespace LunarAnomaly.Gameplay
 
         // To UIManager - old
         // To ObjectiveManager                   
-        public static event Action<int> OnSamplesCarriedChanged;
+        public static event Action<ProgressionStage> OnSamplesCarriedChanged;
 
         void OnEnable()
         {
@@ -41,13 +41,13 @@ namespace LunarAnomaly.Gameplay
         void SampleCollected()
         {
             samplesCollected++;
-            OnSamplesCarriedChanged?.Invoke(samplesCollected);
+            OnSamplesCarriedChanged?.Invoke(ProgressionStage.SampleObjective);
         }
 
         public void ClearSamples()
         {
             samplesCollected = 0;
-            OnSamplesCarriedChanged?.Invoke(samplesCollected);
+            //OnSamplesCarriedChanged?.Invoke();
         }
     }
 }

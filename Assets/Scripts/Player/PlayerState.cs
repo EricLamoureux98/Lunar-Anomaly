@@ -18,9 +18,12 @@ namespace LunarAnomaly.Player
 
         [SerializeField] Transform respawnPoint;
         [SerializeField] float oxygenGracePeriod = 3f;
-
-        [SerializeField] bool testRespawnPlayer;
         [SerializeField] bool respawnAtPoint;
+
+        [Header("Dev Tools")]
+        [SerializeField] Transform teleportPoint;
+        [SerializeField] bool teleportPlayer;
+        [SerializeField] bool testRespawnPlayer;
 
         PlayerCurrentState currentState;
         bool terminalProximity;     
@@ -94,6 +97,12 @@ namespace LunarAnomaly.Player
             {
                 HandleRespawn();
                 testRespawnPlayer = false;
+            }
+
+            if (teleportPlayer)
+            {
+                RequestTeleport(teleportPoint, TeleportType.Cinematic);
+                teleportPlayer = false;
             }
         }
 

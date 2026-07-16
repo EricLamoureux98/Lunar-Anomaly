@@ -5,5 +5,11 @@ public enum NotificationMessage
     Start2,
     HelmetDiscovered1,
     HelmetDiscovered2,
-    OutpostObjective
+    OutpostObjective,
+    OutpostPowerOn,
+    OutpostTransmission,
+    ReturnToHabitat,
+    HabitatInRange,
+    AccessTerminal,
+    CollectPickaxe
 }

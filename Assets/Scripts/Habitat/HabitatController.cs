@@ -10,6 +10,7 @@ public class HabitatController : MonoBehaviour
     [SerializeField] GameObject wrenchObj;
 
     [SerializeField] Transform helmetTransform;
+    //DiscoveryZone discoveryZone;
 
     // To HabitatAirlock
     public static event Action OnEnterHabitat;
@@ -26,14 +27,21 @@ public class HabitatController : MonoBehaviour
 
     bool firstTimeExit = true;
 
+    void Awake()
+    {
+        //discoveryZone = GetComponentInChildren<DiscoveryZone>();
+    }
+
     void OnEnable()
     {
         HabitatTriggerZone.OnInteract += HandleInteract;
+        DiscoveryZone.OnHabitatZoneEntered += PrepareMiningObjective;
     }
 
     void OnDisable()
     {
         HabitatTriggerZone.OnInteract -= HandleInteract;
+        DiscoveryZone.OnHabitatZoneEntered -= PrepareMiningObjective;
     }
 
     void HandleInteract(HabitatPrompt prompt)
@@ -65,8 +73,18 @@ public class HabitatController : MonoBehaviour
 
             case HabitatPrompt.PickupPickaxe:
                 ObjectiveManager.OnToolActive?.Invoke(ToolType.pickaxe, true);
+                //TerminalUI.OnRequestNotification?.Invoke()
+                OnHabitatProgress?.Invoke(ProgressionStage.SampleObjective);
                 pickaxeObj.SetActive(false);
                 break;
         }
+    }
+
+    void PrepareMiningObjective()
+    {
+        Debug.Log("Preparing Mining Objective");
+        TerminalUI.OnRequestNotification?.Invoke(NotificationMessage.CollectPickaxe);
+        OnTriggerZoneActive?.Invoke(HabitatPrompt.PickupPickaxe, true);
+        OnHabitatUIUpdate?.Invoke(HabitatPrompt.PickupPickaxe, true);
     }
 }

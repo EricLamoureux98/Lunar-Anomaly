@@ -22,7 +22,7 @@ namespace LunarAnomaly.Gameplay
 		[SerializeField] Transform ladderTopPosition;
 		[SerializeField] GameObject logCubeObj;
 		[SerializeField] LightFlicker lightFlicker;
-		OutpostDiscoveryZone outpostDiscoveryZone;
+		DiscoveryZone discoveryZone;
 		OutpostAirlock outpostAirlock;	
 		OutpostUI outpostUI;
 
@@ -48,7 +48,7 @@ namespace LunarAnomaly.Gameplay
 
         void Awake()
         {
-			outpostDiscoveryZone = GetComponentInChildren<OutpostDiscoveryZone>();
+			discoveryZone = GetComponentInChildren<DiscoveryZone>();
             outpostAirlock = GetComponentInChildren<OutpostAirlock>();
 			outpostUI = GetComponent<OutpostUI>();
         }
@@ -159,7 +159,7 @@ namespace LunarAnomaly.Gameplay
 			OnTriggerZoneActive?.Invoke(OutpostPrompt.InvestigateHelmet, false);
 			TerminalUI.OnRequestNotification?.Invoke(NotificationMessage.HelmetDiscovered1);
             TerminalUI.OnRequestNotificationDelayed?.Invoke(NotificationMessage.HelmetDiscovered2, 6f);
-			outpostDiscoveryZone.ChangeActive(true);
+			discoveryZone.ChangeActive(true);
 			HabitatController.OnUpdateWaypointTarget?.Invoke(this.transform);
             HabitatController.OnUpdateWaypointActive?.Invoke(true);
 		}

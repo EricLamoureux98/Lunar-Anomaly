@@ -29,11 +29,11 @@ namespace LunarAnomaly.UI
         [SerializeField] bool terminalActive;
         public bool TerminalActive => terminalActive;
 
-        // To BasePanel 
+        // To BasePanel and UpdateText
         public static event Action<PanelType> OnPanelSelected;
-        // And UpdateText
-        public static event Action OnTerminalClosed;
-        // To NotificationController - used in OutpostController
+        public static Action OnTerminalClosed; // Used in OutpostUI
+
+        // To NotificationController - used in OutpostController, OutpostRevealCina
         public static Action<NotificationMessage> OnRequestNotification;
         public static Action<NotificationMessage, float> OnRequestNotificationDelayed;
 

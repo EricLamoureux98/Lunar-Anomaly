@@ -1,7 +1,6 @@
 
 using System;
 using System.Collections;
-
 using UnityEngine;
 
 namespace LunarAnomaly.Gameplay
@@ -54,6 +53,9 @@ namespace LunarAnomaly.Gameplay
         void Update()
         {
             AirlockTesting();
+            
+            if (playerInside && !isCycling)
+                TryCycle(true);
         }
 
         //public void EnterFromExterior() => TryCycle(fromExterior: true);
@@ -153,12 +155,12 @@ namespace LunarAnomaly.Gameplay
         public void ExternalDoorColliderActive(bool active)
         {
             exteriorDoorCollider.enabled = active;
-            interiorDoorCollider.enabled = active;
+            //interiorDoorCollider.enabled = active;
         }
 
         public void InternalDoorColliderActive(bool active)
         {
-            exteriorDoorCollider.enabled = active;
+            //exteriorDoorCollider.enabled = active;
             interiorDoorCollider.enabled = active;
         }
 
