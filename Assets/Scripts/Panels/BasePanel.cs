@@ -10,28 +10,25 @@ namespace LunarAnomaly.UI
 		[SerializeField] PanelType panelType;
 
 		[Header("References")]
-		[SerializeField] protected UpdateText terminalUpdateText;
-		[SerializeField] protected TerminalController terminalController;
-		[SerializeField] protected TMP_Text currentTextBox;
 		
 		CanvasGroup canvasGroup;
 
 		protected virtual void OnEnable()
 		{
 			TerminalUI.OnPanelSelected += HandlePanelSelected;
-			TerminalUI.OnTerminalClosed += HidePanel;
+			TerminalUI.OnPanelClosed += HidePanel;
 		}
 
 		protected virtual void OnDisable()
 		{
 			TerminalUI.OnPanelSelected -= HandlePanelSelected;
-			TerminalUI.OnTerminalClosed -= HidePanel;
+			TerminalUI.OnPanelClosed -= HidePanel;
 		}
 
 		protected virtual void Awake()
 		{
-			canvasGroup = GetComponent<CanvasGroup>();
-			if (canvasGroup == null) Debug.Log("Pannel " + gameObject.name + "does not have canvas group");
+			canvasGroup = GetComponentInParent<CanvasGroup>();
+			if (canvasGroup == null) Debug.Log("Pannel " + gameObject.name + " does not have canvas group");
 		}
 
 		void HandlePanelSelected(PanelType selectedPanel)
@@ -49,6 +46,8 @@ namespace LunarAnomaly.UI
 
 		protected void ShowPanel()
 		{
+			// Debug.Log(gameObject.name + " panel opening");
+
 			canvasGroup.alpha = 1f;
 			canvasGroup.interactable = true;
 			canvasGroup.blocksRaycasts = true;

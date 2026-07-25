@@ -9,7 +9,7 @@ namespace LunarAnomaly.Gameplay
 	{
 		public ProgressionStage CurrentStage { get; private set; }
 
-		// To TerminalUI and ObjectiveManager
+		// To ObjectiveManager
 		public static event Action<ProgressionStage> OnStageChanged;
 		// To TerminalInterfacePanel
 		public static event Action<bool> OnInterfaceLock;

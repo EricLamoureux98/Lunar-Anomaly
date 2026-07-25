@@ -88,3 +88,9 @@ public class HabitatController : MonoBehaviour
         OnHabitatUIUpdate?.Invoke(HabitatPrompt.PickupPickaxe, true);
     }
 }
+
+public enum ToolType
+{
+    pickaxe,
+    repairTool
+}

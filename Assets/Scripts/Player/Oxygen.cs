@@ -11,6 +11,9 @@ namespace LunarAnomaly.Player
         [SerializeField] bool oxygenRefilling = false;
         public bool oxygenDraining { get; private set; }
 
+        [Header("Debug")]
+        public float OxygenDrainRate => drainRate;
+
         float currentOxygen;
         bool oxygenActive;
         bool oxygenDepleted;
@@ -120,6 +123,11 @@ namespace LunarAnomaly.Player
             OnOxygenReset?.Invoke(); 
             oxygenDepleted = false;
             oxygenActive = true;
+        }
+
+        public void UpdateOxygenDrainRate(float rate)
+        {
+            drainRate = rate;
         }
     }
 }

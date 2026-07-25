@@ -37,8 +37,9 @@ MonoBehaviour:
   - message: 5
     notificationText: "COMMAND: \nPower restored. \nInitializing communications array."
   - message: 6
-    notificationText: "COMMAND: \nTransmission established.\nTelemetry upload in
-      progress."
+    notificationText: 'Transmission established.
+
+      Telemetry upload in progress.'
   - message: 7
     notificationText: "Data received. \nProceed to Main Habitat for further instructions."
   - message: 8

@@ -27,7 +27,7 @@ namespace LunarAnomaly.UI
             NotificationController.OnNotificationMessage += ReadText;
             TerminalController.OnTerminalMessage += ReadText;
             TerminalInterfacePanel.OnLogMessage += ReadText;
-            TerminalUI.OnTerminalClosed += StopTypewriter;
+            TerminalUI.OnPanelClosed += StopTypewriter;
             InputHandler.OnTextSpeedup += TextSpeedup;
         }
 
@@ -36,7 +36,7 @@ namespace LunarAnomaly.UI
             NotificationController.OnNotificationMessage -= ReadText;
             TerminalController.OnTerminalMessage -= ReadText;
             TerminalInterfacePanel.OnLogMessage -= ReadText;
-            TerminalUI.OnTerminalClosed -= StopTypewriter;
+            TerminalUI.OnPanelClosed -= StopTypewriter;
             InputHandler.OnTextSpeedup -= TextSpeedup;
         }
 

@@ -11,9 +11,9 @@ namespace LunarAnomaly
 		public static GameManager Instance { get; private set; }
 
 		public GameState CurrentState => gameState; 
-
 		GameState gameState;
 
+		// To UIManager
 		public static event Action<GameState> OnGameStateChanged;
 
 		void Awake()
@@ -31,7 +31,10 @@ namespace LunarAnomaly
 				DontDestroyOnLoad(gameObject);					
 			}
 
-			ChangeState(GameState.MainMenu);
+			if (SceneManager.GetActiveScene().buildIndex == 0)
+				ChangeState(GameState.MainMenu);
+			else
+				ChangeState(GameState.Playing);
 		}
 
 		public void RegisterPlayer(GameObject player)
@@ -39,12 +42,14 @@ namespace LunarAnomaly
 			playerObject = player;
 		}
 
+		// Called from Menu Button
 		public void PlayGame()
 		{
 			SceneManager.LoadScene(1);
 			ChangeState(GameState.Playing);
 		}
 
+		// Called from Menu Button
 		public void QuitGame()
 		{
 			Application.Quit();
@@ -59,7 +64,7 @@ namespace LunarAnomaly
 			ChangeState(GameState.GameOver);
 		}
 
-		// Add a button for this
+		// Called from Menu Button
 		public void TogglePause()
 		{
 			if (gameState == GameState.Paused)
@@ -68,13 +73,14 @@ namespace LunarAnomaly
 				ChangeState(GameState.Paused);
 		}
 
+		// Called from Menu Button
 		public void ReturnToMainMenu()
 		{
 			SceneManager.LoadScene(0);
 			ChangeState(GameState.MainMenu);
 		}
 
-		void ChangeState(GameState newState)
+		public void ChangeState(GameState newState)
 		{
 			//if (playerObject == null) Debug.Log("Player not assigned in GM");
 

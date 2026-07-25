@@ -16,8 +16,8 @@ namespace LunarAnomaly.UI
         [SerializeField] TMP_Text dateAndTime;
 
 		[Header("Terminal Panels")]
-        [SerializeField] GameObject terminalBGPanel;
 		[SerializeField] GameObject terminalOpenText;
+        // [SerializeField] GameObject terminalBGPanel;
         //[SerializeField] GameObject terminalInterfaceGroup;
 
         int lastSecond = -1;
@@ -26,12 +26,12 @@ namespace LunarAnomaly.UI
 
         public string CurrentTime { get; private set; }
         
-        [SerializeField] bool terminalActive;
+        bool terminalActive;
         public bool TerminalActive => terminalActive;
 
         // To BasePanel and UpdateText
-        public static event Action<PanelType> OnPanelSelected;
-        public static Action OnTerminalClosed; // Used in OutpostUI
+        public static Action<PanelType> OnPanelSelected; // Used in UIManager
+        public static Action OnPanelClosed; // Used in OutpostUI
 
         // To NotificationController - used in OutpostController, OutpostRevealCina
         public static Action<NotificationMessage> OnRequestNotification;
@@ -40,16 +40,18 @@ namespace LunarAnomaly.UI
 		void OnEnable()
         {
             TerminalController.OnTerminalProximity += TerminalInteract;
-            PlayerState.OnTerminalUIActive += TerminalPanel;
-            ProgressionManager.OnStageChanged += StageUpdate;
+            //UIManager.OnCursorUnlock += TerminalPanel; **** TEMP *****8
+            UIManager.OnDisplayTerminal += DisplayTerminalPanel;
+            // ProgressionManager.OnStageChanged += StageUpdate;
             TerminalInterfacePanel.OnIntroProceed += HandleIntroNotification;
         }
 
         void OnDisable()
         {
             TerminalController.OnTerminalProximity -= TerminalInteract;
-            PlayerState.OnTerminalUIActive -= TerminalPanel;
-            ProgressionManager.OnStageChanged -= StageUpdate;
+            //UIManager.OnCursorUnlock -= TerminalPanel;
+            UIManager.OnDisplayTerminal -= DisplayTerminalPanel;
+            // ProgressionManager.OnStageChanged -= StageUpdate;
             TerminalInterfacePanel.OnIntroProceed -= HandleIntroNotification;
         }
 
@@ -58,10 +60,10 @@ namespace LunarAnomaly.UI
             // So that airlock logs show correct time
             DateAndTime();
             
-            if(terminalController.terminalActive)
-            {
+            //if(terminalController.terminalWithinRange)
+            //{
                 // DateAndTime();
-            }
+            //}
         }
 
         void DateAndTime()
@@ -76,55 +78,48 @@ namespace LunarAnomaly.UI
         }
 
         // This seems redundant
-        void StageUpdate(ProgressionStage stage)
-        {
-            if (stage == ProgressionStage.Intro)
-            {     
-                //OnPanelSelected?.Invoke(PanelType.Intro);         
-            }
-
-            else if (stage == ProgressionStage.SampleObjective)
-            {
-                //OnPanelSelected?.Invoke(PanelType.Interface); 
-                //terminalInterfaceGroup.SetActive(true);
-            }
-        } 
-
-        // public void HandleEnterLogScreenButton()
+        // void StageUpdate(ProgressionStage stage)
         // {
-        //     if (terminalController.terminalActive)
-        //     {
-        //         OnPanelSelected?.Invoke(PanelType.Logs);
+        //     if (stage == ProgressionStage.Intro)
+        //     {     
+        //         //OnPanelSelected?.Invoke(PanelType.Intro);         
         //     }
-        // }   
+
+        //     else if (stage == ProgressionStage.SampleObjective)
+        //     {
+        //         //OnPanelSelected?.Invoke(PanelType.Interface); 
+        //         //terminalInterfaceGroup.SetActive(true);
+        //     }
+        // } 
 
 		void TerminalInteract(bool value)
         {
             terminalOpenText.SetActive(value);
         }
         
-        void TerminalPanel(bool value)
+        void DisplayTerminalPanel(bool value)
         {
             if (value == true)
             {
                 terminalActive = true;
-                terminalBGPanel.SetActive(true);
+                OnPanelSelected?.Invoke(PanelType.Interface);
+                // terminalBGPanel.SetActive(true);
                 
-                if (progressionManager.CurrentStage == ProgressionStage.Intro)
-                {
-                    OnPanelSelected?.Invoke(PanelType.Interface); // Hack
-                }
-                else// if (progressionManager.CurrentStage != ProgressionStage.Intro)
-                {
-                    OnPanelSelected?.Invoke(PanelType.Interface);
-                }
+                // if (progressionManager.CurrentStage == ProgressionStage.Intro)
+                // {
+                //     OnPanelSelected?.Invoke(PanelType.Interface); // Hack
+                // }
+                // else// if (progressionManager.CurrentStage != ProgressionStage.Intro)
+                // {
+                //     OnPanelSelected?.Invoke(PanelType.Interface);
+                // }
             }
             else
             {
                 terminalActive = false;
                 //terminalInterfaceGroup.SetActive(false);
-                terminalBGPanel.SetActive(false);
-                OnTerminalClosed?.Invoke();
+                // terminalBGPanel.SetActive(false);
+                OnPanelClosed?.Invoke();
                 
                 if (introNotification)
                 {
@@ -140,11 +135,4 @@ namespace LunarAnomaly.UI
             introNotification = true;
         }
 	}
-
-    public enum PanelType
-    {
-        Intro,
-        Interface,
-        //Logs
-    }
 }

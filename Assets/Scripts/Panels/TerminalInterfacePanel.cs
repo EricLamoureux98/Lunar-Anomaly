@@ -12,6 +12,10 @@ namespace LunarAnomaly.UI
         [Header("References")]
 		[SerializeField] MiningManager miningManager;
 		[SerializeField] TMP_Text samplesCollectedText;
+        [SerializeField] UpdateText terminalUpdateText;
+		[SerializeField] TerminalController terminalController;
+		[SerializeField] TerminalUI terminalUI;
+		[SerializeField] TMP_Text currentTextBox;
 
         [Header("Panels")]
         [SerializeField] CanvasGroup notificationPanel;
@@ -67,7 +71,7 @@ namespace LunarAnomaly.UI
 
         public void HandleNotificationButton()
         {
-            if (terminalController.terminalActive)
+            if (terminalUI.TerminalActive)
             {
                 contentPanel.alpha = 0f;
                 notificationPanel.alpha = 1f;
@@ -115,7 +119,7 @@ namespace LunarAnomaly.UI
 
 		public void HandleDepositButton()
         {
-            if (terminalController.terminalActive) 
+            if (terminalUI.TerminalActive) 
             {
                 DepositSamples();
             }
@@ -129,7 +133,7 @@ namespace LunarAnomaly.UI
 
 		void DepositSamples()
         {
-            if (!terminalController.terminalActive) return;
+            if (!terminalUI.TerminalActive) return;
             if (sampleObjectiveComplete) return;
 
             int samples = miningManager.samplesCollected;

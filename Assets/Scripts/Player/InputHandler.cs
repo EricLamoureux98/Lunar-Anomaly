@@ -13,6 +13,7 @@ namespace LunarAnomaly.Input
         public bool UseToolHeld { get; private set; }
 
         public static event Action OnInteractPressed;
+        // To PlayerState
         public static event Action OnCloseUI;
         public static event Action OnTextSpeedup;
 
@@ -59,6 +60,8 @@ namespace LunarAnomaly.Input
                 OnInteractPressed?.Invoke();
         }
 
+        // public void PausePressed
+
         //----------------------------UI---------------------------------//
 
         public void InteractWithUI(InputAction.CallbackContext context)
@@ -70,7 +73,10 @@ namespace LunarAnomaly.Input
         public void ExitUI(InputAction.CallbackContext context)
         {
             if (context.performed)
+            {
+                // Debug.Log("ESC Pressed");
                 OnCloseUI?.Invoke();
+            }
         }
     }
 }

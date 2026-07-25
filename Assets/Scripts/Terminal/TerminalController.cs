@@ -8,10 +8,9 @@ namespace LunarAnomaly.Gameplay
         [SerializeField] LayerMask playerLayer;
         [SerializeField] Animator anim;
 
-        public bool terminalActive { get; private set; }
         TerminalMessage currentTerminalEntry;
 
-        // To TerminalUI and PlayerState
+        // To TerminalUI and UIManager
         public static event Action<bool> OnTerminalProximity;
         // To TerminalUpdateText
         public static event Action<TerminalMessage> OnTerminalMessage;
@@ -35,7 +34,6 @@ namespace LunarAnomaly.Gameplay
         {
             if (!other.gameObject.CompareTag("Player")) return;
             OnTerminalProximity?.Invoke(true);
-            terminalActive = true;
             anim.SetBool("isActive", true);
         }
 
@@ -43,7 +41,6 @@ namespace LunarAnomaly.Gameplay
         {
             if (!other.gameObject.CompareTag("Player")) return;
             OnTerminalProximity?.Invoke(false);
-            terminalActive = false;
             anim.SetBool("isActive", false);
         }
 
@@ -57,6 +54,7 @@ namespace LunarAnomaly.Gameplay
             currentTerminalEntry = TerminalMessage.Greeting;
         }
 
+        // Probably don't need this anymore
         void UpdateStage(ProgressionStage newStage)
         {
             switch (newStage)
@@ -77,16 +75,16 @@ namespace LunarAnomaly.Gameplay
             }
         }
 
-        void OnDrawGizmosSelected()
-        {
-            SphereCollider terminalCollider = GetComponent<SphereCollider>();
-            if (terminalCollider == null) return;
+        // void OnDrawGizmosSelected()
+        // {
+        //     SphereCollider terminalCollider = GetComponent<SphereCollider>();
+        //     if (terminalCollider == null) return;
 
-            float worldRadius = terminalCollider.radius * terminalCollider.transform.lossyScale.x;
+        //     float worldRadius = terminalCollider.radius * terminalCollider.transform.lossyScale.x;
 
-            Gizmos.color = terminalActive ? Color.green : Color.red;
+        //     Gizmos.color = terminalActive ? Color.green : Color.red;
 
-            Gizmos.DrawWireSphere(terminalCollider.transform.position, worldRadius);
-        }
+        //     Gizmos.DrawWireSphere(terminalCollider.transform.position, worldRadius);
+        // }
     }
 }

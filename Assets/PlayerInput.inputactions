@@ -16,6 +16,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "Exit",
+                    "type": "Button",
+                    "id": "1a129292-526a-4930-9489-a68b1b5c919c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Look",
                     "type": "Value",
                     "id": "4271a14a-640b-402e-8897-3b3d025df44c",
@@ -172,6 +181,28 @@
                 },
                 {
                     "name": "",
+                    "id": "23544691-7f49-4148-a723-9ce564b814ad",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Exit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "03fc8992-9e1d-40a1-b9ee-89bd79443d17",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Exit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "c166f99a-5b93-4395-a715-48b76eed4c9f",
                     "path": "<Pointer>/delta",
                     "interactions": "",
@@ -250,15 +281,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Exit",
-                    "type": "Button",
-                    "id": "e0bcf770-f206-449d-9e37-d9aa6a0dd51c",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -281,17 +303,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Skip",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "6177e33e-1ca1-4c62-87f2-1e1d4b006aa8",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Exit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

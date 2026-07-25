@@ -12,7 +12,7 @@ namespace LunarAnomaly.Player
         [Header("References")]
         [SerializeField] HabitatAirlock airlock;
         PlayerMovement playerMovement;
-        PlayerInput playerInput;
+        // PlayerInput playerInput;
         Oxygen oxygen;
         Rigidbody rb;
 
@@ -26,18 +26,20 @@ namespace LunarAnomaly.Player
         [SerializeField] bool testRespawnPlayer;
 
         PlayerCurrentState currentState;
-        bool terminalProximity;     
+        public PlayerCurrentState CurrentState => currentState;
+        
+        // bool terminalProximity;     
         float graceTimer;
 
         Coroutine breathingRoutine;
 
         // To UIManager
         public static event Action OnPlayerDying;
-        public static event Action<bool> OnHideGameplayUI; 
+        // public static event Action<bool> OnHideGameplayUI; 
         public static event Action OnLadderTeleport;
 
-        // To TerminalUI and PlayerLook
-        public static event Action<bool> OnTerminalUIActive;
+        // // To TerminalUI and PlayerLook
+        // public static event Action<bool> OnTerminalUIActive;
 
         // To AtmosphereTracker
         public static event Action OnResetPressure;
@@ -52,16 +54,16 @@ namespace LunarAnomaly.Player
             
             
             rb = GetComponent<Rigidbody>();
-            playerInput = GetComponent<PlayerInput>();
+            // playerInput = GetComponent<PlayerInput>();
             playerMovement = GetComponent<PlayerMovement>();
         }
 
         void OnEnable()
         {
             Oxygen.OnOxygenDepleted += OnOxygenDepleted;
-            TerminalController.OnTerminalProximity += TerminalProximity;
-            InputHandler.OnInteractPressed += TerminalInteract;
-            InputHandler.OnCloseUI += TryExitTerminal;
+            // TerminalController.OnTerminalProximity += TerminalProximity;
+            // InputHandler.OnInteractPressed += TerminalInteract;
+            // InputHandler.OnCloseUI += TryExitTerminal;
             SanityManager.OnInsanity += HandleInsanity;
             OutpostController.OnLadderUsed += HandleLadder;
             OutpostRevealCinematic.OnOutpostCinematicTeleport += RequestTeleport;
@@ -70,9 +72,9 @@ namespace LunarAnomaly.Player
         void OnDisable()
         {
             Oxygen.OnOxygenDepleted -= OnOxygenDepleted;
-            TerminalController.OnTerminalProximity -= TerminalProximity;
-            InputHandler.OnInteractPressed -= TerminalInteract;
-            InputHandler.OnCloseUI -= TryExitTerminal;
+            // TerminalController.OnTerminalProximity -= TerminalProximity;
+            // InputHandler.OnInteractPressed -= TerminalInteract;
+            // InputHandler.OnCloseUI -= TryExitTerminal;
             SanityManager.OnInsanity -= HandleInsanity;
             OutpostController.OnLadderUsed -= HandleLadder;
             OutpostRevealCinematic.OnOutpostCinematicTeleport -= RequestTeleport;
@@ -233,32 +235,32 @@ namespace LunarAnomaly.Player
             }
         }
 
-        void TerminalProximity(bool proximity)
-        {
-            terminalProximity = proximity;
-        }
+        // void TerminalProximity(bool proximity)
+        // {
+        //     terminalProximity = proximity;
+        // }
         
-        void TerminalInteract()
-        {
-            if (currentState != PlayerCurrentState.Alive) return;
+        // void TerminalInteract()
+        // {
+        //     if (currentState != PlayerCurrentState.Alive) return;
 
-            TryEnterTerminal();
-        }
+        //     TryEnterTerminal();
+        // }
         
-        void TryEnterTerminal()
-        {
-            if (!terminalProximity) return;
+        // void TryEnterTerminal()
+        // {
+        //     if (!terminalProximity) return;
 
-            ChangeState(PlayerCurrentState.UsingTerminal);
-        }
+        //     ChangeState(PlayerCurrentState.UsingTerminal);
+        // }
 
-        void TryExitTerminal()
-        {
-            if (currentState == PlayerCurrentState.UsingTerminal)
-            {
-                ChangeState(PlayerCurrentState.Alive);
-            }
-        }
+        // void TryExitTerminal()
+        // {
+        //     if (currentState == PlayerCurrentState.UsingTerminal)
+        //     {
+        //         ChangeState(PlayerCurrentState.Alive);
+        //     }
+        // }
 
         void ChangeState(PlayerCurrentState newState)
         {
@@ -291,11 +293,11 @@ namespace LunarAnomaly.Player
                     HandleGameOver();
                     break;
                 
-                case PlayerCurrentState.UsingTerminal:
-                    playerInput.SwitchCurrentActionMap("UI");
-                    OnHideGameplayUI?.Invoke(true);
-                    OnTerminalUIActive?.Invoke(true);
-                    break;
+                // case PlayerCurrentState.UsingTerminal:
+                //     playerInput.SwitchCurrentActionMap("UI");
+                //     OnHideGameplayUI?.Invoke(true);
+                //     OnTerminalUIActive?.Invoke(true);
+                //     break;
             }
         }
 
@@ -324,11 +326,11 @@ namespace LunarAnomaly.Player
                     oxygen.SetActive(true);
                     break;
 
-                case PlayerCurrentState.UsingTerminal:
-                    playerInput.SwitchCurrentActionMap("Gameplay");
-                    OnTerminalUIActive?.Invoke(false);
-                    OnHideGameplayUI?.Invoke(false);
-                    break;
+                // case PlayerCurrentState.UsingTerminal:
+                //     playerInput.SwitchCurrentActionMap("Gameplay");
+                //     OnTerminalUIActive?.Invoke(false);
+                //     OnHideGameplayUI?.Invoke(false);
+                //     break;
             }
         }
     }
@@ -339,7 +341,7 @@ namespace LunarAnomaly.Player
         Dead, 
         Respawning,
         Insane,
-        UsingTerminal
+        // UsingTerminal // <---- COMMENT OUT
     } 
 
     public enum TeleportType

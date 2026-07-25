@@ -7,26 +7,37 @@ namespace LunarAnomaly.Player
 {
     public class PlayerLook : MonoBehaviour
     {
+        [Header("Mouse")]
+        [SerializeField] float sensitivity = 0.1f;
+        [SerializeField] float maxSense = 0.6f;
+        [SerializeField] float minSense = 0.05f;
+        [SerializeField] float maxLookAngle = 80f;
+
+        [Header("Debug")]
+        public float Sensitivity => sensitivity;
+        public float MaxSense => maxSense;
+        public float MinSense => minSense;
+
         [SerializeField] Transform orientation;
         [SerializeField] Transform vision;
-        [SerializeField] float sensitivity = 0.1f;
-        [SerializeField] float maxLookAngle = 80f;
         InputHandler inputHandler;
 
         Vector2 lookInput;
         float xRotation;
         float currentSensitivity;
 
+        bool cursorUnlocked;
+
         void OnEnable()
         {
-            PlayerState.OnTerminalUIActive += UpdateCursorLock;
+            UIManager.OnCursorUnlock += UpdateCursorLock;
             OutpostUI.OnLogShown += UpdateCursorLock;
             OutpostRevealCinematic.OnSilhouetteSensitivity += CinematicSensitivity;
         }
 
         void OnDisable()
         {
-            PlayerState.OnTerminalUIActive -= UpdateCursorLock;
+            UIManager.OnCursorUnlock -= UpdateCursorLock;
             OutpostUI.OnLogShown -= UpdateCursorLock;
             OutpostRevealCinematic.OnSilhouetteSensitivity -= CinematicSensitivity;
         }
@@ -50,14 +61,22 @@ namespace LunarAnomaly.Player
             HandleLook();
         }
 
+        public void UpdateMouseSense(float sense)
+        {
+            sensitivity = sense;
+            currentSensitivity = sensitivity;
+        }
+
         void UpdateCursorLock(bool unlocked)
         {
-            if (!unlocked)
+            cursorUnlocked = unlocked;
+
+            if (!cursorUnlocked)
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
-            else if (unlocked)
+            else if (cursorUnlocked)
             {
                 Cursor.lockState = CursorLockMode.Confined;
                 Cursor.visible = true;
@@ -67,6 +86,8 @@ namespace LunarAnomaly.Player
 
         void HandleLook()
         {
+            if (cursorUnlocked) return;
+
             float mouseX = lookInput.x * currentSensitivity;
             float mouseY = lookInput.y * currentSensitivity;            
 
@@ -80,9 +101,9 @@ namespace LunarAnomaly.Player
         void CinematicSensitivity(bool enabled)
         {
             if (enabled)
-                currentSensitivity = sensitivity / 10f;
+                currentSensitivity = Sensitivity / 10f;
             else
-                currentSensitivity = sensitivity;
+                currentSensitivity = Sensitivity;
         }
 
         void ReadInput()

@@ -1,6 +1,5 @@
 using LunarAnomaly.Input;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace LunarAnomaly.Player
 {
@@ -26,6 +25,11 @@ namespace LunarAnomaly.Player
         Vector3 moveDirection;
         Vector2 moveInput;
         float currentSpeed;
+
+        [Header("Debug")]
+        public float WalkSpeed => walkSpeed;
+        public float SprintSpeed => sprintSpeed;
+        public float JumpHeight => jumpHeight;
 
         [Header("Sound")]
         [SerializeField] float walkingSoundTime = 0.5f;
@@ -206,6 +210,22 @@ namespace LunarAnomaly.Player
         public void SetActive(bool active)
         {
             movementActive = active;
+        }
+
+        public void UpdateWalkSpeed(float speed)
+        {
+            walkSpeed = speed;
+            currentSpeed = walkSpeed;
+        }
+
+        public void UpdateSprintSpeed(float speed)
+        {
+            sprintSpeed = speed;
+        }
+
+        public void UpdateJumpHeight(float height)
+        {
+            jumpHeight = height;
         }
 
         void ReadInput()
