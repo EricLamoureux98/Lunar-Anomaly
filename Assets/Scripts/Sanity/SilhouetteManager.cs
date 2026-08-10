@@ -6,6 +6,7 @@ namespace LunarAnomaly.Gameplay
 	public class SilhouetteManager : MonoBehaviour
 	{
         [SerializeField] float minSilhouetteDistance = 500f;
+        [SerializeField] float maxSilhouetteDistance = 1000f;
 
 		Silhouette[] silhouetteSpawnPoints;
         Silhouette activeSilhouette;
@@ -31,7 +32,6 @@ namespace LunarAnomaly.Gameplay
             //SelectSilhouette();
         }
 
-        // This should be called by insanity manager
         void RequestSilhouette()
         {
             SelectSilhouette();
@@ -56,7 +56,7 @@ namespace LunarAnomaly.Gameplay
                     continue;
                 }
 
-                if (!candidate.SilhouetteOnScreen() && candidate.SilhouetteDistance() > minSilhouetteDistance)
+                if (!candidate.SilhouetteOnScreen() && candidate.SilhouetteDistance() > minSilhouetteDistance && candidate.SilhouetteDistance() < maxSilhouetteDistance)
                 {
                     activeSilhouette = candidate;
                     activeSilhouette.UpdateSilhouetteVisibility(true);

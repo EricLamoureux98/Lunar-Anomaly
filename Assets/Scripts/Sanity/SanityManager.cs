@@ -10,6 +10,9 @@ namespace LunarAnomaly.Gameplay
 	{		
 		[Header("Sanity Behaviour")]
 		[SerializeField] float maxSanity = 20f; // Should be around 15 - 20 minutes of gameplay
+		[SerializeField] float mediumSanity = 17f;
+		[SerializeField] float lowSanity = 10f;
+		[SerializeField] float criticalSanity = 3f;
 		[SerializeField] float trySpawnSilhouetteTime = 90f;		
 		[SerializeField] float spikeAmount = 1f; // Consider allowing events to decide
 		[SerializeField] float extraDrainAmount = 0.15f; // Consider allowing events to decide
@@ -21,7 +24,7 @@ namespace LunarAnomaly.Gameplay
 		float bonusChance;
 		float spawnTimer;
 
-		bool sanitySystemActive;
+		public bool sanitySystemActive; // public for testing
 
 		public SanityState sanityState; // Public for testing
 
@@ -72,16 +75,15 @@ namespace LunarAnomaly.Gameplay
 			{
             	currentSanity -= Time.deltaTime / 60f;	
 
-				// Remove these magic numebrs
-				if (currentSanity <= maxSanity * 0.1f)
+				if (currentSanity <= criticalSanity)
 				{
 					ChangeState(SanityState.CriticalSanity);
 				}
-				else if (currentSanity <= maxSanity * 0.3f)
+				else if (currentSanity <= lowSanity)
 				{
 					ChangeState(SanityState.LowSanity);
 				}
-				else if (currentSanity <= maxSanity * 0.6f)
+				else if (currentSanity <= mediumSanity)
 				{
 					ChangeState(SanityState.MediumSanity);
 				}
@@ -115,6 +117,7 @@ namespace LunarAnomaly.Gameplay
 		void HandleSilhouetteSpawning()
 		{
 			if (sanityState == SanityState.HighSanity) return;
+			if (!sanityDraining) return;
 
 			float currentChance = silhouetteSpawnChance + bonusChance;
 

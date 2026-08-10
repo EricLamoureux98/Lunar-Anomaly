@@ -1,4 +1,5 @@
 
+using LunarAnomaly.Gameplay;
 using UnityEngine;
 
 namespace LunarAnomaly
@@ -24,7 +25,7 @@ namespace LunarAnomaly
 			if (Physics.Raycast(origin, dir, out RaycastHit hit, distance, mask))
 			{
 				// .IsChildOf is important due to collider being separate
-				return hit.transform.IsChildOf(target);
+				return hit.transform == target || hit.transform.IsChildOf(target);
 			}
 
 			return false;

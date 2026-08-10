@@ -14,7 +14,9 @@ namespace LunarAnomaly.Gameplay
 		[SerializeField] LayerMask playerLayer;
 		[SerializeField] float playerWatchingFOV = 0.95f;
 		[SerializeField] float playerCanSeeFOV = 0.5f;
-		Transform silhouettePos;
+		[SerializeField] Transform visibilityHitbox;
+		[SerializeField] Transform silhouettePos;
+		GameObject playerPos;
 		Camera cameraPos;
 
 		[Header("Behaviour")]
@@ -23,21 +25,20 @@ namespace LunarAnomaly.Gameplay
 		[SerializeField] float fadeBlackTime = 0.75f;
 		float watchTime;
 
-		bool playerWatching;
-		bool playerWasWatching;
-		bool silhouetteEnabled;
+		public bool playerWatching; // public for testing
+		public bool playerWasWatching; // public for testing
+		bool silhouetteEnabled; // public for testing
 		bool debugNotif;
 
 		// To UIManager - Called in OutpostRevealCinematic
 		public static Action OnSilhouetteFlash;
-
 		// To SanityManager
 		public static event Action OnSilhouetteWatched;
 		public static event Action OnSilhouetteVanished;
 
         void Awake()
         {
-            silhouetteCollider = GetComponentInChildren<BoxCollider>();
+            silhouetteCollider = GetComponentInChildren<SphereCollider>();
 			spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         }
 
@@ -45,7 +46,9 @@ namespace LunarAnomaly.Gameplay
         {
             silhouettePos = transform;
 			cameraPos = Camera.main;
-			UpdateSilhouetteVisibility(false);
+			UpdateSilhouetteVisibility(false); 
+
+			playerPos = GameObject.FindWithTag("Player");
         }
 
 		// Consider adding a max active time
@@ -60,12 +63,20 @@ namespace LunarAnomaly.Gameplay
 				}
 
 				CheckPlayerWatching();
+				LookAtPlayer();
 			}
         }
 
+		void LookAtPlayer()
+		{
+			if (playerPos == null) return;
+
+			silhouettePos.LookAt(playerPos.transform);
+		}
+
 		void CheckPlayerWatching()
 		{
-			playerWatching = PlayerVision.IsPointVisible(cameraPos, silhouettePos, playerWatchingFOV, playerLayer);
+			playerWatching = PlayerVision.IsPointVisible(cameraPos, visibilityHitbox, playerWatchingFOV, playerLayer);
 
 			if (playerWatching)
 			{
@@ -105,7 +116,7 @@ namespace LunarAnomaly.Gameplay
 
 		public float SilhouetteDistance()
 		{
-			return Vector3.Distance(cameraPos.transform.position, silhouettePos.transform.position);
+			return Vector3.Distance(cameraPos.transform.position, silhouettePos.position);
 		}
 
 		public void UpdateSilhouetteVisibility(bool visible)
