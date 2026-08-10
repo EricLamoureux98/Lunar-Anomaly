@@ -64,6 +64,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.564
       objectReference: {fileID: 0}
+    - target: {fileID: 7017517326485719659, guid: 7f23602c6e0521c43b9f89d5910ed05b, type: 3}
+      propertyPath: sampleDropChance
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 7986827148161384436, guid: 7f23602c6e0521c43b9f89d5910ed05b, type: 3}
       propertyPath: m_Mesh
       value: 

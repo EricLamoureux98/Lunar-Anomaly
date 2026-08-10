@@ -12,17 +12,19 @@ namespace LunarAnomaly.Gameplay
         [SerializeField] Animator animLighting;
         [SerializeField] Transform smokeSpawnR, smokeSpawnL;
         [SerializeField] ParticleSystem smokeParticle;
-        [SerializeField] AtmosphereZone atmosphereZone; // Might not need to be serialized
         [SerializeField] float pressurizationTime = 3f;
         [SerializeField] float cooldownTime = 2f;
+        [SerializeField] float maxWaitTime = 10f;
+        AtmosphereZone atmosphereZone; // Might not need to be serialized
         float lastCycleTime = float.NegativeInfinity;
+        float startCycleTime = float.NegativeInfinity;
 
         [SerializeField] Collider exteriorDoorCollider;
         [SerializeField] Collider interiorDoorCollider;
 
         bool isCycling = false;
         bool playerInside = false;
-        bool cancelCycle; // Use this if/when the player is killed or level reset etc
+        public bool cancelCycle; // Use this if/when the player is killed or level reset etc
 
         [SerializeField] bool testEnterFromExterior = false;
         [SerializeField] bool testEnterFromInterior = false;
@@ -53,6 +55,9 @@ namespace LunarAnomaly.Gameplay
         void Update()
         {
             AirlockTesting();
+
+            if (isCycling)
+                AirlockWaitLimit();
             
             if (playerInside && !isCycling)
                 TryCycle(true);
@@ -75,6 +80,11 @@ namespace LunarAnomaly.Gameplay
             isCycling = true;
             cancelCycle = false;
 
+            // Make sure inside pressure is always right
+            atmosphereZone.SetPressuized(!fromExterior);
+
+            startCycleTime = Time.time;
+
             // Which animator is the entry/exit side
             Animator entryAnim = fromExterior ? animExt : animInt;
             Animator exitAnim = fromExterior ? animInt : animExt;
@@ -89,6 +99,7 @@ namespace LunarAnomaly.Gameplay
             yield return new WaitForSeconds(2f);
 
             // Wait for player to enter (or cancel)
+            AirlockWaitLimit();
             yield return new WaitUntil(() => playerInside || cancelCycle);
             yield return new WaitForSeconds(0.5f);
             // ---- animLighting.SetBool("isActive", true);
@@ -131,6 +142,14 @@ namespace LunarAnomaly.Gameplay
             isCycling = false;
         }
 
+        void AirlockWaitLimit()
+        {
+            if (!isCycling) return;
+            
+            if (Time.time - startCycleTime >= maxWaitTime)
+                cancelCycle = true;
+        }
+
         public void PlayerInsideAirlock()
         {
             playerInside = true;
@@ -145,7 +164,7 @@ namespace LunarAnomaly.Gameplay
         {
             animExt.SetBool("IsOpen", false);
             animInt.SetBool("IsOpen", false);
-            animLighting.SetBool("isActive", false);
+            // animLighting.SetBool("isActive", false);
 
             isCycling = false;
             playerInside = false;
@@ -155,12 +174,10 @@ namespace LunarAnomaly.Gameplay
         public void ExternalDoorColliderActive(bool active)
         {
             exteriorDoorCollider.enabled = active;
-            //interiorDoorCollider.enabled = active;
         }
 
         public void InternalDoorColliderActive(bool active)
         {
-            //exteriorDoorCollider.enabled = active;
             interiorDoorCollider.enabled = active;
         }
 

@@ -16,6 +16,7 @@ namespace LunarAnomaly.Gameplay
         [SerializeField] LayerMask playerLayer;
         [SerializeField] Transform HabitatWaypoint;
         [SerializeField] DiscoveryZone habitatDiscoveryZone;
+        [SerializeField] Transform hitbox;
         SpriteRenderer silhouette;
 
         [Header("Event Settings")]
@@ -83,7 +84,7 @@ namespace LunarAnomaly.Gameplay
 
         void CheckSilhouetteSeen()
         {
-            playerWatching = PlayerVision.IsPointVisible(cam, transform, playerWatchingFOV, playerLayer);
+            playerWatching = PlayerVision.IsPointVisible(cam, hitbox, playerWatchingFOV, playerLayer);
 
             if (playerWatching)
             {

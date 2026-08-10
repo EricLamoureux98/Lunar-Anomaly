@@ -6,11 +6,11 @@ namespace LunarAnomaly.Gameplay
 {
     public class ObjectiveManager : MonoBehaviour
     {
-
         // Replace these later with a Dictionary
         [SerializeField] ObjectiveSO outpostSO;
         [SerializeField] ObjectiveSO miningSO;
         [SerializeField] ObjectiveSO noObjectiveSO;
+        [SerializeField] ObjectiveSO anomalySO;
 
         int currentObjectiveIndex;
         int currentProgress;
@@ -26,6 +26,8 @@ namespace LunarAnomaly.Gameplay
         public static event Action<ProgressionStage, int> OnObjectiveProgressed;
         // To Pickaxe and RepairTool - Used in HabitatToolPickup
 		public static Action<ToolType, bool> OnToolActive;
+        // To MiningManager
+        public static event Action<int> OnBeginMiningObjective;
 
         void OnEnable()
         {
@@ -33,7 +35,8 @@ namespace LunarAnomaly.Gameplay
             OutpostRepair.OnOutpostProgress += UpdateProgress;
             OutpostController.OnOutpostAdvanced += AdvanceObjective;
             HabitatController.OnHabitatProgress += AdvanceObjective;
-            MiningManager.OnSamplesCarriedChanged += UpdateProgress;
+            // MiningManager.OnSamplesCarriedChanged += UpdateProgress;
+            MiningManager.OnDepositProgressChanged += HandleMiningProgress;
         }
 
         void OnDisable()
@@ -42,7 +45,8 @@ namespace LunarAnomaly.Gameplay
             OutpostRepair.OnOutpostProgress -= UpdateProgress;
             OutpostController.OnOutpostAdvanced -= AdvanceObjective;
             HabitatController.OnHabitatProgress -= AdvanceObjective;
-            MiningManager.OnSamplesCarriedChanged -= UpdateProgress;
+            // MiningManager.OnSamplesCarriedChanged -= UpdateProgress;
+            MiningManager.OnDepositProgressChanged -= HandleMiningProgress;
         }
 
         void Start()
@@ -56,38 +60,40 @@ namespace LunarAnomaly.Gameplay
             {
                 case ProgressionStage.Intro:
                 if (noObjectiveSO == null ) return;
-                    currentStage = newStage;
-                    currentObjectiveIndex = 0;
-                    currentObjectiveSO = noObjectiveSO;
-                    OnUpdateObjectiveTitle?.Invoke(noObjectiveSO.Objectives[0].Title);
-                    PrepareObjectiveData(noObjectiveSO, noObjectiveSO.Objectives[0].objectiveType);
-                    OnUpdateObjectiveData?.Invoke(objectiveUIData);  
+                    PrepareNewStage(ProgressionStage.NoObjective, noObjectiveSO);
                     OnToolActive?.Invoke(ToolType.pickaxe, false);
                     OnToolActive?.Invoke(ToolType.repairTool, false);
                     break;
 
                 case ProgressionStage.OutpostObjective:
                     if (outpostSO == null ) return;
-                    currentStage = newStage;
-                    currentObjectiveIndex = 0;
-                    currentProgress = 0;
-                    currentObjectiveSO = outpostSO;
-                    OnUpdateObjectiveTitle?.Invoke(outpostSO.Objectives[0].Title);
-                    PrepareObjectiveData(outpostSO, outpostSO.Objectives[0].objectiveType);
-                    OnUpdateObjectiveData?.Invoke(objectiveUIData);
+                    PrepareNewStage(ProgressionStage.OutpostObjective, outpostSO);
                     break;
 
                 case ProgressionStage.SampleObjective:
                     if (miningSO == null ) return;
-                    currentStage = newStage;
-                    currentObjectiveIndex = 0;
-                    currentProgress = 0;
-                    currentObjectiveSO = miningSO;
-                    OnUpdateObjectiveTitle?.Invoke(miningSO.Objectives[0].Title);
-                    PrepareObjectiveData(miningSO, miningSO.Objectives[0].objectiveType);
-                    OnUpdateObjectiveData?.Invoke(objectiveUIData);
-                    break;                
+                    PrepareNewStage(ProgressionStage.SampleObjective, miningSO);
+                    int required = miningSO.Objectives[2].Progression.AmountNeeded; // Make smarter
+                    OnBeginMiningObjective?.Invoke(required);
+                    break;    
+
+                case ProgressionStage.Anomaly:
+                    Debug.Log("Entering Anomaly stage");
+                    if (anomalySO == null) return;
+                    PrepareNewStage(ProgressionStage.Anomaly, anomalySO);
+                    break;
             }
+        }
+
+        void PrepareNewStage(ProgressionStage stage, ObjectiveSO objectiveSO)
+        {
+            currentStage = stage;
+            currentObjectiveIndex = 0;
+            currentProgress = 0;
+            currentObjectiveSO = objectiveSO;
+            OnUpdateObjectiveTitle?.Invoke(objectiveSO.Objectives[0].Title);
+            PrepareObjectiveData(objectiveSO, objectiveSO.Objectives[0].objectiveType);
+            OnUpdateObjectiveData?.Invoke(objectiveUIData);
         }
 
         void UpdateProgress(ProgressionStage stage)
@@ -100,6 +106,19 @@ namespace LunarAnomaly.Gameplay
             OnUpdateObjectiveData?.Invoke(objectiveUIData);
 
             if (currentProgress >= currentObjectiveSO.Objectives[currentObjectiveIndex].Progression.AmountNeeded)
+            {
+                AdvanceObjective(currentStage);
+            }
+        }
+
+        void HandleMiningProgress(int deposited, int required)
+        {
+            currentProgress = deposited;
+
+            PrepareObjectiveData(currentObjectiveSO, currentObjectiveSO.Objectives[currentObjectiveIndex].objectiveType);
+            OnUpdateObjectiveData?.Invoke(objectiveUIData);
+
+            if (deposited >= required)
             {
                 AdvanceObjective(currentStage);
             }
@@ -120,7 +139,7 @@ namespace LunarAnomaly.Gameplay
             currentProgress = 0;
 
             OnObjectiveProgressed?.Invoke(currentStage, currentObjectiveIndex);
-            OnUpdateObjectiveTitle?.Invoke(outpostSO.Objectives[currentObjectiveIndex].Title);
+            OnUpdateObjectiveTitle?.Invoke(currentObjectiveSO.Objectives[currentObjectiveIndex].Title);
             PrepareObjectiveData(currentObjectiveSO, currentObjectiveSO.Objectives[currentObjectiveIndex].objectiveType);
             OnUpdateObjectiveData?.Invoke(objectiveUIData);
         }    
@@ -130,8 +149,8 @@ namespace LunarAnomaly.Gameplay
             ObjectiveUIData data = new ObjectiveUIData
             {
                 Type = currentType,
-                Progress = currentProgress,
-                Remaining = currentSO.Objectives[currentObjectiveIndex].Progression.AmountNeeded,
+                Current = currentProgress,
+                Required = currentSO.Objectives[currentObjectiveIndex].Progression.AmountNeeded,
                 TypeText = currentSO.Objectives[currentObjectiveIndex].Progression.ProgressionName
             };
 
@@ -143,7 +162,7 @@ namespace LunarAnomaly.Gameplay
 public struct ObjectiveUIData
 {
     public ObjectiveType Type;
-    public int? Progress;
-    public int? Remaining;
+    public int? Current;
+    public int? Required;
     public string TypeText;
 }

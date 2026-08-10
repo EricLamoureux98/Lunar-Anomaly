@@ -98,15 +98,17 @@ namespace LunarAnomaly.Player
 
         void AtmosphereUpdated(bool pressurized)
         {
+            Debug.Log($"Oxygen received OnPressurized: {pressurized} | " + $"Oxygen: {currentOxygen}");
+            
             if (pressurized)
             {
-                //Debug.Log("Player entered pressurized area");
+                //Debug.Log("Oxygen entering pressured");
                 oxygenDraining = false;
                 oxygenRefilling = true;
             }
             else
             {
-                //Debug.Log("Player exited pressurized area");
+                // Debug.Log("Oxygen entering vacuum");
                 oxygenDraining = true;
                 oxygenRefilling = false;
             }
@@ -119,6 +121,7 @@ namespace LunarAnomaly.Player
 
         public void ResetOxygen()
         {
+            // Debug.Log("Oxygen ResetOxygen");
             currentOxygen = startingOxygen; 
             OnOxygenReset?.Invoke(); 
             oxygenDepleted = false;

@@ -112,7 +112,8 @@ namespace LunarAnomaly
 		Breathing,
 		Typewriter,
 		Electricity,
-		Heartbeat
+		Heartbeat,
+		OxygenWarning
 	}
 
 	[Serializable]

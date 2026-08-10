@@ -50,6 +50,9 @@ namespace LunarAnomaly.Gameplay
 					return ProgressionStage.SampleObjective;
 
 				case ProgressionStage.SampleObjective:
+					return ProgressionStage.Anomaly;
+
+				case ProgressionStage.Anomaly:
 					return ProgressionStage.Outro;
 				
 				case ProgressionStage.Outro:
@@ -79,5 +82,6 @@ public enum ProgressionStage
 	SampleObjective,
 	OutpostObjective,
 	Outro,
-	NoObjective
+	NoObjective,
+	Anomaly
 }

@@ -198,4 +198,4 @@ MonoBehaviour:
   sampleSpawnPoint: {fileID: 3876803616083841511}
   shrinkRate: 0.98
   health: 3
-  sampleDropChance: 0.25
+  sampleDropChance: 0.4

@@ -16,18 +16,22 @@ namespace LunarAnomaly.UI
 
         [SerializeField] float hideDelay;
 
-        readonly Queue<NotificationMessage> notificationQueue = new Queue<NotificationMessage>();        Coroutine queueRoutine;
+        readonly Queue<NotificationMessage> notificationQueue = new Queue<NotificationMessage>();        
+        Coroutine queueRoutine;
+
         bool waitingForReveal;
+        public bool WaitingForReveal => waitingForReveal;
 
         // To UpdateText
         public static event Action<NotificationMessage> OnNotificationMessage;
+        // To TerminalUI
+        public event Action OnWaitingForRevealChanged;
 
         void OnEnable()
         {
             TerminalUI.OnRequestNotification += RequestNotification;
             TerminalUI.OnRequestNotificationDelayed += RequestNotificationDelayed;
             Typewriter.OnCompleteTextRevealed += OnTypewriterComplete;
-            //Typewriter.OnCompleteTextRevealed += RequestHideNotification;
         }
 
         void OnDisable()
@@ -35,24 +39,16 @@ namespace LunarAnomaly.UI
             TerminalUI.OnRequestNotification -= RequestNotification;
             TerminalUI.OnRequestNotificationDelayed -= RequestNotificationDelayed;
             Typewriter.OnCompleteTextRevealed -= OnTypewriterComplete;
-            //Typewriter.OnCompleteTextRevealed -= RequestHideNotification;
         }
 
         void RequestNotification(NotificationMessage message)
         {
             Enqueue(message);
-
-            // updateText.UpdateCurrentTextBox(currentTextBox);
-            // canvasGroup.alpha = 1f;
-            // OnNotificationMessage?.Invoke(message);
         }
 
         void RequestNotificationDelayed(NotificationMessage message, float delay)
         {
             StartCoroutine(DelayedEnqueue(message, delay));
-
-            // if (delayedNotificationRoutine != null) return;
-            // delayedNotificationRoutine = StartCoroutine(DelayedNotification(message, delay));
         }
 
         IEnumerator DelayedEnqueue(NotificationMessage message, float delay)
@@ -60,14 +56,6 @@ namespace LunarAnomaly.UI
             yield return new WaitForSeconds(delay);
             yield return new WaitUntil(() => !terminalUI.TerminalActive);
             Enqueue(message);
-
-            //CancelInvoke(nameof(HideNotification));
-
-            // updateText.UpdateCurrentTextBox(currentTextBox);
-            // canvasGroup.alpha = 1f;
-            // OnNotificationMessage?.Invoke(message);
-            
-            // delayedNotificationRoutine = null;
         }
 
         void Enqueue(NotificationMessage message)
@@ -83,6 +71,7 @@ namespace LunarAnomaly.UI
                 var message = notificationQueue.Dequeue();
 
                 waitingForReveal = true;
+                OnWaitingForRevealChanged?.Invoke();
                 updateText.UpdateCurrentTextBox(currentTextBox);
                 canvasGroup.alpha = 1f;
                 OnNotificationMessage?.Invoke(message);
@@ -100,17 +89,8 @@ namespace LunarAnomaly.UI
         void OnTypewriterComplete()
         {
             waitingForReveal = false;
+            OnWaitingForRevealChanged?.Invoke();
         }
-
-        // void RequestHideNotification()
-        // {
-        //     Invoke(nameof(HideNotification), hideDelay);
-        // }
-
-        // void HideNotification()
-        // {
-        //     canvasGroup.alpha = 0f;
-        // }
     }
 }
 

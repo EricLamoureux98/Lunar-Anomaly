@@ -5,49 +5,51 @@ namespace LunarAnomaly.Gameplay
 {
     public class MiningManager : MonoBehaviour
     {
-        [SerializeField] int debugSamplesCollected;
-        //public int samplesRequired; // Make this better
-        public int samplesCollected { get; private set; }
+        int requiredSamples;
+        int carriedSamples;
+        int depositedSamples;
 
-        // To UIManager - old
+        public int RequiredSamples => requiredSamples;
+        public int CarriedSamples => carriedSamples;
+        public int DepositedSamples => depositedSamples;
+
         // To ObjectiveManager                   
-        public static event Action<ProgressionStage> OnSamplesCarriedChanged;
+        public static event Action<int, int> OnDepositProgressChanged; // deposited, required
 
         void OnEnable()
         {
             RockSample.OnRockSampleCollected += SampleCollected;
+            ObjectiveManager.OnBeginMiningObjective += BeginMiningObjective;
+            HabitatController.OnDepositSamples += DepositCarriedSamples;
         }
 
         void OnDisable()
         {
             RockSample.OnRockSampleCollected -= SampleCollected;
+            ObjectiveManager.OnBeginMiningObjective -= BeginMiningObjective;
+            HabitatController.OnDepositSamples -= DepositCarriedSamples;
         }
 
-        void Start()
+        void BeginMiningObjective(int required)
         {
-            //DebugSamplesCollected();
-            //OnSamplesCarriedChanged?.Invoke(samplesCollected, samplesRequired);
-        }
-
-        void DebugSamplesCollected()
-        {
-            if (debugSamplesCollected > 0)
-            {
-                samplesCollected = debugSamplesCollected;
-                //OnSamplesCarriedChanged?.Invoke(samplesCollected, samplesRequired);
-            }
+            requiredSamples = required;
+            carriedSamples = 0;
+            depositedSamples = 0;
         }
 
         void SampleCollected()
         {
-            samplesCollected++;
-            OnSamplesCarriedChanged?.Invoke(ProgressionStage.SampleObjective);
+            carriedSamples++;
         }
 
-        public void ClearSamples()
+        void DepositCarriedSamples()
         {
-            samplesCollected = 0;
-            //OnSamplesCarriedChanged?.Invoke();
+            if (carriedSamples <= 0) return;
+            
+            depositedSamples += carriedSamples;
+            carriedSamples = 0;
+
+            OnDepositProgressChanged?.Invoke(depositedSamples, requiredSamples);
         }
     }
 }

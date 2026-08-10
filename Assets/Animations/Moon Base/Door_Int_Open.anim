@@ -797,7 +797,7 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 2.5
+  - time: 2.1666667
     functionName: OnAirlockIntDoorCollision
     data: 
     objectReferenceParameter: {fileID: 0}

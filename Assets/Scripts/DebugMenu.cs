@@ -6,9 +6,11 @@ using UnityEngine.UI;
 public class DebugMenu : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] PlayerLook playerLook;
     [SerializeField] PlayerMovement playerMovement;
+    [SerializeField] PlayerState playerState;
+    [SerializeField] PlayerLook playerLook;
     [SerializeField] Oxygen oxygen;
+    PauseMenu pauseMenu;
 
     [Header("Sliders")]
     [SerializeField] Slider mouseSenseSlider;
@@ -17,11 +19,22 @@ public class DebugMenu : MonoBehaviour
     [SerializeField] Slider jumpHeightSlider;
     [SerializeField] Slider oxygenDrainSlider;
 
+    [Header("Buttons & Toggles")]
+    [SerializeField] Toggle respawnInHabitatToggle;
+    [SerializeField] Button teleportPlayerButton;
+    [SerializeField] Button forceRespawnButton;
+
+    void Awake()
+    {
+        pauseMenu = GetComponent<PauseMenu>();
+    }
+
     void Start()
     {
-        InitializeMouseSense();
+        InitializeTeleportSettings();
         InitializeMovementSettings();
         InitializeOxygenSettings();
+        InitializeMouseSense();
     }
 
     void InitializeMouseSense()
@@ -53,6 +66,13 @@ public class DebugMenu : MonoBehaviour
         oxygenDrainSlider.value = oxygen.OxygenDrainRate;
     }
 
+    void InitializeTeleportSettings()
+    {
+        if (playerState == null) return;
+
+        respawnInHabitatToggle.isOn = playerState.RespawnInHabitat;
+    }
+
     // Controlled by slider
     public void HandleSenseUpdate(float sense)
     {
@@ -81,5 +101,26 @@ public class DebugMenu : MonoBehaviour
     public void HandleOxygenDrainUpdate(float drainRate)
     {
         oxygen.UpdateOxygenDrainRate(drainRate);
+    }
+
+    // Controlled by Toggle
+    public void HandleRespawnInHabitat(bool inHabitat)
+    {
+        // ***** EITHER ADD A NEW POS OR REMOVE
+        playerState.UpdateRespawnInHabitat(inHabitat); 
+    }
+
+    // Controlled by Button
+    public void HandleForceRespawn()
+    {
+        pauseMenu.ResumeGame();
+        playerState.HandleRespawn();
+    }
+
+    // Controlled by Button
+    public void HandleTeleport()
+    {
+        pauseMenu.ResumeGame();
+        playerState.HandleDebugTeleport();
     }
 }

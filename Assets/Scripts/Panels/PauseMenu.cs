@@ -8,6 +8,11 @@ public class PauseMenu : BasePanel
 
     bool debugEnabled;
 
+    // protected override void HidePanel()
+    // {
+    //     base.HidePanel();
+    // }
+
     public void ReturnToMainMenu()
     {
         GameManager.Instance.ReturnToMainMenu();

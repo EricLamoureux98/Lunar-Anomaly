@@ -10,6 +10,6 @@ public enum NotificationMessage
     OutpostTransmission,
     ReturnToHabitat,
     HabitatInRange,
-    AccessTerminal,
+    AccessTerminal, // Not used
     CollectPickaxe
 }

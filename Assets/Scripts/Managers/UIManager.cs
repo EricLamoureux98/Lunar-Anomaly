@@ -11,6 +11,7 @@ namespace LunarAnomaly.UI
     {
         [SerializeField] CanvasGroup gameplayCanvasGroup;
 
+        [SerializeField] NotificationController notifController;
         [SerializeField] ScreenEffect screenEffect;
         [SerializeField] PlayerInput playerInput;
         [SerializeField] PlayerState playerState;
@@ -78,7 +79,7 @@ namespace LunarAnomaly.UI
 
                 case GameState.Playing:
                     OnCursorUnlock?.Invoke(false);
-                    TerminalUI.OnPanelClosed();     
+                    TerminalUI.OnPanelClosed?.Invoke(); 
                     HideGameplayUI(false);
                     break;
                 
@@ -118,6 +119,7 @@ namespace LunarAnomaly.UI
         void TryEnterTerminal()
         {
             if (!terminalProximity) return;
+            if (notifController.WaitingForReveal) return;
 
             EnterTerminal();
         }

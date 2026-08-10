@@ -2,6 +2,7 @@ using System;
 using LunarAnomaly.Gameplay;
 using LunarAnomaly.Player;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 
 namespace LunarAnomaly.UI
@@ -11,28 +12,30 @@ namespace LunarAnomaly.UI
         [Header("References")]
         [SerializeField] TerminalController terminalController;
         [SerializeField] ProgressionManager progressionManager;
+        [SerializeField] NotificationController notificationController;
 
         [Header("Terminal Text")]
         [SerializeField] TMP_Text dateAndTime;
 
 		[Header("Terminal Panels")]
 		[SerializeField] GameObject terminalOpenText;
+        [SerializeField] GameObject terminalWaitText;
         // [SerializeField] GameObject terminalBGPanel;
         //[SerializeField] GameObject terminalInterfaceGroup;
 
         int lastSecond = -1;
 
         bool introNotification;
+        bool playerInProximity;
 
         public string CurrentTime { get; private set; }
         
         bool terminalActive;
         public bool TerminalActive => terminalActive;
 
-        // To BasePanel and UpdateText
+        // To BasePanel
         public static Action<PanelType> OnPanelSelected; // Used in UIManager
-        public static Action OnPanelClosed; // Used in OutpostUI
-
+        public static Action OnPanelClosed; // Used in OutpostUI and UIManager
         // To NotificationController - used in OutpostController, OutpostRevealCina
         public static Action<NotificationMessage> OnRequestNotification;
         public static Action<NotificationMessage, float> OnRequestNotificationDelayed;
@@ -44,6 +47,7 @@ namespace LunarAnomaly.UI
             UIManager.OnDisplayTerminal += DisplayTerminalPanel;
             // ProgressionManager.OnStageChanged += StageUpdate;
             TerminalInterfacePanel.OnIntroProceed += HandleIntroNotification;
+            notificationController.OnWaitingForRevealChanged += UpdateTerminalEnterText;
         }
 
         void OnDisable()
@@ -53,6 +57,7 @@ namespace LunarAnomaly.UI
             UIManager.OnDisplayTerminal -= DisplayTerminalPanel;
             // ProgressionManager.OnStageChanged -= StageUpdate;
             TerminalInterfacePanel.OnIntroProceed -= HandleIntroNotification;
+            notificationController.OnWaitingForRevealChanged -= UpdateTerminalEnterText;
         }
 
         void Update()
@@ -94,11 +99,46 @@ namespace LunarAnomaly.UI
 
 		void TerminalInteract(bool value)
         {
-            terminalOpenText.SetActive(value);
+            playerInProximity = value;
+            UpdateTerminalEnterText();
+
+            // if (value == true)
+            // {
+            //     if (notificationController.WaitingForReveal)
+            //     {
+            //         terminalWaitText.SetActive(true);    
+            //         terminalOpenText.SetActive(false);                
+            //     }
+            //     else
+            //     {
+            //         terminalOpenText.SetActive(true);       
+            //         terminalWaitText.SetActive(false);            
+            //     }
+            // }
+            // else
+            // {
+                
+            // }
+        }
+
+        void UpdateTerminalEnterText()
+        {
+            if (!playerInProximity)
+            {
+                terminalWaitText.SetActive(false);
+                terminalOpenText.SetActive(false);
+                return;
+            }
+
+            bool waiting = notificationController.WaitingForReveal;
+            terminalWaitText.SetActive(waiting);
+            terminalOpenText.SetActive(!waiting);  
         }
         
         void DisplayTerminalPanel(bool value)
         {
+            if (notificationController.WaitingForReveal) return; 
+            
             if (value == true)
             {
                 terminalActive = true;

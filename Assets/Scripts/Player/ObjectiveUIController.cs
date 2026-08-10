@@ -33,17 +33,17 @@ namespace LunarAnomaly.UI
             switch (data.Type)
             {
                 case ObjectiveType.Full:
-                    if (data.Progress == null || data.Remaining == null) return;
+                    if (data.Current == null || data.Required == null) return;
 
-                    objectiveProgress.text = string.Format("{0} / {1} {2}", data.Progress, data.Remaining, data.TypeText);
+                    objectiveProgress.text = string.Format("{0} / {1} {2}", data.Current, data.Required, data.TypeText);
                     objectiveProgressBar.gameObject.SetActive(true);
-                    UpdateProgressBar(data.Progress.Value, data.Remaining.Value);
+                    UpdateProgressBar(data.Current.Value, data.Required.Value);
                     break;
 
                 case ObjectiveType.NoBar:
-                    if (data.Progress == null || data.Remaining == null) return;
+                    if (data.Current == null || data.Required == null) return;
                     objectiveProgressBar.gameObject.SetActive(false);
-                    objectiveProgress.text = string.Format("{0} / {1} {2}", data.Progress, data.Remaining, data.TypeText);
+                    objectiveProgress.text = string.Format("{0} / {1} {2}", data.Current, data.Required, data.TypeText);
                     break; 
 
                 case ObjectiveType.NoProgress:

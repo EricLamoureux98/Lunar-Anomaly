@@ -100,6 +100,8 @@ namespace LunarAnomaly.UI
         IEnumerator OxygenWarningFlash(GameObject canvas)
         {
             float timer = 0f;
+            
+            SoundManager.PlaySound(SoundType.OxygenWarning, 1f, false);
 
             while (timer < flashDuration)
             {

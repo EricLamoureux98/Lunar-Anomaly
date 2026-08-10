@@ -27,6 +27,7 @@ namespace LunarAnomaly.Player
         {
             if (other.TryGetComponent(out AtmosphereZone zone))
             {
+                // Debug.Log($"Entering Atmoshere Zone. Atmosphere: {zone.IsPressurized}");
                 if (IsPressurized == zone.IsPressurized) return;
                 
                 IsPressurized = zone.IsPressurized;
@@ -36,24 +37,42 @@ namespace LunarAnomaly.Player
 
         void RefreshPressureState()
         {
-            Collider[] hits = Physics.OverlapSphere(transform.position, 1f);
+            Collider[] hits = Physics.OverlapSphere(transform.position, 1f, ~0, QueryTriggerInteraction.Collide);
+
+            // Debug.Log($"Hit count: {hits.Length}");
+            // foreach (var hit in hits) 
+            // { 
+            //     Debug.Log($"Hit: {hit.name} | Parent: {hit.transform.parent?.name}"); 
+            // }
+
             foreach (var hit in hits)
             {
-                if (hit.TryGetComponent(out AtmosphereZone zone))
-                {
-                    if (IsPressurized == zone.IsPressurized) return;
+                AtmosphereZone zone = hit.GetComponentInParent<AtmosphereZone>();
 
-                    IsPressurized = zone.IsPressurized;
-                    OnPressurized?.Invoke(IsPressurized);
-                    
-                    Debug.Log("Refresh Success. Player inside pressurized zone");
+                if (zone != null)
+                {
+                    if (IsPressurized != zone.IsPressurized)
+                    {
+                        IsPressurized = zone.IsPressurized;
+                        OnPressurized?.Invoke(IsPressurized);
+                    }
+
+                    return;                                   
                 }
+            }
+
+            if (IsPressurized)
+            {
+                IsPressurized = false;
+                OnPressurized?.Invoke(false);
             }
         }
 
         void HandlePressureChanged(bool pressurized)
         {
-            OnPressurized?.Invoke(pressurized);
+            Debug.Log($"HandlePressureChanged | " + $"Zone says: {pressurized} | " + $"Tracker before: {IsPressurized}");
+            IsPressurized = pressurized;
+            OnPressurized?.Invoke(IsPressurized);
         }
     }
 }

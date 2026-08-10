@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ public class HabitatUI : MonoBehaviour
     [SerializeField] TMP_Text exitHabitat;
     [SerializeField] TMP_Text pickupPickaxe;
     [SerializeField] TMP_Text pickupWrench;
+    [SerializeField] TMP_Text depositSamples;
 
     void OnEnable()
     {
@@ -38,6 +40,10 @@ public class HabitatUI : MonoBehaviour
             case HabitatPrompt.PickupPickaxe:
                 pickupPickaxe.enabled = active;
                 break;
+            
+            case HabitatPrompt.DepositSamples:
+                depositSamples.enabled = active;
+                break;
         }
     }
 }
@@ -47,5 +53,6 @@ public enum HabitatPrompt
     EnterHabitat,
     ExitHabitat,
     PickupWrench,
-    PickupPickaxe
+    PickupPickaxe,
+    DepositSamples
 }

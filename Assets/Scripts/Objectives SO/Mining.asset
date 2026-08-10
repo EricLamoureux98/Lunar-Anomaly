@@ -13,7 +13,12 @@ MonoBehaviour:
   m_Name: Mining
   m_EditorClassIdentifier: Assembly-CSharp::ObjectiveSO
   Objectives:
-  - Title: Retrieve Pickaxe From Storage
+  - Title: Return to Habitat
+    objectiveType: 2
+    Progression:
+      AmountNeeded: 0
+      ProgressionName: 
+  - Title: Retrieve Excavation Tool
     objectiveType: 2
     Progression:
       AmountNeeded: 0
@@ -22,9 +27,4 @@ MonoBehaviour:
     objectiveType: 0
     Progression:
       AmountNeeded: 10
-      ProgressionName: Samples Collected
-  - Title: Deposit Samples
-    objectiveType: 2
-    Progression:
-      AmountNeeded: 0
-      ProgressionName: 
+      ProgressionName: Samples Deposited

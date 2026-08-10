@@ -47,8 +47,8 @@ namespace LunarAnomaly.UI
             switch (effectType)
             {
                 case ScreenEffectType.Death:
-                    fadeInDuration = 3f;
-                    holdDuration = 1f;
+                    fadeInDuration = 1f;
+                    holdDuration = 3f;
                     fadeOutDuration = 1.5f;
                     break;
 

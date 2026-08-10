@@ -10,8 +10,8 @@ namespace LunarAnomaly.UI
 	public class TerminalInterfacePanel : BasePanel
 	{
         [Header("References")]
-		[SerializeField] MiningManager miningManager;
-		[SerializeField] TMP_Text samplesCollectedText;
+		// 
+		// [SerializeField] TMP_Text samplesCollectedText;
         [SerializeField] UpdateText terminalUpdateText;
 		[SerializeField] TerminalController terminalController;
 		[SerializeField] TerminalUI terminalUI;
@@ -36,9 +36,11 @@ namespace LunarAnomaly.UI
         [SerializeField] Button notifButton;
 
         bool interfaceLocked;
+
+        bool interfaceOpen;
         
-        int samplesDelivered;
-        bool sampleObjectiveComplete;		
+        //int samplesDelivered;
+        //bool sampleObjectiveComplete;		
 
         // To TerminalUpdateText
         public static event Action<LogMessage> OnLogMessage;
@@ -47,8 +49,10 @@ namespace LunarAnomaly.UI
         // To TerminalNotification
         public static event Action OnStartingAirlockNotification;
         public static event Action<bool> OnViewNotification;
-        // To TerminalUI
+        // To TerminalUI & HabitatController
         public static event Action OnIntroProceed;
+        // To UpdateText
+        public event Action OnDisableTerminalTextbox;
 
         protected override void OnEnable()
         {
@@ -64,15 +68,28 @@ namespace LunarAnomaly.UI
 
         protected override void OnPanelShown()
         {
+            interfaceOpen = true;
             terminalUpdateText.UpdateCurrentTextBox(currentTextBox);
 			terminalController.RequestCurrentMessage();
             CreateLogButtons();
+        }
+
+        protected override void HidePanel()
+        {
+            base.HidePanel();
+            
+            if (interfaceOpen) 
+            {
+                OnDisableTerminalTextbox?.Invoke();
+                interfaceOpen = false;
+            }
         }
 
         public void HandleNotificationButton()
         {
             if (terminalUI.TerminalActive)
             {
+                SoundManager.PlaySound(SoundType.MenuClick, 1, false);
                 contentPanel.alpha = 0f;
                 notificationPanel.alpha = 1f;
 
@@ -110,6 +127,7 @@ namespace LunarAnomaly.UI
 
         public void HandleIntroProceedButton()
         {
+            SoundManager.PlaySound(SoundType.MenuClick, 1, false);
             OnPlayerProgressed?.Invoke();
             OnStartingAirlockNotification?.Invoke();
             OnIntroProceed?.Invoke();
@@ -117,32 +135,34 @@ namespace LunarAnomaly.UI
             HandleNotificationButton();
         }
 
-		public void HandleDepositButton()
-        {
-            if (terminalUI.TerminalActive) 
-            {
-                DepositSamples();
-            }
-        }
 
-		void UpdateSamplesDeposited(int samples, int required)
-        {
+        // ******** MOVED TO HABITATCONTROLLER ********
+		// void HandleDepositButton()
+        // {
+        //     if (terminalUI.TerminalActive) 
+        //     {
+        //         DepositSamples();
+        //     }
+        // }
+
+		// void UpdateSamplesDeposited(int samples, int required)
+        // {
             //samplesCollectedText.text = string.Format("Samples collected: {0}/{1}", samples, remaining);
-            samplesCollectedText.text = string.Format("Samples delivered: {0}/{1}", Mathf.Min(samples, required), required);
-        }
+            // samplesCollectedText.text = string.Format("Samples delivered: {0}/{1}", Mathf.Min(samples, required), required);
+        // }
 
-		void DepositSamples()
-        {
-            if (!terminalUI.TerminalActive) return;
-            if (sampleObjectiveComplete) return;
+		// void DepositSamples()
+        // {
+        //     if (!terminalUI.TerminalActive) return;
+        //     if (sampleObjectiveComplete) return;
 
-            int samples = miningManager.samplesCollected;
+        //     int samples = miningManager.samplesCollected;
             
-            if (samples < 0) return;
+        //     if (samples < 0) return;
 
-            //AddDeliveredSamples(samples);
-            miningManager.ClearSamples(); // <--- Consider not clearing all samples later
-        }
+        //     //AddDeliveredSamples(samples);
+        //     miningManager.ClearSamples(); // <--- Consider not clearing all samples later
+        // }
 
         // void AddDeliveredSamples(int amount)
         // {
@@ -206,6 +226,7 @@ namespace LunarAnomaly.UI
 
             void OnLogButtonClicked(LogMessage message, string title, string date, string number)
             {
+                SoundManager.PlaySound(SoundType.MenuClick, 1, false);
                 contentPanel.alpha = 1f;
                 notificationPanel.alpha = 0f;
 

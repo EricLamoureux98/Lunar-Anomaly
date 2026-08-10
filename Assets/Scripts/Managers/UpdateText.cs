@@ -13,6 +13,7 @@ namespace LunarAnomaly.UI
 		[SerializeField] TerminalTextDatabase terminalTextDatabase;
         [SerializeField] LogTextDatabase logTextDatabase;
         [SerializeField] NotificationDatabase notificationDatabase;
+        [SerializeField] TerminalInterfacePanel terminalInterfacePanel;
 		Typewriter typewriter;
 
 		TMP_Text currentTextBox;
@@ -27,7 +28,7 @@ namespace LunarAnomaly.UI
             NotificationController.OnNotificationMessage += ReadText;
             TerminalController.OnTerminalMessage += ReadText;
             TerminalInterfacePanel.OnLogMessage += ReadText;
-            TerminalUI.OnPanelClosed += StopTypewriter;
+            terminalInterfacePanel.OnDisableTerminalTextbox += StopTypewriter;
             InputHandler.OnTextSpeedup += TextSpeedup;
         }
 
@@ -36,7 +37,7 @@ namespace LunarAnomaly.UI
             NotificationController.OnNotificationMessage -= ReadText;
             TerminalController.OnTerminalMessage -= ReadText;
             TerminalInterfacePanel.OnLogMessage -= ReadText;
-            TerminalUI.OnPanelClosed -= StopTypewriter;
+            terminalInterfacePanel.OnDisableTerminalTextbox -= StopTypewriter;
             InputHandler.OnTextSpeedup -= TextSpeedup;
         }
 

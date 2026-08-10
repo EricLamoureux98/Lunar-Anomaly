@@ -53,7 +53,7 @@ namespace LunarAnomaly.UI
 			canvasGroup.blocksRaycasts = true;
 		}
 
-		protected void HidePanel()
+		protected virtual void HidePanel()
 		{
 			canvasGroup.alpha = 0f;
 			canvasGroup.interactable = false;
