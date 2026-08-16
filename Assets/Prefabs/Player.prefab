@@ -5039,7 +5039,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5429432989826683286}
   m_Layer: 0
-  m_Name: Orientation
+  m_Name: Player Orientation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5413,8 +5413,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: e0bcf770-f206-449d-9e37-d9aa6a0dd51c
-    m_ActionName: 'UI/Exit[/Keyboard/escape]'
+    m_ActionId: 1a129292-526a-4930-9489-a68b1b5c919c
+    m_ActionName: 'Gameplay/Exit[/Keyboard/escape,/Keyboard/p]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -5444,10 +5444,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc7eab4ffb223af4ca55486f425c6b28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLook
+  sensitivity: 0.1
+  maxSense: 0.4
+  minSense: 0.01
+  maxLookAngle: 80
   orientation: {fileID: 5429432989826683286}
   vision: {fileID: 7014973538034280536}
-  sensitivity: 0.1
-  maxLookAngle: 80
 --- !u!114 &3863893203420497876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5461,9 +5463,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerState
   airlock: {fileID: 0}
-  respawnPoint: {fileID: 0}
+  habitatRespawnPoint: {fileID: 0}
+  outpostRespawnPoint: {fileID: 0}
   oxygenGracePeriod: 3
-  testRespawnPlayer: 0
+  respawnInHabitat: 1
+  teleportPoint: {fileID: 0}
+  objectiveManager: {fileID: 0}
 --- !u!114 &4624461531798685161
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5488,7 +5493,7 @@ MonoBehaviour:
   jumpCooldown: 0.25
   bumpThreshold: 2
   walkingSoundTime: 0.5
-  runningSoundTime: 0.25
+  runningSoundTime: 0.3
 --- !u!114 &6823310202566192328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5508,7 +5513,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   IsGrounded: 0
-  maxSlopeAngle: 45
+  maxSlopeAngle: 55
   minSlopeAngle: 10
   IsOnSlope: 0
 --- !u!114 &988392927802740686
@@ -5523,7 +5528,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a6bf725c2f0eab4b9146ae1b40b42a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Oxygen
-  startingOxygen: 180
+  startingOxygen: 240
   drainRate: 1
   refillRate: 25
   oxygenRefilling: 0
@@ -6067,9 +6072,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 42.61
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 1187af69b203093489c73489c5389f93, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1187af69b203093489c73489c5389f93, type: 3}
       propertyPath: m_Name
       value: Outpost_Valve
+      objectReference: {fileID: 0}
+    - target: {fileID: 3992663748734899438, guid: 1187af69b203093489c73489c5389f93, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4803813084240995372, guid: 1187af69b203093489c73489c5389f93, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

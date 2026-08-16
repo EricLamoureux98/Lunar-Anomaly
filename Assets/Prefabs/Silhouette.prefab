@@ -47,7 +47,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -102,15 +102,17 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 1024
-  playerWatchingFOV: 0.95
-  playerCanSeeFOV: 0.6
+  playerWatchingFOV: 0.99
+  playerCanSeeFOV: 0.5
   visibilityHitbox: {fileID: 6371008572545286027}
-  silhouettePos: {fileID: 8961943931608602061}
   maxWatchTime: 3
-  minWatchBeforeVanish: 1.5
-  fadeBlackTime: 0.75
+  minWatchBeforeVanish: 1
+  playerTooCloseDistance: 200
+  watchTime: 0
   playerWatching: 0
+  silhouetteOnScreen: 0
   playerWasWatching: 0
+  silhouetteEnabled: 0
 --- !u!1 &6970613804891241651
 GameObject:
   m_ObjectHideFlags: 0
