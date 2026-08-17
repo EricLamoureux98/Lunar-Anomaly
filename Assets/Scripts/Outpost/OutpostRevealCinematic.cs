@@ -113,8 +113,8 @@ namespace LunarAnomaly.Gameplay
 
         IEnumerator SilhouetteEvent()
         {           
-            SoundManager.PlaySound(SoundType.AlienSeenFirstTime, 2.5f, false);
-            SoundManager.PlaySound(SoundType.Heartbeat, 3f, false);
+            SoundManager.PlaySound(SoundType.AlienSeenFirstTime, 2.5f);
+            SoundManager.PlaySound(SoundType.Heartbeat, 3f);
 
             yield return new WaitForSeconds(waitBeforeFlash);
 

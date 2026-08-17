@@ -13,7 +13,12 @@ namespace LunarAnomaly.Player
         [SerializeField] Transform groundCheckPos;
         [SerializeField] float groundCheckRadius;
         [SerializeField] LayerMask whatIsGround;
+        [SerializeField] LayerMask whatIsMetal;
+        LayerMask combinedMask;
         public bool IsGrounded; // { get; private set; }
+        
+        bool footstepInterior;
+        public bool FootstepInterior => footstepInterior;
 
         [Header("Slope Handling")]
         [SerializeField] float maxSlopeAngle = 40f;
@@ -37,35 +42,18 @@ namespace LunarAnomaly.Player
             }
         }
 
-        void CheckGround()
+        void Start()
         {
-            IsGrounded = Physics.CheckSphere(groundCheckPos.position, groundCheckRadius, whatIsGround);
+            combinedMask = whatIsGround | whatIsMetal;
         }
 
-        // void CheckSlope()
-        // {
-        //     if (Physics.Raycast(groundCheckPos.position, Vector3.down, out slopeHit, groundCheckRadius + 0.2f, whatIsGround))
-        //     {
-        //         float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+        void CheckGround()
+        {
+            IsGrounded = Physics.CheckSphere(groundCheckPos.position, groundCheckRadius, combinedMask);
+        }
 
-        //         // Slope detection bug. Changed to 1f
-        //         if (angle > 1f && angle <= maxSlopeAngle)
-        //         {
-        //             IsOnSlope = true;
-        //             SlopeNormal = slopeHit.normal;
-        //         }
-        //         else
-        //         {
-        //             IsOnSlope = false;
-        //             SlopeNormal = Vector3.up;
-        //         }
-        //     }
-        // }
-
-        // Better SphereCast version
         void CheckSlope()
         {
-
             if (!IsGrounded)
             {
                 IsOnSlope = false;
@@ -73,8 +61,19 @@ namespace LunarAnomaly.Player
                 return;
             }
 
-            if (Physics.Raycast(groundCheckPos.position, Vector3.down, out slopeHit, 0.6f, whatIsGround))
+            if (Physics.Raycast(groundCheckPos.position, Vector3.down, out slopeHit, 0.6f, combinedMask))
             {
+                if ((whatIsGround.value & (1 << slopeHit.collider.gameObject.layer)) != 0)
+                {
+                    footstepInterior = false;
+                    //Debug.Log("Standing on lunar surface");
+                }
+                else if ((whatIsMetal.value & (1 << slopeHit.collider.gameObject.layer)) != 0)
+                {
+                    footstepInterior = true;
+                    //Debug.Log("Standing in habitat");
+                }
+
                 float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
 
                 if (angle > minSlopeAngle && angle <= maxSlopeAngle)

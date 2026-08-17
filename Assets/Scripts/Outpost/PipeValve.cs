@@ -45,7 +45,7 @@ namespace LunarAnomaly.Gameplay
         {
             if (valveInHand) return;
 
-            SoundManager.PlaySound(SoundType.Pickup, 0.5f, false);
+            SoundManager.PlaySoundWithVariation(SoundType.Pickup, 0.5f);
             missingValveTxt.SetActive(false);
             repairValveTxt.SetActive(true);
 
@@ -58,7 +58,7 @@ namespace LunarAnomaly.Gameplay
         {
             if (!valveInHand) return; 
 
-            SoundManager.PlaySound(SoundType.MetalSlam, 1f, false);
+            SoundManager.PlaySoundWithVariation(SoundType.MetalSlam, 1f);
             CameraShakeManager.Instance.CameraShake(outpostImpulseSource, 0.03f);
             
             Destroy(playerHoldingValve);
@@ -68,7 +68,7 @@ namespace LunarAnomaly.Gameplay
 
         void TurnValve()
         {
-            SoundManager.PlaySound(SoundType.OutpostValve, 0.65f, false);
+            SoundManager.PlaySound(SoundType.OutpostValve, 0.65f);
             valveAnim.SetBool("isTurning", true);
             OutpostController.OnTriggerZoneActive?.Invoke(OutpostPrompt.TurnValve, false);
             OutpostController.OnOutpostUIUpdate?.Invoke(OutpostPrompt.TurnValve, false);

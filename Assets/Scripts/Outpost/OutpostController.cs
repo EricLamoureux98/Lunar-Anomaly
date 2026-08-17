@@ -180,7 +180,7 @@ namespace LunarAnomaly.Gameplay
 			//outpostAirlock.HandleDoorOpen(false);
 			powerBoxOpen = true;
 			powerBoxDoorAnim.SetBool("IsOpen", true);
-			SoundManager.PlaySound(SoundType.OutpostSqueak, 1f, false);			
+			SoundManager.PlaySound(SoundType.OutpostSqueak, 1f);			
 			OnOutpostUIUpdate?.Invoke(OutpostPrompt.PowerPanel, false);
 		}
 
@@ -189,7 +189,7 @@ namespace LunarAnomaly.Gameplay
 		{
 			if (!powerBoxOpen) return;
 
-			SoundManager.PlaySound(SoundType.OutpostBang, 1f, false);
+			SoundManager.PlaySound(SoundType.OutpostBang, 1f);
 			CameraShakeManager.Instance.CameraShake(outpostImpulseSource, 0.03f);
 			OnOutpostUIUpdate?.Invoke(OutpostPrompt.TurnOnPower, true);
 			OnTriggerZoneActive?.Invoke(OutpostPrompt.TurnOnPower, true);
@@ -207,7 +207,7 @@ namespace LunarAnomaly.Gameplay
 		{
 			if (dishEnabled) return;
 
-			SoundManager.PlaySound(SoundType.LeverPull, 1.5f, false);
+			SoundManager.PlaySound(SoundType.LeverPull, 1.5f);
 			dishEnabled = true;
 		}
 
@@ -235,13 +235,13 @@ namespace LunarAnomaly.Gameplay
 		// Called from switch animation
 		public void HandlePowerSwitchSound()
 		{
-			SoundManager.PlaySound(SoundType.SwitchFlip, 2f, false);
+			SoundManager.PlaySound(SoundType.SwitchFlip, 2f);
 		}
 
 		void HandleOutpostStart()
 		{
 			isPowered = true;
-			SoundManager.PlaySound(SoundType.MachineStart, 2f, false);
+			SoundManager.PlaySound(SoundType.MachineStart, 2f);
 			satelliteDishAnim.SetBool("IsPowered", true);
 		}
 
@@ -249,7 +249,7 @@ namespace LunarAnomaly.Gameplay
 		{
 			if (isPowered && !outpostActive)
 			{
-				SoundManager.PlaySound(SoundType.OutpostButton, 1f, false);
+				SoundManager.PlaySound(SoundType.OutpostButton, 1f);
 				lightFlicker.StartFlicker(1f);
 
 				OnOutpostAdvanced?.Invoke(ProgressionStage.OutpostObjective);
@@ -290,7 +290,7 @@ namespace LunarAnomaly.Gameplay
 			if (isPowered)
 			{
 				outpostAirlock.HandleDoorOpen(true);
-				SoundManager.PlaySound(SoundType.Airlock, 0.5f, false);
+				SoundManager.PlaySound(SoundType.DoorOpen, 0.5f);
 			}
 		}
 

@@ -92,7 +92,7 @@ namespace LunarAnomaly.Player
 
 		public void HandleRepairSound()
 		{
-			SoundManager.PlaySound(SoundType.Repair, 0.25f, false);
+			SoundManager.PlaySound(SoundType.Repair, 0.25f);
 		}
 
 		void ReadInput()

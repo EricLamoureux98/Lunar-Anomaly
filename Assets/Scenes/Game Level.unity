@@ -2823,7 +2823,7 @@ PrefabInstance:
       objectReference: {fileID: 1492853676}
     - target: {fileID: 3863893203420497876, guid: 35ac4db3dd21229419ae7e912615aa66, type: 3}
       propertyPath: respawnInHabitat
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3863893203420497876, guid: 35ac4db3dd21229419ae7e912615aa66, type: 3}
       propertyPath: habitatRespawnPoint
@@ -2876,6 +2876,10 @@ PrefabInstance:
     - target: {fileID: 5520289281215148931, guid: 35ac4db3dd21229419ae7e912615aa66, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6823310202566192328, guid: 35ac4db3dd21229419ae7e912615aa66, type: 3}
+      propertyPath: whatIsMetal.m_Bits
+      value: 8192
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -21112,7 +21116,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 7991
+    m_Bits: 16183
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -111485,7 +111489,7 @@ GameObject:
   - component: {fileID: 1785370347}
   - component: {fileID: 1785370346}
   - component: {fileID: 1785370345}
-  m_Layer: 8
+  m_Layer: 13
   m_Name: Stair Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -127970,7 +127974,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -3111565609762313623, guid: 2726205d10908ace192ffc4f84798e99, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: -3111565609762313623, guid: 2726205d10908ace192ffc4f84798e99, type: 3}
       propertyPath: m_IsActive
@@ -127986,7 +127990,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -1760714182489039777, guid: 2726205d10908ace192ffc4f84798e99, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: -1760714182489039777, guid: 2726205d10908ace192ffc4f84798e99, type: 3}
       propertyPath: m_IsActive
@@ -134925,6 +134929,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6244791315778238824, guid: 4bdd838cb9b90460fb7a96fe264ddb4a, type: 3}
+      propertyPath: soundList.Array.data[28].sounds.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6244791315778238824, guid: 4bdd838cb9b90460fb7a96fe264ddb4a, type: 3}
       propertyPath: 'soundList.Array.data[0].sounds.Array.data[0]'
       value: 
       objectReference: {fileID: 8300000, guid: 542ee9a4144826fdb8b9f927789c70ba, type: 3}
@@ -134944,6 +134952,22 @@ PrefabInstance:
       propertyPath: 'soundList.Array.data[27].sounds.Array.data[0]'
       value: 
       objectReference: {fileID: 8300000, guid: 002d5f6841ea01c8383f946035eb26c2, type: 3}
+    - target: {fileID: 6244791315778238824, guid: 4bdd838cb9b90460fb7a96fe264ddb4a, type: 3}
+      propertyPath: 'soundList.Array.data[28].sounds.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: bbc33b054c9c56b5b848c89796d6ad85, type: 3}
+    - target: {fileID: 6244791315778238824, guid: 4bdd838cb9b90460fb7a96fe264ddb4a, type: 3}
+      propertyPath: 'soundList.Array.data[28].sounds.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8300000, guid: d24d54198240b14ecbc6ea9f587e4927, type: 3}
+    - target: {fileID: 6244791315778238824, guid: 4bdd838cb9b90460fb7a96fe264ddb4a, type: 3}
+      propertyPath: 'soundList.Array.data[28].sounds.Array.data[2]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 641bfcdc396d9c1fa9d8a8b71e5e7fea, type: 3}
+    - target: {fileID: 6244791315778238824, guid: 4bdd838cb9b90460fb7a96fe264ddb4a, type: 3}
+      propertyPath: 'soundList.Array.data[28].sounds.Array.data[3]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 8f4320e15e400c1aa99ab0e879d82cf9, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

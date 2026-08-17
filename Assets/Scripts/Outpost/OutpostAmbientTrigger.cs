@@ -27,6 +27,6 @@ public class OutpostAmbientTrigger : MonoBehaviour
 
     void PlaySound()
     {
-        SoundManager.PlaySound(SoundType.Ambience, 1f, false);
+        SoundManager.PlaySound(SoundType.Ambience, 1f);
     }
 }

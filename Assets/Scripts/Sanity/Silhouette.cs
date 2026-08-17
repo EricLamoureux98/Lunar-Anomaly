@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 	
@@ -7,7 +8,6 @@ namespace LunarAnomaly.Gameplay
 	public class Silhouette : MonoBehaviour
 	{
 		[Header("References")]
-		Collider silhouetteCollider;
 		SpriteRenderer spriteRenderer;
 
 		[Header("Detection")]
@@ -15,19 +15,22 @@ namespace LunarAnomaly.Gameplay
 		[SerializeField] float playerWatchingFOV = 0.95f;
 		[SerializeField] float playerCanSeeFOV = 0.5f;
 		[SerializeField] Transform visibilityHitbox;
-		[SerializeField] Transform silhouettePos;
-		GameObject playerPos;
+		Transform silhouetteTransform;
+		Vector3 silhouetteStartingPos;
+		GameObject playerObject;
 		Camera cameraPos;
 
 		[Header("Behaviour")]
 		[SerializeField] float maxWatchTime = 4f;
 		[SerializeField] float minWatchBeforeVanish = 1.5f;
-		[SerializeField] float fadeBlackTime = 0.75f;
-		float watchTime;
+		// [SerializeField] float fadeBlackTime = 0.75f;
+		[SerializeField] float playerTooCloseDistance = 150f;
+		public float watchTime; // public for testing
 
 		public bool playerWatching; // public for testing
+		public bool silhouetteOnScreen; // public for testing
 		public bool playerWasWatching; // public for testing
-		bool silhouetteEnabled; // public for testing
+		public bool silhouetteEnabled; // public for testing
 		bool debugNotif;
 
 		// To UIManager - Called in OutpostRevealCinematic
@@ -38,20 +41,19 @@ namespace LunarAnomaly.Gameplay
 
         void Awake()
         {
-            silhouetteCollider = GetComponentInChildren<SphereCollider>();
 			spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         }
 
         void Start()
         {
-            silhouettePos = transform;
+            silhouetteTransform = transform;
+			silhouetteStartingPos = transform.position;
 			cameraPos = Camera.main;
-			UpdateSilhouetteVisibility(false); 
+			UpdateSilhouetteVisibility(false);
 
-			playerPos = GameObject.FindWithTag("Player");
+			playerObject = GameObject.FindWithTag("Player");
         }
 
-		// Consider adding a max active time
         void Update()
         {
 			if (silhouetteEnabled)
@@ -64,14 +66,15 @@ namespace LunarAnomaly.Gameplay
 
 				CheckPlayerWatching();
 				LookAtPlayer();
+				MaintainDistanceFromPlayer();
 			}
         }
 
 		void LookAtPlayer()
 		{
-			if (playerPos == null) return;
+			if (playerObject == null) return;
 
-			silhouettePos.LookAt(playerPos.transform);
+			silhouetteTransform.LookAt(playerObject.transform);
 		}
 
 		void CheckPlayerWatching()
@@ -90,46 +93,93 @@ namespace LunarAnomaly.Gameplay
 				}	
 				else
 				{
-					OnSilhouetteFlash?.Invoke();
+					StartCoroutine(MoveSilhouette());
 					OnSilhouetteVanished?.Invoke();
-					UpdateSilhouetteVisibility(false);
-					SoundManager.PlaySound(SoundType.Ambience);
+					silhouetteEnabled = false;
+					//OnSilhouetteFlash?.Invoke();
+					//SoundManager.PlaySound(SoundType.Ambience);
 				}			
 			}
 			else
 			{
-				watchTime = 0f;
+				// Reset to 0 if not watched vv breaks below logic
+				//watchTime = 0f;
 			}
 			
 			if (!SilhouetteOnScreen() && playerWasWatching && watchTime > minWatchBeforeVanish)
 			{
-				// Consider adding a delay
-				UpdateSilhouetteVisibility(false);
-				
+				UpdateSilhouetteVisibility(false);				
 			}
+		}
+
+		void MaintainDistanceFromPlayer()
+		{
+			float distance = Vector3.Distance(cameraPos.transform.position, silhouetteTransform.position);
+
+			if (distance <= playerTooCloseDistance)
+				UpdateSilhouetteVisibility(false);
+		}
+
+		public bool PlayerCanSeeSilhouette(Transform player, LayerMask obstacleMask)
+		{
+			Vector3 origin = visibilityHitbox.position;
+			Vector3 targetPos = player.position; // + Vector3.up * 1.15f;
+
+			Vector3 dir = (targetPos - origin).normalized;
+			float distance = Vector3.Distance(origin, targetPos);
+
+			int mask = obstacleMask;
+
+			if (Physics.Raycast(origin, dir, out RaycastHit hit, distance, mask))
+			{
+				return hit.transform == player || hit.transform.IsChildOf(player);
+			}
+
+			return false;
 		}
 
 		public bool SilhouetteOnScreen()
 		{
-			return PlayerVision.IsPointVisible(cameraPos, silhouettePos, playerCanSeeFOV, playerLayer);
+			return PlayerVision.IsPointVisible(cameraPos, visibilityHitbox, playerCanSeeFOV, playerLayer);
 		}
 
 		public float SilhouetteDistance()
 		{
-			return Vector3.Distance(cameraPos.transform.position, silhouettePos.position);
+			return Vector3.Distance(cameraPos.transform.position, silhouetteTransform.position);
 		}
 
 		public void UpdateSilhouetteVisibility(bool visible)
 		{
-			if (spriteRenderer == null || silhouetteCollider == null) return;
+			if (spriteRenderer == null) return;
+
+			if (visible) transform.position = silhouetteStartingPos;
 
 			silhouetteEnabled = visible;
 			spriteRenderer.enabled = visible;
-			silhouetteCollider.enabled = visible;
 
 			playerWasWatching = false;
 			debugNotif = false;
 			watchTime = 0f;
+		}
+
+		IEnumerator MoveSilhouette()
+		{
+			Vector3 targetPos = silhouetteStartingPos - new Vector3(0, 40f, 0);
+			float duration = 3f;
+			float elapsed = 0f;
+
+			while (elapsed < duration)
+			{
+				elapsed += Time.deltaTime;
+
+				float t = elapsed / duration;
+				transform.position = Vector3.Lerp(silhouetteStartingPos, targetPos, t);
+
+				yield return null;
+			}
+
+			transform.position = targetPos;
+			UpdateSilhouetteVisibility(false);
 		}
     }
 }

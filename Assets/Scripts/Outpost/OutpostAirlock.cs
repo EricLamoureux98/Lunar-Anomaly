@@ -92,8 +92,8 @@ namespace LunarAnomaly.Gameplay
 			if (!playerInside) yield break;
 
 			HandleDoorOpen(false);
-			SoundManager.PlaySound(SoundType.Alarm, 1.25f, false);
-			SoundManager.PlaySound(fromExterior ? SoundType.GainAtmosphere : SoundType.LoseAtmosphere, 1f, false);
+			SoundManager.PlaySound(SoundType.Alarm, 1.25f);
+			SoundManager.PlaySound(fromExterior ? SoundType.GainAtmosphere : SoundType.LoseAtmosphere, 1f);
 			lightFlicker.StartFlicker(3f);
 			
 			yield return new WaitForSeconds(pressurizationTime);

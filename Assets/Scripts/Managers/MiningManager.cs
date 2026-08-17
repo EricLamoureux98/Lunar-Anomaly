@@ -47,6 +47,8 @@ namespace LunarAnomaly.Gameplay
             if (carriedSamples <= 0) return;
             
             depositedSamples += carriedSamples;
+            depositedSamples = Mathf.Min(depositedSamples, requiredSamples);
+
             carriedSamples = 0;
 
             OnDepositProgressChanged?.Invoke(depositedSamples, requiredSamples);

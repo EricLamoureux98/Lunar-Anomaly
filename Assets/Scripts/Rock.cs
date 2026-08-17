@@ -48,7 +48,7 @@ namespace LunarAnomaly.Gameplay
             if (isDestroyed) return; 
             isDestroyed = true;
 
-            SoundManager.PlaySound(SoundType.RockBreak, 0.4f);
+            SoundManager.PlaySoundWithVariation(SoundType.RockBreak, 0.4f);
 
             if (destructionParticlePrefab != null)
             {

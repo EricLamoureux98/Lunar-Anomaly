@@ -1,12 +1,14 @@
 
 using System;
 using System.Collections;
+using Unity.Cinemachine;
 using UnityEngine;
 
 namespace LunarAnomaly.Gameplay
 {
     public class HabitatAirlock : MonoBehaviour
     {
+        [SerializeField] CinemachineImpulseSource habitatImpulseSource;
         [SerializeField] Animator animExt;
         [SerializeField] Animator animInt;
         [SerializeField] Animator animLighting;
@@ -24,7 +26,7 @@ namespace LunarAnomaly.Gameplay
 
         bool isCycling = false;
         bool playerInside = false;
-        public bool cancelCycle; // Use this if/when the player is killed or level reset etc
+        bool cancelCycle; // Use this if/when the player is killed or level reset etc
 
         [SerializeField] bool testEnterFromExterior = false;
         [SerializeField] bool testEnterFromInterior = false;
@@ -63,8 +65,6 @@ namespace LunarAnomaly.Gameplay
                 TryCycle(true);
         }
 
-        //public void EnterFromExterior() => TryCycle(fromExterior: true);
-        //public void EnterFromInterior() => TryCycle(fromExterior: false);
         void EnterFromExterior() => TryCycle(fromExterior: true);
         void EnterFromInterior() => TryCycle(fromExterior: false);
 
@@ -95,15 +95,21 @@ namespace LunarAnomaly.Gameplay
 
             // Open entry side
             entryAnim.SetBool("IsOpen", true);
-            SoundManager.PlaySound(SoundType.Airlock, 0.5f);
-            yield return new WaitForSeconds(2f);
+
+            if (!fromExterior)
+                {
+                    SoundManager.PlaySound(SoundType.Airlock, 0.15f);
+                    yield return new WaitForSeconds(1.1f);
+                }
+
+            SoundManager.PlaySound(SoundType.DoorOpen, 1.5f);
+            yield return new WaitForSeconds(1f);
 
             // Wait for player to enter (or cancel)
             AirlockWaitLimit();
             yield return new WaitUntil(() => playerInside || cancelCycle);
             yield return new WaitForSeconds(0.5f);
             // ---- animLighting.SetBool("isActive", true);
-            SoundManager.PlaySound(SoundType.Alarm, 1.25f, false);
 
             if (cancelCycle)
             {
@@ -113,7 +119,16 @@ namespace LunarAnomaly.Gameplay
 
             // Close entry side and pressurize
             entryAnim.SetBool("IsOpen", false);
-            SoundManager.PlaySound(fromExterior ? SoundType.GainAtmosphere : SoundType.LoseAtmosphere, 1f, false);
+            yield return new WaitForSeconds(1f);
+
+            SoundManager.PlaySound(SoundType.DoorClose, 1.65f);
+            CameraShakeManager.Instance.CameraShake(habitatImpulseSource, 0.04f);
+
+            yield return new WaitForSeconds(1f);
+            SoundManager.PlaySound(SoundType.Alarm, 1.25f);
+
+            yield return new WaitForSeconds(1f);
+            SoundManager.PlaySound(fromExterior ? SoundType.GainAtmosphere : SoundType.LoseAtmosphere, 1f);
             if (fromExterior && smokeParticle != null)
             {
                 Instantiate(smokeParticle, smokeSpawnL.position, smokeSpawnL.rotation);
@@ -129,13 +144,13 @@ namespace LunarAnomaly.Gameplay
             // Open exit side
             // ---- animLighting.SetBool("isActive", false);
             exitAnim.SetBool("IsOpen", true);
-            SoundManager.PlaySound(SoundType.Airlock, 0.5f);
+            SoundManager.PlaySound(SoundType.DoorOpen, 0.5f);
 
             // Wait for player to leave, then close exit door
             yield return new WaitUntil(() => !playerInside || cancelCycle);
             yield return new WaitForSeconds(1f);
             exitAnim.SetBool("IsOpen", false);
-            SoundManager.PlaySound(SoundType.Airlock, 0.5f);
+            SoundManager.PlaySound(SoundType.DoorOpen, 0.5f);
             OnAirlockCycled?.Invoke();
 
             lastCycleTime = Time.time;
@@ -145,6 +160,7 @@ namespace LunarAnomaly.Gameplay
         void AirlockWaitLimit()
         {
             if (!isCycling) return;
+            if (playerInside) return;
             
             if (Time.time - startCycleTime >= maxWaitTime)
                 cancelCycle = true;

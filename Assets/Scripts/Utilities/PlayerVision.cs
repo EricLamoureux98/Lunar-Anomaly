@@ -21,8 +21,8 @@ namespace LunarAnomaly
 
 			// ~ is the bitwise NOT operator. It flips the layers bit (everything EXCEPT this layer)
 			int mask = ~ignoreMask;
-
-			if (Physics.Raycast(origin, dir, out RaycastHit hit, distance, mask))
+																				// Ignore Trigger Colliders VV
+			if (Physics.Raycast(origin, dir, out RaycastHit hit, distance, mask, QueryTriggerInteraction.Ignore))
 			{
 				// .IsChildOf is important due to collider being separate
 				return hit.transform == target || hit.transform.IsChildOf(target);

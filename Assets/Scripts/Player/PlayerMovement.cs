@@ -147,7 +147,8 @@ namespace LunarAnomaly.Player
         {
             if (soundTimer >= currentSoundTime && Mathf.Abs(rb.linearVelocity.x) > 0.5f)
             {
-                SoundManager.PlaySound(SoundType.Footstep, 0.1f, false);
+                SoundManager.PlaySoundWithVariation(groundChecker.FootstepInterior ? SoundType.FootstepInterior : SoundType.Footstep, 0.1f);
+                // SoundManager.PlaySoundWithVariation(SoundType.Footstep, 0.1f);
                 soundTimer = 0f;
             }
 
@@ -166,23 +167,30 @@ namespace LunarAnomaly.Player
         {        
             if (soundTimer >= currentSoundTime && Mathf.Abs(rb.linearVelocity.x) > 0.5f)
             {
-                SoundManager.PlaySound(SoundType.Footstep, 0.1f, false);
+                SoundManager.PlaySoundWithVariation(groundChecker.FootstepInterior ? SoundType.FootstepInterior : SoundType.Footstep, 0.1f);
+                //SoundManager.PlaySoundWithVariation(SoundType.Footstep, 0.1f);
                 soundTimer = 0f;
             }
 
-            rb.useGravity = false;
+            rb.useGravity = true;
 
-            Vector3 slopeDir = groundChecker.GetSlopeMoveDirection(moveDirection);
+            rb.AddForce(moveDirection.normalized * currentSpeed * 10f, ForceMode.Force);
+
+            if (moveDirection == Vector3.zero)
+                rb.linearVelocity = Vector3.zero;
+
+            // ** Deprecated **  Using gravity now instead of manually calculating slope speed
+            //rb.useGravity = false;
+
+            //Vector3 slopeDir = groundChecker.GetSlopeMoveDirection(moveDirection);
 
             // Prevent downhill acceleration
             //if (rb.linearVelocity.magnitude < currentSpeed)
-                rb.AddForce(slopeDir.normalized * currentSpeed * 10, ForceMode.Force);
+                //rb.AddForce(slopeDir.normalized * currentSpeed * 10, ForceMode.Force);
 
-            rb.AddForce(-groundChecker.SlopeNormal * 10f, ForceMode.Force);
+            //rb.AddForce(-groundChecker.SlopeNormal * 10f, ForceMode.Force);
 
-            // Prevent sliding when player not moving
-            if (moveDirection == Vector3.zero)
-                rb.linearVelocity = Vector3.zero;
+            // Prevent sliding when player not moving            
         }
 
         void HandleAirMovement()

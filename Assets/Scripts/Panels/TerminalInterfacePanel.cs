@@ -89,7 +89,7 @@ namespace LunarAnomaly.UI
         {
             if (terminalUI.TerminalActive)
             {
-                SoundManager.PlaySound(SoundType.MenuClick, 1, false);
+                SoundManager.PlaySound(SoundType.MenuClick, 0.8f);
                 contentPanel.alpha = 0f;
                 notificationPanel.alpha = 1f;
 
@@ -127,7 +127,7 @@ namespace LunarAnomaly.UI
 
         public void HandleIntroProceedButton()
         {
-            SoundManager.PlaySound(SoundType.MenuClick, 1, false);
+            SoundManager.PlaySound(SoundType.MenuClick, 0.8f);
             OnPlayerProgressed?.Invoke();
             OnStartingAirlockNotification?.Invoke();
             OnIntroProceed?.Invoke();
@@ -226,7 +226,7 @@ namespace LunarAnomaly.UI
 
             void OnLogButtonClicked(LogMessage message, string title, string date, string number)
             {
-                SoundManager.PlaySound(SoundType.MenuClick, 1, false);
+                SoundManager.PlaySound(SoundType.MenuClick, 0.8f);
                 contentPanel.alpha = 1f;
                 notificationPanel.alpha = 0f;
 

@@ -67,7 +67,7 @@ public class HabitatController : MonoBehaviour
                 break;
             
             case HabitatPrompt.PickupWrench:
-                SoundManager.PlaySound(SoundType.Pickup, 1, false);
+                SoundManager.PlaySound(SoundType.Pickup, 1f);
                 ObjectiveManager.OnToolActive?.Invoke(ToolType.repairTool, true);
                 OnHabitatProgress?.Invoke(ProgressionStage.OutpostObjective);
                 OnTriggerZoneActive?.Invoke(HabitatPrompt.ExitHabitat, true);
@@ -78,7 +78,7 @@ public class HabitatController : MonoBehaviour
                 break;
 
             case HabitatPrompt.PickupPickaxe:
-                SoundManager.PlaySound(SoundType.Pickup, 1, false);
+                SoundManager.PlaySound(SoundType.Pickup, 1f);
                 ObjectiveManager.OnToolActive?.Invoke(ToolType.pickaxe, true);
                 //TerminalUI.OnRequestNotification?.Invoke()
                 OnHabitatProgress?.Invoke(ProgressionStage.SampleObjective);

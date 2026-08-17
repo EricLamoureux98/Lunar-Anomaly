@@ -48,10 +48,10 @@ namespace LunarAnomaly.UI
             {
                 flashed50 = true;
 
-                //StartCoroutine(OxygenWarningFlash(oxygenUI50));
 				if (flashRoutine != null)
 					StopCoroutine(flashRoutine);
 				
+                SoundManager.PlaySound(SoundType.OxygenWarning, 1f);
 				flashRoutine = StartCoroutine(OxygenWarningFlash(oxygenUI50));
             }
 
@@ -59,10 +59,10 @@ namespace LunarAnomaly.UI
             {
                 flashed10 = true;
 
-                //StartCoroutine(OxygenWarningFlash(oxygenUI10));
 				if (flashRoutine != null)
 					StopCoroutine(flashRoutine);
 				
+                SoundManager.PlaySound(SoundType.OxygenWarning, 1f);
 				flashRoutine = StartCoroutine(OxygenWarningFlash(oxygenUI10));
             }
         }
@@ -100,8 +100,6 @@ namespace LunarAnomaly.UI
         IEnumerator OxygenWarningFlash(GameObject canvas)
         {
             float timer = 0f;
-            
-            SoundManager.PlaySound(SoundType.OxygenWarning, 1f, false);
 
             while (timer < flashDuration)
             {

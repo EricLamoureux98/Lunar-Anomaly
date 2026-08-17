@@ -1,4 +1,5 @@
 using System;
+using LunarAnomaly.Player;
 using LunarAnomaly.UI;
 using UnityEngine;
 
@@ -28,6 +29,8 @@ namespace LunarAnomaly.Gameplay
 		public static Action<ToolType, bool> OnToolActive;
         // To MiningManager
         public static event Action<int> OnBeginMiningObjective;
+        // To PlayerState
+        public event Action<RespawnPoint> OnUpdateRespawnPoint;
 
         void OnEnable()
         {
@@ -68,6 +71,7 @@ namespace LunarAnomaly.Gameplay
                 case ProgressionStage.OutpostObjective:
                     if (outpostSO == null ) return;
                     PrepareNewStage(ProgressionStage.OutpostObjective, outpostSO);
+                    OnUpdateRespawnPoint?.Invoke(RespawnPoint.Outpost);
                     break;
 
                 case ProgressionStage.SampleObjective:
@@ -75,6 +79,7 @@ namespace LunarAnomaly.Gameplay
                     PrepareNewStage(ProgressionStage.SampleObjective, miningSO);
                     int required = miningSO.Objectives[2].Progression.AmountNeeded; // Make smarter
                     OnBeginMiningObjective?.Invoke(required);
+                    OnUpdateRespawnPoint?.Invoke(RespawnPoint.Habitat);
                     break;    
 
                 case ProgressionStage.Anomaly:

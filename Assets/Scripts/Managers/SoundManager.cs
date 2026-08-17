@@ -14,6 +14,7 @@ namespace LunarAnomaly
 		
 		[SerializeField] AudioSource musicSource;
 		[SerializeField] AudioSource sfxSource;
+		[SerializeField] AudioSource sfxVeriationSource;
 
 		void Awake()
 		{
@@ -43,9 +44,9 @@ namespace LunarAnomaly
 			}
         }
 
-        public static void PlaySound(SoundType sound, float volume = 1f, bool soundVariation = true)
+        public static void PlaySound(SoundType sound, float volume = 1f)
 		{
-			if (Instance == null || Instance.sfxSource == null || Instance.musicSource == null)
+			if (Instance == null || Instance.sfxSource == null || Instance.sfxVeriationSource == null || Instance.musicSource == null)
 			{
 				Debug.Log("SoundManager instance not ready");
 				return;
@@ -61,13 +62,40 @@ namespace LunarAnomaly
 
 			AudioClip randomClip = clips[Random.Range(0, clips.Length)];
 
-			Instance.sfxSource.pitch = soundVariation ? Random.Range(0.85f, 1.15f) : 1f;
-
 			Instance.sfxSource.PlayOneShot(randomClip, volume);
+		}
+
+		public static void PlaySoundWithVariation(SoundType sound, float volume = 1f)
+		{
+			if (Instance == null || Instance.sfxSource == null || Instance.sfxVeriationSource == null || Instance.musicSource == null)
+			{
+				Debug.Log("SoundManager instance not ready");
+				return;
+			}
+
+			AudioClip[] clips = Instance.soundList[(int)sound].Sounds;
+			
+			if (clips == null || clips.Length == 0)
+			{
+				Debug.LogWarning($"No clips assigned for sound: {sound}");
+				return;
+			}
+
+			AudioClip randomClip = clips[Random.Range(0, clips.Length)];
+
+			Instance.sfxVeriationSource.pitch = Random.Range(0.85f, 1.15f);
+
+			Instance.sfxVeriationSource.PlayOneShot(randomClip, volume);
 		}
 
 		public static void PlayMusic(SoundType sound, float volume = 1f)
 		{
+			if (Instance == null || Instance.sfxSource == null || Instance.sfxVeriationSource == null || Instance.musicSource == null)
+			{
+				Debug.Log("SoundManager instance not ready");
+				return;
+			}
+
 			AudioClip[] clips = Instance.soundList[(int)sound].Sounds;
 
 			if (clips == null || clips.Length == 0)
@@ -113,7 +141,10 @@ namespace LunarAnomaly
 		Typewriter,
 		Electricity,
 		Heartbeat,
-		OxygenWarning
+		OxygenWarning,
+		DoorClose,
+		DoorOpen,
+		FootstepInterior
 	}
 
 	[Serializable]

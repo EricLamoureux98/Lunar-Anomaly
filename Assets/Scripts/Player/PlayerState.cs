@@ -9,11 +9,16 @@ namespace LunarAnomaly.Player
     {
         [Header("References")]
         [SerializeField] HabitatAirlock airlock;
+        //[SerializeField] CheckpointManager checkpointManager;
         PlayerMovement playerMovement;
         Oxygen oxygen;
         Rigidbody rb;
 
-        [SerializeField] Transform respawnPoint;
+        [Header("Repsawn Points")]
+        [SerializeField] Transform habitatRespawnPoint;
+        [SerializeField] Transform outpostRespawnPoint;
+        Transform currentRespawnPoint;
+
         [SerializeField] float oxygenGracePeriod = 3f;
         [SerializeField] bool respawnInHabitat;
 
@@ -23,6 +28,7 @@ namespace LunarAnomaly.Player
 
         PlayerCurrentState currentState;
         public PlayerCurrentState CurrentState => currentState;
+        [SerializeField] ObjectiveManager objectiveManager;
           
         float graceTimer;
 
@@ -34,7 +40,25 @@ namespace LunarAnomaly.Player
         public static event Action OnLadderTeleport;
 
         // To AtmosphereTracker
-        public static event Action OnResetPressure;
+        public static event Action OnResetPressure;        
+
+        void OnEnable()
+        {
+            Oxygen.OnOxygenDepleted += OnOxygenDepleted;
+            SanityManager.OnInsanity += HandleInsanity;
+            OutpostController.OnLadderUsed += HandleLadderTeleport;
+            OutpostRevealCinematic.OnOutpostCinematicTeleport += RequestTeleport;
+            objectiveManager.OnUpdateRespawnPoint += UpdateRespawnPoint;
+        }
+
+        void OnDisable()
+        {
+            Oxygen.OnOxygenDepleted -= OnOxygenDepleted;
+            SanityManager.OnInsanity -= HandleInsanity;
+            OutpostController.OnLadderUsed -= HandleLadderTeleport;
+            OutpostRevealCinematic.OnOutpostCinematicTeleport -= RequestTeleport;
+            objectiveManager.OnUpdateRespawnPoint -= UpdateRespawnPoint;
+        }
 
         void Awake()
         {
@@ -47,25 +71,10 @@ namespace LunarAnomaly.Player
             playerMovement = GetComponent<PlayerMovement>();
         }
 
-        void OnEnable()
-        {
-            Oxygen.OnOxygenDepleted += OnOxygenDepleted;
-            SanityManager.OnInsanity += HandleInsanity;
-            OutpostController.OnLadderUsed += HandleLadderTeleport;
-            OutpostRevealCinematic.OnOutpostCinematicTeleport += RequestTeleport;
-        }
-
-        void OnDisable()
-        {
-            Oxygen.OnOxygenDepleted -= OnOxygenDepleted;
-            SanityManager.OnInsanity -= HandleInsanity;
-            OutpostController.OnLadderUsed -= HandleLadderTeleport;
-            OutpostRevealCinematic.OnOutpostCinematicTeleport -= RequestTeleport;
-        }
-
         void Start()
         {
             EnterState(PlayerCurrentState.Alive);
+            UpdateRespawnPoint(RespawnPoint.Habitat);
 
             if (respawnInHabitat) HandleRespawn();
         }
@@ -76,6 +85,21 @@ namespace LunarAnomaly.Player
             {
                 case PlayerCurrentState.Suffocating:
                     HandleSuffocating();
+                    break;
+            }
+        }
+
+        void UpdateRespawnPoint(RespawnPoint respawnPoint)
+        {
+            Debug.Log($"Updating respawn point to: {respawnPoint}");
+            switch (respawnPoint)
+            {
+                case RespawnPoint.Habitat:
+                    currentRespawnPoint = habitatRespawnPoint;
+                    break;
+                
+                case RespawnPoint.Outpost:
+                    currentRespawnPoint = outpostRespawnPoint;
                     break;
             }
         }
@@ -104,7 +128,7 @@ namespace LunarAnomaly.Player
 
                 if (!oxygen.oxygenDraining) continue;
 
-                SoundManager.PlaySound(SoundType.Breathing, 0.5f, false);
+                SoundManager.PlaySound(SoundType.Breathing, 0.5f);
             }
         }
 
@@ -152,9 +176,9 @@ namespace LunarAnomaly.Player
         // Public for debug menu
         public void HandleRespawn()
         {
-            if (respawnPoint == null) return;
+            if (currentRespawnPoint == null) return;
             
-            RequestTeleport(respawnPoint, TeleportType.Respawn);
+            RequestTeleport(currentRespawnPoint, TeleportType.Respawn);
             ChangeState(PlayerCurrentState.Alive);
         }
 
@@ -225,7 +249,7 @@ namespace LunarAnomaly.Player
 
             ExitState(currentState);
             currentState = newState;
-            EnterState(newState);
+            EnterState(currentState); // <--- Make sure this is working
         }
 
         void EnterState(PlayerCurrentState state)
@@ -293,5 +317,12 @@ namespace LunarAnomaly.Player
         Respawn,
         Ladder,
         Cinematic
+    }
+
+    public enum RespawnPoint
+    {
+        Habitat,
+        Outpost,
+        Anomaly
     }
 }

@@ -41,7 +41,7 @@ namespace LunarAnomaly.Gameplay
         {
             if (cableConnected) return; 
 
-            SoundManager.PlaySound(SoundType.Electricity, 1.5f, false);
+            SoundManager.PlaySound(SoundType.Electricity, 1.5f);
 
             cableConnected = true;
 

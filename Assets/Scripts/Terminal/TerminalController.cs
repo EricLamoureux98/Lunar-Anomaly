@@ -51,10 +51,11 @@ namespace LunarAnomaly.Gameplay
 
         void SetupMiningSample()
         {
-            currentTerminalEntry = TerminalMessage.Greeting;
+            // currentTerminalEntry = TerminalMessage.Greeting;
         }
 
         // Probably don't need this anymore
+        // Maybe turn this into warnings
         void UpdateStage(ProgressionStage newStage)
         {
             switch (newStage)
@@ -64,7 +65,7 @@ namespace LunarAnomaly.Gameplay
                     break;
                 
                 case ProgressionStage.SampleObjective:
-                    SetupMiningSample();
+                    // SetupMiningSample();
                     break;
                 
                 case ProgressionStage.OutpostObjective:

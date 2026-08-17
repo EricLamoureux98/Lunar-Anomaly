@@ -12,7 +12,7 @@ namespace LunarAnomaly.Gameplay
         {
             if (collision.gameObject.CompareTag("Player"))
             {
-                SoundManager.PlaySound(SoundType.Pickup, 1f, false);
+                SoundManager.PlaySound(SoundType.Pickup, 1f);
                 OnRockSampleCollected?.Invoke();
                 Destroy(gameObject);
             }

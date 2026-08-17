@@ -18,13 +18,13 @@ public class MainMenu : MonoBehaviour
     public void PlayGame()
     {
         SoundManager.StopMusic();
-        SoundManager.PlaySound(SoundType.MenuClick, 1f, false);
+        SoundManager.PlaySound(SoundType.MenuClick, 1f);
         gm.PlayGame();
     }
 
     public void QuitGame()
     {
-        SoundManager.PlaySound(SoundType.MenuClick, 1f, false);
+        SoundManager.PlaySound(SoundType.MenuClick, 1f);
         gm.QuitGame();
     }
 }
