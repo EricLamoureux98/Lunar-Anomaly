@@ -1,9 +1,19 @@
 fileFormatVersion: 2
-guid: 4a0b6ed640a17842ab1b7aeba0bf855f
+guid: 9c156160114d1112a96bc8f9b030d691
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Glass
+    second: {fileID: 2100000, guid: d0c60c0e48bfbefe3812b7389f5a2738, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal
+    second: {fileID: 2100000, guid: 5b2c50194e692b4e2a9ab3000a4327d3, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -71,7 +81,7 @@ ModelImporter:
     useFileScale: 1
     strictVertexDataChecks: 0
   tangentSpace:
-    normalSmoothAngle: 45
+    normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4

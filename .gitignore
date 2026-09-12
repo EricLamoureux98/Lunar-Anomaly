@@ -111,3 +111,5 @@ InitTestScene*.unity*
 
 # JetBrains Rider
 *.idea/
+Assets/IDEAS.cs
+Assets/IDEAS.cs.meta
