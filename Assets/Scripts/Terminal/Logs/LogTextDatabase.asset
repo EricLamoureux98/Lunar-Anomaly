@@ -82,7 +82,7 @@ MonoBehaviour:
       because I''m worried.
 
       Just being thorough.'
-    isDiscovered: 0
+    isDiscovered: 1
   - message: 2
     logTitle: 'Log 003: Visual Disturbance'
     logDate: Sol 019
