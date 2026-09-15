@@ -16,6 +16,7 @@ namespace LunarAnomaly.UI
 		[SerializeField] TerminalController terminalController;
 		[SerializeField] TerminalUI terminalUI;
 		[SerializeField] TMP_Text currentTextBox;
+        [SerializeField] LogManager logManager;
 
         [Header("Panels")]
         [SerializeField] CanvasGroup notificationPanel;
@@ -196,7 +197,7 @@ namespace LunarAnomaly.UI
 
         void CreateLogButtons()
         {
-            // Makes sure spawned buttons update with isDiscoverd
+            // Makes sure spawned buttons update with IsDiscoverd
             foreach (Transform child in logButtonContainer)
                 Destroy(child.gameObject);
 
@@ -205,13 +206,11 @@ namespace LunarAnomaly.UI
             {
                 Button button = Instantiate(logButtonPrefab, logButtonContainer);
                 TextMeshProUGUI text = button.GetComponentInChildren<TextMeshProUGUI>();
-                //text.text = log.logTitle;
                 string captureLogNumber = $"- Log {logIndex:D3}";
                 text.text = captureLogNumber;
                 logIndex++;
 
-                //button.interactable = log.isDiscovered;
-                button.gameObject.SetActive(log.isDiscovered);
+                // Intro Menu Pause
                 if (interfaceLocked) 
                 {
                     button.interactable = false;
@@ -221,7 +220,16 @@ namespace LunarAnomaly.UI
                 string capturedTitle = log.logTitle;
                 string capturedDate = log.logDate;
                 LogMessage capturedMessage = log.message;
-                button.onClick.AddListener(() => OnLogButtonClicked(capturedMessage, capturedTitle, capturedDate, captureLogNumber));
+
+                if (logManager.IsDiscoverd(log.message))
+                {
+                    button.onClick.AddListener(() => OnLogButtonClicked(capturedMessage, capturedTitle, capturedDate, captureLogNumber));                    
+                }
+                else
+                {
+                    button.interactable = false;
+                    text.color = Color.darkSlateGray;
+                }
             }
 
             void OnLogButtonClicked(LogMessage message, string title, string date, string number)

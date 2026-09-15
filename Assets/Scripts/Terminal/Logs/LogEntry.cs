@@ -10,6 +10,4 @@ public class LogEntry
 
 	[TextArea(5,10)]
 	public string logText;
-
-	public bool isDiscovered;
 }

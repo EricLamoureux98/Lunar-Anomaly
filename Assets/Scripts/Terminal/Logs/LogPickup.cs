@@ -4,7 +4,7 @@ using UnityEngine;
 public class LogPickup : MonoBehaviour
 {
     [SerializeField] LogMessage log;
-    [SerializeField] LogTextDatabase logTextDatabase;
+    [SerializeField] LogManager logManager;
 
     void OnTriggerEnter(Collider other)
     {
@@ -18,7 +18,7 @@ public class LogPickup : MonoBehaviour
 
     void CollectLog()
     {
-        logTextDatabase.DiscoverLog(log);
+        logManager.DiscoverLog(log);
         Destroy(gameObject);
     }
 }

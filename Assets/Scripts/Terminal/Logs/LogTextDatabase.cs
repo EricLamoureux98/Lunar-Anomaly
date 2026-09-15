@@ -19,16 +19,4 @@ public class LogTextDatabase : ScriptableObject
         Debug.LogWarning($"Log message {message} not found in database!");
         return "Log message not found!";
     }
-
-    public void DiscoverLog(LogMessage message)
-    {
-        foreach (var entry in logEntries)
-        {
-            if (entry.message == message)
-            {
-                entry.isDiscovered = true;
-                return;
-            }
-        }
-    }
 }

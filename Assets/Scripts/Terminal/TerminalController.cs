@@ -5,6 +5,7 @@ namespace LunarAnomaly.Gameplay
 {
     public class TerminalController : MonoBehaviour
     {
+        [SerializeField] LogManager logManager;
         [SerializeField] LayerMask playerLayer;
         [SerializeField] Animator anim;
 
@@ -28,6 +29,7 @@ namespace LunarAnomaly.Gameplay
         void Start()
         {
             //currentTerminalEntry = TerminalMessage.Intro;  
+            logManager.DiscoverLog(LogMessage.Log1);
         }
 
         void OnTriggerEnter(Collider other)
