@@ -58,12 +58,19 @@ namespace LunarAnomaly.UI
                     break;
 
                 case ScreenEffectType.Silhouette:
-                    holdDuration = 0.25f;
+                    fadeInDuration = 0.08f;
+                    holdDuration = 0.15f;
+                    fadeOutDuration = 0.5f;
                     break;
 
                 case ScreenEffectType.LadderTeleport:
                     holdDuration = 0.25f;
                     fadeOutDuration = 1.5f;
+                    break;
+                
+                case ScreenEffectType.Cinematic:
+                    holdDuration = 5f;
+                    fadeOutDuration = 2f;
                     break;
             }
 

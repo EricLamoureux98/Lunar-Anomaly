@@ -12,7 +12,7 @@ namespace LunarAnomaly.Gameplay
     {
         [Header("References")]
         [SerializeField] private CinemachineCamera virtualCamera;
-        [SerializeField] ScreenFader screenFader;
+        [SerializeField] ScreenEffect screenEffect;
         [SerializeField] LayerMask playerLayer;
         [SerializeField] Transform HabitatWaypoint;
         [SerializeField] DiscoveryZone habitatDiscoveryZone;
@@ -27,6 +27,7 @@ namespace LunarAnomaly.Gameplay
         [SerializeField] float cinematicCamFOV = 20f;
         [SerializeField] float camZoomSpeed = 10f;
         [SerializeField] Transform playerTeleportPos;
+        [SerializeField] float oxygenUpdateAmount = 0.7f;
 
         bool silhouetteActive;
         bool playerWatching;
@@ -48,6 +49,8 @@ namespace LunarAnomaly.Gameplay
         // To WaypointManager
         public static event Action<Transform> OnUpdateWaypointTarget;
         public static event Action<bool> OnUpdateWaypointActive;
+        // To Oxygen
+        public static event Action<float> OnUpdateOxygen;
 
         void OnEnable()
         {
@@ -124,8 +127,10 @@ namespace LunarAnomaly.Gameplay
             ResetZoom();
             
 
-            Silhouette.OnSilhouetteFlash?.Invoke();
+            // Silhouette.OnSilhouetteFlash?.Invoke();
+            screenEffect.PlayScreenEffect(ScreenEffectType.Cinematic);
             
+            OnUpdateOxygen?.Invoke(oxygenUpdateAmount);
             OutpostController.OnOutpostAdvanced?.Invoke(ProgressionStage.OutpostObjective);
             OnOutpostCinematicTeleport?.Invoke(playerTeleportPos, TeleportType.Cinematic);
             OnDisableOutpost?.Invoke();

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using LunarAnomaly.Gameplay;
 
 namespace LunarAnomaly.Player
 {
@@ -28,11 +29,13 @@ namespace LunarAnomaly.Player
         void OnEnable()
         {
             AtmosphereTracker.OnPressurized += AtmosphereUpdated;
+            OutpostRevealCinematic.OnUpdateOxygen += UpdateCurrentOxygen;
         }
 
         void OnDisable()
         {
             AtmosphereTracker.OnPressurized -= AtmosphereUpdated;
+            OutpostRevealCinematic.OnUpdateOxygen -= UpdateCurrentOxygen;
         }
 
         void Start()
@@ -60,6 +63,11 @@ namespace LunarAnomaly.Player
             {
                 RefillOxygen();
             }
+        }
+
+        void UpdateCurrentOxygen(float newOxygen)
+        {
+            currentOxygen = startingOxygen * newOxygen;
         }
 
         void DrainOxygen()
@@ -98,7 +106,7 @@ namespace LunarAnomaly.Player
 
         void AtmosphereUpdated(bool pressurized)
         {
-            Debug.Log($"Oxygen received OnPressurized: {pressurized} | " + $"Oxygen: {currentOxygen}");
+            Debug.LogWarning($"Oxygen received OnPressurized: {pressurized} | " + $"Oxygen: {currentOxygen}");
             
             if (pressurized)
             {

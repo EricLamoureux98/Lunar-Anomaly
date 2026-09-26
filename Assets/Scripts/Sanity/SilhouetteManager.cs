@@ -12,6 +12,8 @@ namespace LunarAnomaly.Gameplay
 
         [SerializeField] Transform playerPos;
 
+        [SerializeField] bool spawnSilhouette;
+
 		Silhouette[] silhouetteSpawnPoints;
         Silhouette activeSilhouette;
 
@@ -30,8 +32,18 @@ namespace LunarAnomaly.Gameplay
             silhouetteSpawnPoints = FindObjectsByType<Silhouette>(FindObjectsSortMode.None);
         }
 
+        void Update()
+        {
+            if (spawnSilhouette)
+            {
+                RequestSilhouette();
+                spawnSilhouette = false;
+            }
+        }
+
         void RequestSilhouette()
         {
+            CancelInvoke(nameof(SelectSilhouette)); // To avoid spawning twice
             SelectSilhouette();
         }
 
@@ -56,7 +68,7 @@ namespace LunarAnomaly.Gameplay
 
                 if (!candidate.SilhouetteOnScreen() && candidate.SilhouetteDistance() > minSilhouetteDistance 
                 && candidate.SilhouetteDistance() < maxSilhouetteDistance 
-                && !candidate.PlayerCanSeeSilhouette(playerPos, obstacleLayer))
+                && candidate.PlayerCanSeeSilhouette(playerPos, obstacleLayer))
                 {
                     activeSilhouette = candidate;
                     activeSilhouette.UpdateSilhouetteVisibility(true);
@@ -67,6 +79,7 @@ namespace LunarAnomaly.Gameplay
             }
 
             Debug.Log("No valid silhouette spawn points found");
+            Invoke(nameof(RequestSilhouette), Random.Range(2f, 5f));
         }
     }
 }

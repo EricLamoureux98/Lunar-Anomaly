@@ -28,8 +28,8 @@ namespace LunarAnomaly.Gameplay
 
 		public SanityState sanityState; // Public for testing
 
-		// To SilhouetteManager
-		public static event Action OnSilhouetteRequest;		
+		// To SilhouetteManager - Used in Silhouette
+		public static Action OnSilhouetteRequest;		
 		// To PlayerState
 		public static event Action OnInsanity;
 
@@ -93,9 +93,10 @@ namespace LunarAnomaly.Gameplay
 				}			
 			}
 
+			// Might deprecate
 			if (currentSanity <= 0)
 			{
-				OnInsanity?.Invoke();
+				// OnInsanity?.Invoke();
 			}
 		}
 

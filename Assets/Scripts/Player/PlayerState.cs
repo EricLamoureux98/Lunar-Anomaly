@@ -24,7 +24,7 @@ namespace LunarAnomaly.Player
 
         [Header("Debug")]
         public bool RespawnInHabitat => respawnInHabitat;
-        [SerializeField] Transform teleportPoint;
+        [SerializeField] Transform debugTeleportPoint;
 
         PlayerCurrentState currentState;
         public PlayerCurrentState CurrentState => currentState;
@@ -91,7 +91,7 @@ namespace LunarAnomaly.Player
 
         void UpdateRespawnPoint(RespawnPoint respawnPoint)
         {
-            Debug.Log($"Updating respawn point to: {respawnPoint}");
+            Debug.LogWarning($"Updating respawn point to: {respawnPoint}");
             switch (respawnPoint)
             {
                 case RespawnPoint.Habitat:
@@ -155,6 +155,7 @@ namespace LunarAnomaly.Player
             HandleRespawn();
         }
 
+        // Might deprecate
         void HandleGameOver()
         {
             // This is redundant 
@@ -170,7 +171,7 @@ namespace LunarAnomaly.Player
 
         public void HandleDebugTeleport()
         {
-            RequestTeleport(teleportPoint, TeleportType.Cinematic);
+            RequestTeleport(debugTeleportPoint, TeleportType.Cinematic);
         }
 
         // Public for debug menu
@@ -212,7 +213,7 @@ namespace LunarAnomaly.Player
                     break;
 
                 case TeleportType.Cinematic:
-                    fadeTime = 0.1f;
+                    fadeTime = 0.5f;
                     playerMovement.SetActive(false);
                     break;
             }
@@ -271,7 +272,7 @@ namespace LunarAnomaly.Player
                     break;
 
                 case PlayerCurrentState.Insane:
-                    HandleGameOver();
+                    // HandleGameOver(); ---- might deprecate
                     break;
             }
         }
@@ -309,7 +310,7 @@ namespace LunarAnomaly.Player
         Suffocating, 
         Dead, 
         Respawning,
-        Insane,
+        Insane, // Might not use
     } 
 
     public enum TeleportType
