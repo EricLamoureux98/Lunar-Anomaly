@@ -32,6 +32,7 @@ namespace LunarAnomaly.UI
             TerminalUI.OnRequestNotification += RequestNotification;
             TerminalUI.OnRequestNotificationDelayed += RequestNotificationDelayed;
             Typewriter.OnCompleteTextRevealed += OnTypewriterComplete;
+            LogPickup.OnLogPickup += RequestNotification;
         }
 
         void OnDisable()
@@ -39,6 +40,7 @@ namespace LunarAnomaly.UI
             TerminalUI.OnRequestNotification -= RequestNotification;
             TerminalUI.OnRequestNotificationDelayed -= RequestNotificationDelayed;
             Typewriter.OnCompleteTextRevealed -= OnTypewriterComplete;
+            LogPickup.OnLogPickup -= RequestNotification;
         }
 
         void RequestNotification(NotificationMessage message)

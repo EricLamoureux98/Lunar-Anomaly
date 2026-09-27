@@ -14,7 +14,8 @@ namespace LunarAnomaly.UI
 		[SerializeField] GameObject logBGPanel;
 		[SerializeField] CanvasGroup logGroup;
 		[SerializeField] TMP_Text currentTextBox;
-		[SerializeField] Typewriter typewriter;
+		[SerializeField] LogManager logManager;
+		// [SerializeField] Typewriter typewriter;
 		// [SerializeField] PlayerLook playerLook;
 
 		[Header("Power Panel")]
@@ -36,7 +37,7 @@ namespace LunarAnomaly.UI
 		[SerializeField] string logText;	
 
 		// To PlayerLook
-		public static Action<bool> OnLogShown; // Temp no event for Demo
+		public static event Action<bool> OnLogShown; // Temp no event for Demo
 
         void OnEnable()
         {
@@ -132,16 +133,19 @@ namespace LunarAnomaly.UI
 
 		public void CloseLog()
 		{
+			viewLog.text = "Read Log";
+
 			logBGPanel.SetActive(false);
 			logGroup.alpha = 0f;
 			logGroup.interactable = false;
 			logGroup.blocksRaycasts = false;
-
+			updateText.StopTypewriter();
 			//PlayerState.OnHideGameplayUI?.Invoke(true);
 			// playerLook.UpdateCursorLock(false);
 
 			// TerminalUI.OnPanelClosed?.Invoke(); <---- terminalInterfacePanel.OnDisableTerminalTextbox 
 			OnLogShown?.Invoke(false);
+			logManager.DiscoverLog(LogMessage.Log2);
 		}
 	}
 

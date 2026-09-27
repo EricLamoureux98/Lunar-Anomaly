@@ -45,7 +45,12 @@ MonoBehaviour:
   - message: 8
     notificationText: "COMMAND: \nYou are within operational range of Main Habitat."
   - message: 9
-    notificationText: "COMMAND: \nMission update available. \nAccess terminal."
+    notificationText: 'SYSTEM NOTIFICATION:
+
+      Log download successful.
+
+      Access
+      terminal to view log.'
   - message: 10
     notificationText: 'OBJECTIVE UPDATED.
 
@@ -53,3 +58,10 @@ MonoBehaviour:
 
       Retrieve
       excavation tool.'
+  - message: 11
+    notificationText: 'OBJECTIVE COMPLETE.
+
+      You have survived the demo...
+
+      Final
+      chapter coming soon'

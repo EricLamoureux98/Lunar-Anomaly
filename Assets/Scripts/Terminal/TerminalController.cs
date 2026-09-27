@@ -29,7 +29,7 @@ namespace LunarAnomaly.Gameplay
         void Start()
         {
             //currentTerminalEntry = TerminalMessage.Intro;  
-            logManager.DiscoverLog(LogMessage.Log1);
+            // logManager.DiscoverLog(LogMessage.Log1);
         }
 
         void OnTriggerEnter(Collider other)
