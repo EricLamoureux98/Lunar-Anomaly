@@ -6,7 +6,7 @@ namespace LunarAnomaly.Gameplay
     public class MiningManager : MonoBehaviour
     {
         int requiredSamples;
-        int carriedSamples;
+        public int carriedSamples; // for testing
         int depositedSamples;
 
         public int RequiredSamples => requiredSamples;
@@ -20,14 +20,16 @@ namespace LunarAnomaly.Gameplay
         {
             RockSample.OnRockSampleCollected += SampleCollected;
             ObjectiveManager.OnBeginMiningObjective += BeginMiningObjective;
-            HabitatController.OnDepositSamples += DepositCarriedSamples;
+            HabitatDeposit.OnSamplesDeposited += DepositCarriedSamples;
+            // HabitatController.OnDepositSamples += DepositCarriedSamples;
         }
 
         void OnDisable()
         {
             RockSample.OnRockSampleCollected -= SampleCollected;
             ObjectiveManager.OnBeginMiningObjective -= BeginMiningObjective;
-            HabitatController.OnDepositSamples -= DepositCarriedSamples;
+            HabitatDeposit.OnSamplesDeposited -= DepositCarriedSamples;
+            // HabitatController.OnDepositSamples -= DepositCarriedSamples;
         }
 
         void BeginMiningObjective(int required)
@@ -52,6 +54,11 @@ namespace LunarAnomaly.Gameplay
             carriedSamples = 0;
 
             OnDepositProgressChanged?.Invoke(depositedSamples, requiredSamples);
+        }
+
+        public void DebugUpdateSamplesCarried(int newCarried)
+        {
+            carriedSamples = newCarried;
         }
     }
 }

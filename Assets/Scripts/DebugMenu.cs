@@ -1,4 +1,5 @@
 using System;
+using LunarAnomaly.Gameplay;
 using LunarAnomaly.Player;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +11,7 @@ public class DebugMenu : MonoBehaviour
     [SerializeField] PlayerState playerState;
     [SerializeField] PlayerLook playerLook;
     [SerializeField] Oxygen oxygen;
+    [SerializeField] MiningManager miningManager;
     PauseMenu pauseMenu;
 
     [Header("Sliders")]
@@ -18,6 +20,7 @@ public class DebugMenu : MonoBehaviour
     [SerializeField] Slider sprintSpeedSlider;
     [SerializeField] Slider jumpHeightSlider;
     [SerializeField] Slider oxygenDrainSlider;
+    [SerializeField] Slider samplesSlider;
 
     [Header("Buttons & Toggles")]
     [SerializeField] Toggle respawnInHabitatToggle;
@@ -34,6 +37,7 @@ public class DebugMenu : MonoBehaviour
         InitializeTeleportSettings();
         InitializeMovementSettings();
         InitializeOxygenSettings();
+        InitializeSampleSettings();
         InitializeMouseSense();
     }
 
@@ -73,6 +77,13 @@ public class DebugMenu : MonoBehaviour
         respawnInHabitatToggle.isOn = playerState.RespawnInHabitat;
     }
 
+    void InitializeSampleSettings()
+    {
+        if (miningManager == null) return;
+
+        samplesSlider.value = miningManager.CarriedSamples;
+    }
+
     // Controlled by slider
     public void HandleSenseUpdate(float sense)
     {
@@ -101,6 +112,13 @@ public class DebugMenu : MonoBehaviour
     public void HandleOxygenDrainUpdate(float drainRate)
     {
         oxygen.UpdateOxygenDrainRate(drainRate);
+    }
+
+    // Controller by slider
+    public void HandleCarriedSamplesUpdate(float samples)
+    {
+        int intSamples = Mathf.CeilToInt(samples);
+        miningManager.DebugUpdateSamplesCarried(intSamples);
     }
 
     // Controlled by Toggle

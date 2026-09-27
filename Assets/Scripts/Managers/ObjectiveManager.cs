@@ -125,6 +125,7 @@ namespace LunarAnomaly.Gameplay
 
             if (deposited >= required)
             {
+                TerminalUI.OnRequestNotificationDelayed?.Invoke(NotificationMessage.EndOfDemo, 1f);
                 AdvanceObjective(currentStage);
             }
         }

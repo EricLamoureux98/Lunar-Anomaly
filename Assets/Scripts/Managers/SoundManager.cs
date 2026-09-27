@@ -144,7 +144,12 @@ namespace LunarAnomaly
 		OxygenWarning,
 		DoorClose,
 		DoorOpen,
-		FootstepInterior
+		FootstepInterior,
+		LaserScan,
+		Suction,
+		Pnumatic,
+		DoorClick,
+		ItemPlace
 	}
 
 	[Serializable]

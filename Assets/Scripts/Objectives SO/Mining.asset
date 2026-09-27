@@ -23,7 +23,7 @@ MonoBehaviour:
     Progression:
       AmountNeeded: 0
       ProgressionName: 
-  - Title: Collect Samples
+  - Title: Deposit Samples
     objectiveType: 0
     Progression:
       AmountNeeded: 8

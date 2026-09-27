@@ -11,6 +11,7 @@ public class HabitatController : MonoBehaviour
     [SerializeField] GameObject wrenchObj;
 
     [SerializeField] Transform helmetTransform;
+
     //DiscoveryZone discoveryZone;
 
     // To HabitatAirlock
@@ -25,8 +26,10 @@ public class HabitatController : MonoBehaviour
     // To WaypointManager - Used in OutpostController
     public static Action<Transform> OnUpdateWaypointTarget;
     public static Action<bool> OnUpdateWaypointActive;
-    // To MiningManager
+    // To MiningManager & HabitatDeposit
     public static event Action OnDepositSamples;
+    // To HabitatDesposit
+    // public event Action On
 
     bool firstTimeExit = true;	
 
@@ -115,6 +118,8 @@ public class HabitatController : MonoBehaviour
 
     void DepositSamplesCollected()
     {
+        // Notify HabitatDeposit
+
         OnDepositSamples?.Invoke();
     }
 }
