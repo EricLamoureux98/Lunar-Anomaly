@@ -31887,6 +31887,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Title
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ad0750936645d59429225c7a37c11f1a, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -84121,6 +84125,14 @@ PrefabInstance:
     - target: {fileID: 1953116664911711701, guid: c8f90474a5492544fab24af2b25682e2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8099158475061246327, guid: c8f90474a5492544fab24af2b25682e2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684226098075304245, guid: c8f90474a5492544fab24af2b25682e2, type: 3}
+      propertyPath: m_ReceiveGI
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
