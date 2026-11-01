@@ -18,13 +18,13 @@ namespace LunarAnomaly.Player
         float currentOxygen;
         bool oxygenActive;
         bool oxygenDepleted;
+        bool warningsNeedReset = false;
 
         // Sent to PlayerState
         public static event Action<bool> OnOxygenDepleted; 
-
-        // Sent to UIManager
+        // Sent to OxygenUIManager
         public static event Action<float> OnOxygenChanged;
-        public static event Action OnOxygenReset;
+        public static event Action OnOxygenUIReset;
 
         void OnEnable()
         {
@@ -78,6 +78,7 @@ namespace LunarAnomaly.Player
                                     // Sends fill %
             OnOxygenChanged?.Invoke(currentOxygen / startingOxygen);
 
+            if (currentOxygen <= startingOxygen * 0.5f) warningsNeedReset = true;
             if (currentOxygen <= 0) OxygenDepleted();
         }
 
@@ -90,8 +91,14 @@ namespace LunarAnomaly.Player
             }
             if (currentOxygen < startingOxygen)
             {
-                currentOxygen += refillRate * Time.deltaTime;          
+                currentOxygen = Mathf.Min(startingOxygen, currentOxygen + refillRate * Time.deltaTime);               
                 OnOxygenChanged?.Invoke(currentOxygen / startingOxygen);
+            }
+
+            if (currentOxygen >= startingOxygen * 0.6f && warningsNeedReset)
+            {
+                OnOxygenUIReset?.Invoke(); 
+                warningsNeedReset = false;
             }
         }
 
@@ -110,13 +117,11 @@ namespace LunarAnomaly.Player
             
             if (pressurized)
             {
-                //Debug.Log("Oxygen entering pressured");
                 oxygenDraining = false;
                 oxygenRefilling = true;
             }
             else
             {
-                // Debug.Log("Oxygen entering vacuum");
                 oxygenDraining = true;
                 oxygenRefilling = false;
             }
@@ -127,11 +132,13 @@ namespace LunarAnomaly.Player
             oxygenActive = active;
         }
 
+        // Called from PlayerState during Death
         public void ResetOxygen()
         {
-            // Debug.Log("Oxygen ResetOxygen");
             currentOxygen = startingOxygen; 
-            OnOxygenReset?.Invoke(); 
+            OnOxygenUIReset?.Invoke(); 
+            OnOxygenChanged?.Invoke(startingOxygen);
+            warningsNeedReset = false;
             oxygenDepleted = false;
             oxygenActive = true;
         }

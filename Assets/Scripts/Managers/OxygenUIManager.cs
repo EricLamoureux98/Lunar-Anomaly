@@ -4,7 +4,6 @@ using LunarAnomaly.Player;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 namespace LunarAnomaly.UI
 {
 	public class OxygenUIManager : MonoBehaviour
@@ -17,21 +16,24 @@ namespace LunarAnomaly.UI
         [SerializeField] Image oxygenBar;
         [SerializeField] float flashDuration = 2f;
         [SerializeField] float flashInterval = 0.25f;
+        GameObject activeCanvas;
         bool flashed50;
         bool flashed10;
+        
 		Coroutine flashRoutine;
 
 		void OnEnable()
         {
             Oxygen.OnOxygenChanged += UpdateOxygenUI;
-            Oxygen.OnOxygenReset += ResetOxygenWarnings;
+            Oxygen.OnOxygenUIReset += ResetOxygenWarnings;
 			HabitatAirlock.OnEnterAtmosphere += AtmosphereChangeWarning;
         }
 
         void OnDisable()
         {
+            StopActiveWarning();
             Oxygen.OnOxygenChanged -= UpdateOxygenUI;
-            Oxygen.OnOxygenReset -= ResetOxygenWarnings;
+            Oxygen.OnOxygenUIReset -= ResetOxygenWarnings;
 			HabitatAirlock.OnEnterAtmosphere -= AtmosphereChangeWarning;
 	}
 
@@ -44,26 +46,20 @@ namespace LunarAnomaly.UI
 
         void CheckOxygenWarnings(float percent)
         {
-            if (!flashed50 && percent <= 0.5f)
-            {
-                flashed50 = true;
-
-				if (flashRoutine != null)
-					StopCoroutine(flashRoutine);
-				
-                SoundManager.PlaySound(SoundType.OxygenWarning, 1f);
-				flashRoutine = StartCoroutine(OxygenWarningFlash(oxygenUI50));
-            }
-
             if (!flashed10 && percent <= 0.1f)
             {
                 flashed10 = true;
-
-				if (flashRoutine != null)
-					StopCoroutine(flashRoutine);
+                flashed50 = true;
 				
                 SoundManager.PlaySound(SoundType.OxygenWarning, 1f);
-				flashRoutine = StartCoroutine(OxygenWarningFlash(oxygenUI10));
+                StartWarning(oxygenUI10);
+            }        
+            else if (!flashed50 && percent <= 0.5f)
+            {
+                flashed50 = true;
+				
+                SoundManager.PlaySound(SoundType.OxygenWarning, 1f);
+                StartWarning(oxygenUI50);
             }
         }
 
@@ -71,19 +67,11 @@ namespace LunarAnomaly.UI
         {
             if (inAtmosphere)
             {
-                //StartCoroutine(OxygenWarningFlash(enteringAtmosphere));
-				if (flashRoutine != null)
-					StopCoroutine(flashRoutine);
-				
-				flashRoutine = StartCoroutine(OxygenWarningFlash(enteringAtmosphere));
+                StartWarning(enteringAtmosphere);
             }
             else
             {
-                //StartCoroutine(OxygenWarningFlash(enteringVacuum));
-				if (flashRoutine != null)
-					StopCoroutine(flashRoutine);
-				
-				flashRoutine = StartCoroutine(OxygenWarningFlash(enteringVacuum));
+                StartWarning(enteringVacuum);
             }
         }
 
@@ -91,10 +79,36 @@ namespace LunarAnomaly.UI
         {
             flashed50 = false;
             flashed10 = false;
-			oxygenUI50.SetActive(false);
-			oxygenUI10.SetActive(false);
+            StopActiveWarning();
+        }
 
-            oxygenBar.fillAmount = 1f;
+        void StartWarning(GameObject warningCanvas)
+        {
+            if (warningCanvas == activeCanvas) return;
+            if (warningCanvas == null) return;
+            if (flashRoutine != null) StopActiveWarning();
+
+            activeCanvas = warningCanvas;
+
+            flashRoutine = StartCoroutine(OxygenWarningFlash(activeCanvas));
+        }
+
+        void StopActiveWarning()
+        {
+            if (activeCanvas || flashRoutine != null)
+            {
+                if (activeCanvas != null)
+                {
+                    activeCanvas.SetActive(false);
+                    activeCanvas = null;                
+                }
+
+                if (flashRoutine != null)
+                {
+                    StopCoroutine(flashRoutine);
+                    flashRoutine = null;                
+                }
+            }
         }
 
         IEnumerator OxygenWarningFlash(GameObject canvas)
@@ -115,7 +129,10 @@ namespace LunarAnomaly.UI
             if (canvas != null)
             {
                 canvas.SetActive(false);
+                activeCanvas = null;
             }
+
+            flashRoutine = null;
         }
 	}
 }
