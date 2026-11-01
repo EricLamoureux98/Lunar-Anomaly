@@ -35,6 +35,8 @@ namespace LunarAnomaly.Gameplay
         public static Action<bool> OnEnterAtmosphere;
         // To TerminalNotification
         public static event Action OnAirlockCycled;
+        // To AnomalyManager
+        public static event Action OnAirlockDoorClose;
 
         void Awake()
         {
@@ -98,7 +100,7 @@ namespace LunarAnomaly.Gameplay
 
             if (!fromExterior)
                 {
-                    SoundManager.PlaySound(SoundType.Airlock, 0.15f);
+                    // SoundManager.PlaySound(SoundType.Airlock, 0.15f);
                     yield return new WaitForSeconds(1.1f);
                 }
 
@@ -119,10 +121,12 @@ namespace LunarAnomaly.Gameplay
 
             // Close entry side and pressurize
             entryAnim.SetBool("IsOpen", false);
-            yield return new WaitForSeconds(1f);
+            SoundManager.PlaySound(SoundType.DoorOpen, 0.75f);
+            yield return new WaitForSeconds(0.9f);
 
-            SoundManager.PlaySound(SoundType.DoorClose, 1.65f);
-            CameraShakeManager.Instance.CameraShake(habitatImpulseSource, 0.04f);
+            SoundManager.PlaySound(SoundType.DoorClose, 1.75f);
+            yield return new WaitForSeconds(0.1f);
+            CameraShakeManager.Instance.CameraShake(habitatImpulseSource, 0.03f);
 
             yield return new WaitForSeconds(1f);
             SoundManager.PlaySound(SoundType.Alarm, 1.25f);
@@ -134,6 +138,8 @@ namespace LunarAnomaly.Gameplay
                 Instantiate(smokeParticle, smokeSpawnL.position, smokeSpawnL.rotation);
                 Instantiate(smokeParticle, smokeSpawnR.position, smokeSpawnR.rotation);
             }
+            
+            OnAirlockDoorClose?.Invoke();
 
             yield return new WaitForSeconds(pressurizationTime);
 
@@ -144,13 +150,13 @@ namespace LunarAnomaly.Gameplay
             // Open exit side
             // ---- animLighting.SetBool("isActive", false);
             exitAnim.SetBool("IsOpen", true);
-            SoundManager.PlaySound(SoundType.DoorOpen, 0.5f);
+            SoundManager.PlaySound(SoundType.DoorOpen, 0.75f);
 
             // Wait for player to leave, then close exit door
             yield return new WaitUntil(() => !playerInside || cancelCycle);
             yield return new WaitForSeconds(1f);
             exitAnim.SetBool("IsOpen", false);
-            SoundManager.PlaySound(SoundType.DoorOpen, 0.5f);
+            SoundManager.PlaySound(SoundType.DoorOpen, 0.75f);
             OnAirlockCycled?.Invoke();
 
             lastCycleTime = Time.time;

@@ -13,6 +13,11 @@ MonoBehaviour:
   m_Name: Anomaly
   m_EditorClassIdentifier: Assembly-CSharp::ObjectiveSO
   Objectives:
+  - Title: Wait For Update
+    objectiveType: 2
+    Progression:
+      AmountNeeded: 0
+      ProgressionName: 
   - Title: Investigate Anomaly
     objectiveType: 2
     Progression:

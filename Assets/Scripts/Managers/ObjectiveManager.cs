@@ -29,8 +29,12 @@ namespace LunarAnomaly.Gameplay
 		public static Action<ToolType, bool> OnToolActive;
         // To MiningManager
         public static event Action<int> OnBeginMiningObjective;
+        // To AnomalyManager
+        public static event Action OnBeginAnomalyObjective;
         // To PlayerState
         public event Action<RespawnPoint> OnUpdateRespawnPoint;
+        // To ProgressionManager
+        public static event Action OnMiningObjectiveComplete;
 
         void OnEnable()
         {
@@ -40,6 +44,7 @@ namespace LunarAnomaly.Gameplay
             HabitatController.OnHabitatProgress += AdvanceObjective;
             // MiningManager.OnSamplesCarriedChanged += UpdateProgress;
             MiningManager.OnDepositProgressChanged += HandleMiningProgress;
+            AnomalyManager.OnAnomalyProgress += AdvanceObjective;
         }
 
         void OnDisable()
@@ -50,6 +55,7 @@ namespace LunarAnomaly.Gameplay
             HabitatController.OnHabitatProgress -= AdvanceObjective;
             // MiningManager.OnSamplesCarriedChanged -= UpdateProgress;
             MiningManager.OnDepositProgressChanged -= HandleMiningProgress;
+            AnomalyManager.OnAnomalyProgress -= AdvanceObjective;
         }
 
         void Start()
@@ -69,12 +75,14 @@ namespace LunarAnomaly.Gameplay
                     break;
 
                 case ProgressionStage.OutpostObjective:
+                    Debug.Log("Entering Outpost stage");
                     if (outpostSO == null ) return;
                     PrepareNewStage(ProgressionStage.OutpostObjective, outpostSO);
                     OnUpdateRespawnPoint?.Invoke(RespawnPoint.Outpost);
                     break;
 
                 case ProgressionStage.SampleObjective:
+                    Debug.Log("Entering Sample stage");
                     if (miningSO == null ) return;
                     PrepareNewStage(ProgressionStage.SampleObjective, miningSO);
                     int required = miningSO.Objectives[2].Progression.AmountNeeded; // Make smarter
@@ -86,6 +94,7 @@ namespace LunarAnomaly.Gameplay
                     Debug.Log("Entering Anomaly stage");
                     if (anomalySO == null) return;
                     PrepareNewStage(ProgressionStage.Anomaly, anomalySO);
+                    OnBeginAnomalyObjective?.Invoke();
                     break;
             }
         }
@@ -125,8 +134,9 @@ namespace LunarAnomaly.Gameplay
 
             if (deposited >= required)
             {
-                TerminalUI.OnRequestNotificationDelayed?.Invoke(NotificationMessage.EndOfDemo, 1f);
-                AdvanceObjective(currentStage);
+                //////////////////////
+                // AdvanceObjective(currentStage);
+                OnMiningObjectiveComplete?.Invoke();
             }
         }
 
@@ -136,9 +146,9 @@ namespace LunarAnomaly.Gameplay
             
             currentObjectiveIndex++;
 
-            if (currentObjectiveIndex >= currentObjectiveSO.Objectives.Length)
+            if (currentObjectiveIndex >= currentObjectiveSO.Objectives.Length + 1)
             {
-                Debug.Log("Quest finished!");
+                Debug.Log("Game finished!");
                 return;
             }
             

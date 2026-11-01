@@ -36,7 +36,7 @@ public class HabitatDeposit : MonoBehaviour
     [SerializeField] float samplePlaceDelay = 1f;
     [SerializeField] float sampleScanStartDelay = 0.5f;
     [SerializeField] float sampleScanTime = 2f;
-    [SerializeField] float sampleGlowEffectTiming = 2.5f;
+    // [SerializeField] float sampleGlowEffectTiming = 2.5f;
 
 
     Coroutine depositRoutine;

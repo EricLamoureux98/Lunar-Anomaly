@@ -7,7 +7,7 @@ namespace LunarAnomaly.Gameplay
 {
 	public class ProgressionManager : MonoBehaviour
 	{
-		public ProgressionStage CurrentStage { get; private set; }
+		public ProgressionStage CurrentStage; // { get; private set; }
 
 		// To ObjectiveManager
 		public static event Action<ProgressionStage> OnStageChanged;
@@ -18,12 +18,14 @@ namespace LunarAnomaly.Gameplay
         {
             TerminalInterfacePanel.OnPlayerProgressed += HandleConfirmed;
 			OutpostRevealCinematic.OnOutpostMissionComplete += HandleConfirmed;
+			ObjectiveManager.OnMiningObjectiveComplete += HandleConfirmed;
         }
 
         void OnDisable()
         {
             TerminalInterfacePanel.OnPlayerProgressed -= HandleConfirmed;
 			OutpostRevealCinematic.OnOutpostMissionComplete -= HandleConfirmed;
+			ObjectiveManager.OnMiningObjectiveComplete -= HandleConfirmed;
         }
 
         void Start()

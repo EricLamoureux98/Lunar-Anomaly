@@ -6,7 +6,7 @@ namespace LunarAnomaly.Gameplay
 {
 	public class OutpostAirlock : MonoBehaviour
 	{
-		[SerializeField] LightFlicker lightFlicker;
+		// [SerializeField] LightFlicker lightFlicker;
 		AtmosphereZone atmosphereZone;
 		OutpostController outpostController;
 
@@ -94,7 +94,7 @@ namespace LunarAnomaly.Gameplay
 			HandleDoorOpen(false);
 			SoundManager.PlaySound(SoundType.Alarm, 1.25f);
 			SoundManager.PlaySound(fromExterior ? SoundType.GainAtmosphere : SoundType.LoseAtmosphere, 1f);
-			lightFlicker.StartFlicker(3f);
+			// lightFlicker.StartFlicker(3f);
 			
 			yield return new WaitForSeconds(pressurizationTime);
 			

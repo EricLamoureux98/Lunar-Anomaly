@@ -20,6 +20,8 @@ public class WaypointManager : MonoBehaviour
         HabitatController.OnUpdateWaypointActive += WaypointActive;
         OutpostRevealCinematic.OnUpdateWaypointTarget += UpdateWaypointTarget;
         OutpostRevealCinematic.OnUpdateWaypointActive += WaypointActive;
+        AnomalyManager.OnUpdateWaypointTarget += UpdateWaypointTarget;
+        AnomalyManager.OnUpdateWaypointActive += WaypointActive;
     }
 
     void OnDisable()
@@ -28,6 +30,8 @@ public class WaypointManager : MonoBehaviour
         HabitatController.OnUpdateWaypointActive -= WaypointActive;
         OutpostRevealCinematic.OnUpdateWaypointTarget -= UpdateWaypointTarget;
         OutpostRevealCinematic.OnUpdateWaypointActive -= WaypointActive;
+        AnomalyManager.OnUpdateWaypointTarget -= UpdateWaypointTarget;
+        AnomalyManager.OnUpdateWaypointActive -= WaypointActive;
     }
 
     void Update()

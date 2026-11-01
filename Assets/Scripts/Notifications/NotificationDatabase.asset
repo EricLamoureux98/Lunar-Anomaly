@@ -58,10 +58,22 @@ MonoBehaviour:
 
       Retrieve
       excavation tool.'
+  - message: 12
+    notificationText: 'COMMAND:
+
+      Priority update received.'
+  - message: 13
+    notificationText: 'An anomalous reading has been detected.
+
+      Hold for confirmation.
+
+      .....'
+  - message: 14
+    notificationText: 'OBJECTIVE UPDATED.
+
+      Investigate nearby anomaly.'
   - message: 11
-    notificationText: 'OBJECTIVE COMPLETE.
+    notificationText: 'You have survived the demo...
 
-      You have survived the demo...
-
-      Final
-      chapter coming soon'
+      Final chapter coming
+      soon'

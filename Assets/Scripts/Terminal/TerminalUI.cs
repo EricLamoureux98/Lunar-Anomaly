@@ -36,14 +36,15 @@ namespace LunarAnomaly.UI
         // To BasePanel
         public static Action<PanelType> OnPanelSelected; // Used in UIManager
         public static Action OnPanelClosed; // Used in OutpostUI and UIManager
-        // To NotificationController - used in OutpostController, OutpostRevealCina
+
+        // To NotificationController - used in OutpostController, OutpostRevealCina, HabitatController
         public static Action<NotificationMessage> OnRequestNotification;
         public static Action<NotificationMessage, float> OnRequestNotificationDelayed;
 
 		void OnEnable()
         {
             TerminalController.OnTerminalProximity += TerminalInteract;
-            //UIManager.OnCursorUnlock += TerminalPanel; **** TEMP *****8
+            //UIManager.OnCursorUnlock += TerminalPanel; **** TEMP *****
             UIManager.OnDisplayTerminal += DisplayTerminalPanel;
             // ProgressionManager.OnStageChanged += StageUpdate;
             TerminalInterfacePanel.OnIntroProceed += HandleIntroNotification;
@@ -164,7 +165,7 @@ namespace LunarAnomaly.UI
                 if (introNotification)
                 {
                     OnRequestNotification?.Invoke(NotificationMessage.Start1);
-                    OnRequestNotificationDelayed?.Invoke(NotificationMessage.Start2, 10f);
+                    OnRequestNotificationDelayed?.Invoke(NotificationMessage.Start2, 8f);
                     introNotification = false;
                 }
             }

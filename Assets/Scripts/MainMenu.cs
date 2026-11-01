@@ -1,4 +1,5 @@
 using LunarAnomaly;
+using LunarAnomaly.UI;
 using UnityEngine;
 
 public class MainMenu : MonoBehaviour

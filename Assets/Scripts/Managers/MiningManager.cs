@@ -62,5 +62,3 @@ namespace LunarAnomaly.Gameplay
         }
     }
 }
-// Different sample/rock types
-

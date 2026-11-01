@@ -12,5 +12,8 @@ public enum NotificationMessage
     HabitatInRange,
     LogPickup,
     CollectPickaxe,
-    EndOfDemo
+    EndOfDemo,
+    PriorityUpdate,
+    AnomalyDetected,
+    InvestigateAnomaly
 }

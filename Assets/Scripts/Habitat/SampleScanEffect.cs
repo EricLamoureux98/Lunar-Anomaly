@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -7,9 +6,12 @@ public class SampleScanEffect : MonoBehaviour
     [SerializeField] Renderer sampleRenderer;
     [SerializeField] GameObject sampleObject;
 
+    Coroutine changeColorRoutine;
+
     public void ChangeColor(float changeDuration)
     {
-        StartCoroutine(ChangeColorRoutine(changeDuration));
+        if (changeColorRoutine == null)
+            changeColorRoutine = StartCoroutine(ChangeColorRoutine(changeDuration));
     }
 
     IEnumerator ChangeColorRoutine(float duration)
@@ -26,7 +28,11 @@ public class SampleScanEffect : MonoBehaviour
                     
             sampleRenderer.material.SetColor("_EmissionColor", Color.Lerp(off, on, t));
             sampleObject.transform.localScale = Vector3.Lerp(startingScale, startingScale * 1.1f, t);
+            
             yield return null;
         }
+        
+        sampleRenderer.material.SetColor("_EmissionColor", off);
+        changeColorRoutine = null;
     }
 }

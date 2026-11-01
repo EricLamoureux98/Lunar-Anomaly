@@ -71,7 +71,9 @@ namespace LunarAnomaly.UI
         {
             string text = notificationDatabase.GetNotificationText(notificationMessage);
 
-            ShowText(text, notificationMessage, revealedNotificationMessage);
+            // ShowText(text, notificationMessage, revealedNotificationMessage);
+            if (typewriter == null) return;
+            ShowWithTypewriter(text); // Bypass for notifications
         }
 
         // This is a generic method
@@ -100,7 +102,7 @@ namespace LunarAnomaly.UI
             typewriter.SetText(text, currentTextBox);
         }
 
-        void StopTypewriter()
+        public void StopTypewriter()
         {
             typewriter.Stop();
         }

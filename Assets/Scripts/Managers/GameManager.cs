@@ -1,4 +1,5 @@
 using System;
+using LunarAnomaly.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -59,6 +60,7 @@ namespace LunarAnomaly
 			#endif
 		}
 
+		// Might deprecate
         public void TriggerGameOver()
 		{
 			ChangeState(GameState.GameOver);
@@ -73,7 +75,7 @@ namespace LunarAnomaly
 				ChangeState(GameState.Paused);
 		}
 
-		// Called from Menu Button
+		// Called from Menu Button & AnomalyManager
 		public void ReturnToMainMenu()
 		{
 			SceneManager.LoadScene(0);
@@ -102,6 +104,7 @@ namespace LunarAnomaly
 					break;
 
 				case GameState.MainMenu:
+					UIManager.OnCursorUnlock?.Invoke(true);
 					break;
 				
 				default:

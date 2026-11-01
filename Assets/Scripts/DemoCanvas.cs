@@ -33,7 +33,7 @@ public class DemoCanvas : MonoBehaviour
     {
         demoCanvas.SetActive(true);
         //playerLook.UpdateCursorLock(true);
-        OutpostUI.OnLogShown?.Invoke(true);
+        // OutpostUI.OnLogShown?.Invoke(true);
 
         updateText.UpdateCurrentTextBox(currentTextBox);
 		updateText.ShowWithTypewriter(logText);

@@ -30,8 +30,6 @@ namespace LunarAnomaly
 				transform.SetParent(null); // Make it root to prevent warning
 				DontDestroyOnLoad(gameObject);					
 			}
-
-			//audioSource = GetComponent<AudioSource>();
 		}
 
         void OnValidate()
@@ -118,7 +116,7 @@ namespace LunarAnomaly
 	{
 		Airlock,
 		Mining,
-		Ambience,
+		AmbientBanging,
 		Music,
 		Footstep,
 		GainAtmosphere,
@@ -149,7 +147,8 @@ namespace LunarAnomaly
 		Suction,
 		Pnumatic,
 		DoorClick,
-		ItemPlace
+		ItemPlace,
+		AlienClick
 	}
 
 	[Serializable]

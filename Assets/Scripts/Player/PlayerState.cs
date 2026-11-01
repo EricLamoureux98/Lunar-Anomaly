@@ -31,6 +31,7 @@ namespace LunarAnomaly.Player
         [SerializeField] ObjectiveManager objectiveManager;
           
         float graceTimer;
+        // bool breathing;
 
         Coroutine breathingRoutine;
 
@@ -49,6 +50,7 @@ namespace LunarAnomaly.Player
             OutpostController.OnLadderUsed += HandleLadderTeleport;
             OutpostRevealCinematic.OnOutpostCinematicTeleport += RequestTeleport;
             objectiveManager.OnUpdateRespawnPoint += UpdateRespawnPoint;
+            AnomalyManager.OnPlayerInactive += HandleInactive;
         }
 
         void OnDisable()
@@ -58,6 +60,7 @@ namespace LunarAnomaly.Player
             OutpostController.OnLadderUsed -= HandleLadderTeleport;
             OutpostRevealCinematic.OnOutpostCinematicTeleport -= RequestTeleport;
             objectiveManager.OnUpdateRespawnPoint -= UpdateRespawnPoint;
+            AnomalyManager.OnPlayerInactive -= HandleInactive;
         }
 
         void Awake()
@@ -155,14 +158,19 @@ namespace LunarAnomaly.Player
             HandleRespawn();
         }
 
-        // Might deprecate
-        void HandleGameOver()
+        void HandleInactive()
         {
-            // This is redundant 
-            if (GameManager.Instance.CurrentState == GameState.GameOver) return; 
-
-            GameManager.Instance.TriggerGameOver();
+            ChangeState(PlayerCurrentState.Inactive);
         }
+
+        // Might deprecate
+        // void HandleGameOver()
+        // {
+        //     // This is redundant 
+        //     if (GameManager.Instance.CurrentState == GameState.GameOver) return; 
+
+        //     GameManager.Instance.TriggerGameOver(); <-- not used 
+        // }
 
         public void UpdateRespawnInHabitat(bool inHabitat)
         {
@@ -258,6 +266,7 @@ namespace LunarAnomaly.Player
             switch (state)
             {
                 case PlayerCurrentState.Alive:
+                    //breathing = true;
                     HandleAlive();                   
                     break;
 
@@ -273,6 +282,17 @@ namespace LunarAnomaly.Player
 
                 case PlayerCurrentState.Insane:
                     // HandleGameOver(); ---- might deprecate
+                    break;
+
+                case PlayerCurrentState.Inactive:
+                    oxygen.SetActive(false);
+                    playerMovement.SetActive(false);
+                    //breathing = false;
+                    if (breathingRoutine != null)
+                    {
+                        StopCoroutine(breathingRoutine);
+                        breathingRoutine = null;
+                    }
                     break;
             }
         }
@@ -311,6 +331,7 @@ namespace LunarAnomaly.Player
         Dead, 
         Respawning,
         Insane, // Might not use
+        Inactive
     } 
 
     public enum TeleportType

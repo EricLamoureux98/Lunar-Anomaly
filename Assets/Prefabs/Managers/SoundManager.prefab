@@ -57,11 +57,14 @@ MonoBehaviour:
   - name: Ambience
     sounds:
     - {fileID: 8300000, guid: 54f9a38c48b09a188ab18dcd21f264cd, type: 3}
+    - {fileID: 8300000, guid: ba83567931c26c881917e1f9fc7e923a, type: 3}
   - name: Music
     sounds:
     - {fileID: 8300000, guid: ad0d9a8736437904cbfbdbf963fe0760, type: 3}
   - name: Footstep
     sounds:
+    - {fileID: 8300000, guid: e74d9e642ccd4e47fa96b65ba91572a1, type: 3}
+    - {fileID: 8300000, guid: 18ebcef0b76689cc9846672346ef4da4, type: 3}
     - {fileID: 8300000, guid: 8af80a5ee47f9ef4082d5e666de05d68, type: 3}
     - {fileID: 8300000, guid: f56969f0fbe7a834fb05a82b1319fa86, type: 3}
     - {fileID: 8300000, guid: 11d98bd6817859845a7b1bfbb03e8a7e, type: 3}
@@ -151,6 +154,15 @@ MonoBehaviour:
   - name: Pnumatic
     sounds:
     - {fileID: 8300000, guid: 8561ed7676802e5469b62217a1447176, type: 3}
+  - name: DoorClick
+    sounds:
+    - {fileID: 8300000, guid: 644f5488d1ca83667acf42bc951ccb89, type: 3}
+  - name: ItemPlace
+    sounds:
+    - {fileID: 8300000, guid: 4ce8bbf24c648166ab55d14e7b7b691b, type: 3}
+  - name: AlienClick
+    sounds:
+    - {fileID: 8300000, guid: edcad44ccc02d912db0462c01fc0ef11, type: 3}
   musicSource: {fileID: 7934640381745263177}
   sfxSource: {fileID: 2842162810629879099}
   sfxVeriationSource: {fileID: 1182675234243706577}

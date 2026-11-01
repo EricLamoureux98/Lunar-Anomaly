@@ -13,7 +13,7 @@ namespace LunarAnomaly.UI
 
         Coroutine currentEffectRoutine;
 
-        void OnEnable()
+        void OnEnable() // The could be moved to PlayScreenEffect
         {
             PlayerState.OnPlayerDying += PlayerDying;
             Silhouette.OnSilhouetteFlash += SilhouetteFlash;
@@ -43,6 +43,7 @@ namespace LunarAnomaly.UI
             float holdDuration = 0.5f;
             float fadeOutDuration = 1f;
             bool useRealtime = false;
+            bool toBlack = false;
 
             switch (effectType)
             {
@@ -52,13 +53,13 @@ namespace LunarAnomaly.UI
                     fadeOutDuration = 1.5f;
                     break;
 
-                case ScreenEffectType.GameOver:
-                    holdDuration = 3f;
-                    useRealtime = true;
-                    break;
+                // case ScreenEffectType.GameOver:
+                //     holdDuration = 3f;
+                //     useRealtime = true;
+                //     break;
 
                 case ScreenEffectType.Silhouette:
-                    fadeInDuration = 0.08f;
+                    fadeInDuration = 0.1f;
                     holdDuration = 0.15f;
                     fadeOutDuration = 0.5f;
                     break;
@@ -72,17 +73,30 @@ namespace LunarAnomaly.UI
                     holdDuration = 5f;
                     fadeOutDuration = 2f;
                     break;
+
+                case ScreenEffectType.ToBlack:
+                    fadeInDuration = 0.35f;
+                    //holdDuration = 0.5f;
+                    toBlack = true;
+                    break;
+            }
+
+            if (toBlack)
+            {
+                    screenFader.StartFade(0f, 1f, fadeInDuration, useRealtime);
+                    //yield return new WaitForSeconds(holdDuration);
+                    yield break;
             }
 
             screenFader.StartFade(0f, 1f, fadeInDuration, useRealtime);
 
             yield return useRealtime ? new WaitForSecondsRealtime(holdDuration) : new WaitForSeconds(holdDuration);
 
-            if (effectType == ScreenEffectType.GameOver)
-            {
-                deathText.gameObject.SetActive(true);
-                yield break;
-            }
+            // if (effectType == ScreenEffectType.GameOver)
+            // {
+            //     deathText.gameObject.SetActive(true);
+            //     yield break;
+            // }
 
             screenFader.StartFade(1f, 0f, fadeOutDuration, useRealtime);
         }
@@ -105,19 +119,21 @@ namespace LunarAnomaly.UI
             PlayScreenEffect(ScreenEffectType.Death);
         }
 
-        public void GameOver()
-        {
-            PlayScreenEffect(ScreenEffectType.GameOver);
-        }
+        // Might deprecate
+        // public void GameOver()
+        // {
+        //     PlayScreenEffect(ScreenEffectType.GameOver);
+        // }
     }
 }
 
 public enum ScreenEffectType
 {
     Death,
-    GameOver,
+    // GameOver,
     Silhouette,
     Cinematic,
-    LadderTeleport
+    LadderTeleport,
+    ToBlack
 }
 

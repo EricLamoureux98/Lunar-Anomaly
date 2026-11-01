@@ -250,7 +250,7 @@ namespace LunarAnomaly.Gameplay
 			if (isPowered && !outpostActive)
 			{
 				SoundManager.PlaySound(SoundType.OutpostButton, 1f);
-				lightFlicker.StartFlicker(1f);
+				lightFlicker.StartFlicker(1.5f);
 
 				OnOutpostAdvanced?.Invoke(ProgressionStage.OutpostObjective);
 				outpostActive = true;

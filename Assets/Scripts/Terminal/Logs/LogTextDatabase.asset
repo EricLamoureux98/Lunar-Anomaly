@@ -44,7 +44,6 @@ MonoBehaviour:
 
       Perfectly
       normal, I think.'
-    isDiscovered: 1
   - message: 1
     logTitle: 'Log 002: Minor Anomaly'
     logDate: Sol 011
@@ -54,12 +53,12 @@ MonoBehaviour:
 
 
       Something
-      odd today. Not a malfunction. just... misplaced equipment.
+      odd today. Not a malfunction. Just... misplaced equipment.
 
 
       I left a
-      wrench on the diagnostics console before heading to the airlock. When I returned,
-      it was on the floor near the storage lockers. No damage, no sign of impact.
+      wrench by the sample analyzer before heading to the airlock. When I returned,
+      it was on the floor near the storage lockers. No damage or sign of impact.
       Just sitting there like it had always been there.
 
 
@@ -82,7 +81,6 @@ MonoBehaviour:
       because I''m worried.
 
       Just being thorough.'
-    isDiscovered: 1
   - message: 2
     logTitle: 'Log 003: Visual Disturbance'
     logDate: Sol 019
@@ -118,7 +116,6 @@ MonoBehaviour:
 
       But
       I can''t shake the feeling that it was looking directly at me.'
-    isDiscovered: 0
   - message: 3
     logTitle: 'Log 004: Cognitive Degradation'
     logDate: Sol 026
@@ -131,7 +128,7 @@ MonoBehaviour:
       losing time.
 
 
-      Not hours. just minutes. Small gaps. I''ll start a task,
+      Not hours. Just minutes. Small gaps. I''ll start a task,
       blink, and suddenly it''s finished. Tools already put away. Systems already
       checked. No memory of doing it.
 
@@ -158,7 +155,6 @@ MonoBehaviour:
       is moving when I''m not looking.
 
       I know it is.'
-    isDiscovered: 0
   - message: 4
     logTitle: 'Log 005: Final Entry'
     logDate: Unknown
@@ -211,11 +207,10 @@ MonoBehaviour:
       If
       anyone finds this log...
 
-      do not trust what you see out there.
+      Do not trust what you see out there.
 
 
       It
       is not alone.
 
       And soon... neither will you.'
-    isDiscovered: 0

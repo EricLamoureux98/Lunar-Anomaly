@@ -20,8 +20,8 @@ namespace LunarAnomaly.UI
 
         bool terminalProximity;   
 
-        // To PlayerLook
-        public static event Action<bool> OnCursorUnlock;
+        // To PlayerLook -- Used in GM
+        public static Action<bool> OnCursorUnlock;
         // To TerminalUI
         public static event Action<bool> OnDisplayTerminal;
 
@@ -83,10 +83,11 @@ namespace LunarAnomaly.UI
                     HideGameplayUI(false);
                     break;
                 
-                case GameState.GameOver:
-                    HideGameplayUI(true);
-                    screenEffect.GameOver();
-                    break;
+                // Might deprecate
+                // case GameState.GameOver:
+                //     HideGameplayUI(true);
+                //     screenEffect.GameOver();
+                //     break;
                 
                 case GameState.Paused:
                     OnCursorUnlock?.Invoke(true);
